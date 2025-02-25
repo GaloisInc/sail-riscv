@@ -431,7 +431,7 @@ foreach (xlen IN ITEMS 32 64)
                         ${SAIL_BIN}
                         --lean
                         --memo-z3
-                        --require-version 0.19
+                        --require-version 0.18
                         --lean-output-dir ${CMAKE_CURRENT_BINARY_DIR}
                         --lean-force-output
                         --lean-noncomputable
