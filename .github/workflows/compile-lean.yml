@@ -69,6 +69,7 @@ jobs:
             build/model/Lean_RV64D_executable/.lake
           key: ${{ matrix.os }}-${{ matrix.version }}-lake
 
+
       - name: Use Lean to build the model and report errors
         run: |
           source ~/.profile
