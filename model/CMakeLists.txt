@@ -273,6 +273,7 @@ foreach (xlen IN ITEMS 32 64)
         )
     endif()
 
+<<<<<<< HEAD
     ############# RMEM #############
 
     # Generate riscv.lem, riscv_toFromInterp2.ml and riscv.defs
@@ -344,6 +345,64 @@ foreach (xlen IN ITEMS 32 64)
             --variable "RMEM = true"
             ${project_file}
     )
+=======
+            set(vext_srcs
+                "riscv_insts_vext_utils.sail"
+                # "riscv_insts_vext_fp_utils.sail"
+                # "riscv_insts_vext_vset.sail"
+                # "riscv_insts_vext_arith.sail"
+                # "riscv_insts_vext_fp.sail"
+                # "riscv_insts_vext_mem.sail"
+                # "riscv_insts_vext_mask.sail"
+                # "riscv_insts_vext_vm.sail"
+                # "riscv_insts_vext_fp_vm.sail"
+                # "riscv_insts_vext_red.sail"
+                # "riscv_insts_vext_fp_red.sail"
+            )
+
+            set(sail_default_inst
+                "riscv_insts_base.sail"
+                "riscv_insts_zifencei.sail"
+                "riscv_insts_zaamo.sail"
+                "riscv_insts_zalrsc.sail"
+                "riscv_insts_zca.sail"
+                "riscv_insts_mext.sail"
+                "riscv_insts_zicsr.sail"
+                "riscv_insts_hints.sail"
+                # "riscv_insts_fext.sail"
+                # "riscv_insts_zcf.sail"
+                # "riscv_insts_dext.sail"
+                # "riscv_insts_zcd.sail"
+                # "riscv_insts_svinval.sail"
+                # "riscv_insts_zba.sail"
+                # "riscv_insts_zbb.sail"
+                # "riscv_insts_zbc.sail"
+                # "riscv_insts_zbs.sail"
+                # "riscv_insts_zcb.sail"
+                # "riscv_insts_zfh.sail"
+                # Zfa needs to be added after fext, dext and Zfh (as it needs
+                # definitions from those)
+                # "riscv_insts_zfa.sail"
+                # "riscv_insts_zkn.sail"
+                # "riscv_insts_zks.sail"
+                # "riscv_insts_zbkb.sail"
+                # "riscv_insts_zbkx.sail"
+                # "riscv_insts_zicond.sail"
+                ${vext_srcs}
+                # "riscv_insts_zicbom.sail"
+                # "riscv_insts_zicboz.sail"
+                # "riscv_insts_zawrs.sail"
+                "riscv_insts_zvbb.sail"
+                "riscv_insts_zvbc.sail"
+                # "riscv_insts_zvkg.sail"
+                # "riscv_insts_zvkned.sail"
+                # "riscv_insts_zvknhab.sail"
+                # "riscv_insts_zvksh.sail"
+                # Zimop and Zcmop should be at the end so they can be overridden by earlier extensions
+                "riscv_insts_zimop.sail"
+                "riscv_insts_zcmop.sail"
+            )
+>>>>>>> e5c0693 (Lean: Use smaller model for executable)
 
     add_custom_target(generated_rmem_${arch} DEPENDS
         "rmem_${arch}.lem"
@@ -353,6 +412,7 @@ foreach (xlen IN ITEMS 32 64)
 
     ############# Rocq #############
 
+<<<<<<< HEAD
     # Build Rocq (formerly Coq) definitions.
     add_custom_command(
         DEPENDS ${sail_srcs} ${project_file}
@@ -393,6 +453,22 @@ foreach (xlen IN ITEMS 32 64)
     )
     add_custom_target(generated_rocq_${arch} DEPENDS "${CMAKE_BINARY_DIR}/rocq/${arch}.v")
     add_custom_target(build_rocq_${arch} DEPENDS "${CMAKE_BINARY_DIR}/rocq/${arch}.vo")
+=======
+            set(sail_sys_srcs
+                "riscv_vext_control.sail"
+                "riscv_sys_exceptions.sail"
+                "riscv_sync_exception.sail"
+                "riscv_zihpm.sail"
+                "riscv_sscofpmf.sail"
+                "riscv_zkr_control.sail"
+                "riscv_zicntr_control.sail"
+                # "riscv_softfloat_interface.sail"
+                # "riscv_fdext_regs.sail"
+                # "riscv_fdext_control.sail"
+                "riscv_smcntrpmf.sail"
+                "riscv_sys_control.sail"
+            )
+>>>>>>> e5c0693 (Lean: Use smaller model for executable)
 
     ############# Lean #############
 
@@ -496,10 +572,26 @@ foreach (xlen IN ITEMS 32 64)
             >>
             ${CMAKE_CURRENT_BINARY_DIR}/${arch}_types.lem
 
+<<<<<<< HEAD
     )
     add_custom_target(generated_lem_${arch} DEPENDS "${arch}.lem")
 
     ############# Isabelle #############
+=======
+            if (variant STREQUAL "rocq" OR variant STREQUAL "lean")
+                list(APPEND sail_step_srcs
+                    # "riscv_termination.sail"
+                )
+            endif()
+
+            # Final file list.
+            set(sail_srcs
+                ${sail_arch_srcs}
+                ${sail_seq_inst_srcs}
+                ${sail_step_srcs}
+                # "main.sail"
+            )
+>>>>>>> e5c0693 (Lean: Use smaller model for executable)
 
     # Build Isabelle definitions from Lem
     string_upper_initial("${arch}" arch_thy)
