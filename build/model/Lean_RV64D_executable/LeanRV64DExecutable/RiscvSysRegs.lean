@@ -694,9 +694,10 @@ def currentlyEnabled (merge_var : extension) : SailM Bool := do
   | Ext_Zimop => (pure (hartSupports Ext_Zimop))
   | Ext_Zcmop => (pure ((hartSupports Ext_Zcmop) && (← (currentlyEnabled Ext_Zca))))
   | _ =>
-    (do
-      assert false "Pattern match failure at riscv_insts_zcmop.sail:9.0-9.97"
-      throw Error.Exit)
+    pure false
+    -- (do
+    --   assert false "Pattern match failure at riscv_insts_zcmop.sail:9.0-9.97"
+    --   throw Error.Exit)
 
 def virtual_memory_supported (_ : Unit) : SailM Bool := do
   (pure ((← (currentlyEnabled Ext_Sv32)) || ((← (currentlyEnabled Ext_Sv39)) || ((← (currentlyEnabled
