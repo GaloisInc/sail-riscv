@@ -51,7 +51,7 @@ let htif_tohost_size = 8
 function enable_htif(tohost_addr : bits(64)) -> unit = htif_tohost_base = Some(trunc(tohost_addr))
 
 /* Location of HTIF ports */
-val plat_htif_tohost = impure {c: "plat_htif_tohost", lem: "plat_htif_tohost"} : unit -> physaddrbits
+val plat_htif_tohost = impure {c: "plat_htif_tohost", lean: "plat_htif_tohost", lem: "plat_htif_tohost"} : unit -> physaddrbits
 function plat_htif_tohost () = zeros()
 // todo: fromhost
 
