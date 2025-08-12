@@ -64,7 +64,7 @@ register plat_clint_size : physaddrbits = to_bits_checked(config platform.clint.
 val plat_enable_htif = pure "plat_enable_htif" : unit -> bool
 
 /* Location of HTIF ports */
-val plat_htif_tohost = pure {c: "plat_htif_tohost", lem: "plat_htif_tohost"} : unit -> physaddrbits
+val plat_htif_tohost = impure {c: "plat_htif_tohost", lem: "plat_htif_tohost"} : unit -> physaddrbits
 function plat_htif_tohost () = zeros()
 // todo: fromhost
 
