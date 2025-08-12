@@ -177,9 +177,6 @@ def plat_enable_misaligned_access : Bool := true
 
 def plat_mtval_has_illegal_inst_bits : Bool := false
 
-def plat_htif_tohost (_ : Unit) : (BitVec 64) :=
-  (zeros (n := 64))
-
 /-- Type quantifiers: width : Int, width ≤ max_mem_access -/
 def within_phys_mem (typ_0 : physaddr) (width : Int) : SailM Bool := do
   let .Physaddr addr : physaddr := typ_0
