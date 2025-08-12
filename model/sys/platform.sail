@@ -50,7 +50,12 @@ let htif_tohost_size = 8
 // This is called externally. bits(64) is used because it's easier to deal with from C.
 function enable_htif(tohost_addr : bits(64)) -> unit = htif_tohost_base = Some(trunc(tohost_addr))
 
-// Physical memory map predicates
+/* Location of HTIF ports */
+val plat_htif_tohost = impure {c: "plat_htif_tohost", lem: "plat_htif_tohost"} : unit -> physaddrbits
+function plat_htif_tohost () = zeros()
+// todo: fromhost
+
+/* Physical memory map predicates */
 
 function within_phys_mem forall 'n, 'n <= max_mem_access. (Physaddr(addr) : physaddr, width : int('n)) -> bool = {
   // To avoid overflow issues when physical memory extends to the end
