@@ -395,6 +395,8 @@ def try_step (step_no : Nat) (exit_wait : Bool) : SailM Bool := do
       (pure true))
 
 def loop (_ : Unit) : SailM Unit := do
+  print_bits_effect "loop: PC = " (← readReg PC)
+  print_bits_effect "loop: htif_tohost = " (← readReg htif_tohost)
   let i : Nat := 0
   let step_no : Nat := 0
   let (i, step_no) ← (( do
