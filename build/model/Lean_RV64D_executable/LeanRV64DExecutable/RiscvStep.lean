@@ -330,12 +330,14 @@ def wait_is_nop (wr : WaitReason) : Bool :=
 
 /-- Type quantifiers: k_ex151353# : Bool, step_no : Nat, 0 ≤ step_no -/
 def try_step (step_no : Nat) (exit_wait : Bool) : SailM Bool := do
+  dbg_trace "try_step: {step_no}"
   let _ : Unit := (ext_pre_step_hook ())
   writeReg minstret_increment (← (should_inc_minstret (← readReg cur_privilege)))
   let step_val ← (( do
     match (← readReg hart_state) with
     | .HART_WAITING (wr, instbits) => (run_hart_waiting step_no wr instbits exit_wait)
     | .HART_ACTIVE () => (run_hart_active step_no) ) : SailM Step )
+  dbg_trace "try_step step_val: {repr step_val}"
   match step_val with
   | .Step_Pending_Interrupt (intr, priv) =>
     (do
