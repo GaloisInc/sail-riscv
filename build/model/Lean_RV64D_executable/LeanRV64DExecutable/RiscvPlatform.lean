@@ -637,6 +637,7 @@ def htif_store (app_0 : physaddr) (width : Nat) (data : (BitVec (8 * width))) : 
   then
     (do
       let cmd ← do (pure (Mk_htif_cmd (← readReg htif_tohost)))
+      dbg_trace "htif_tohost as cmd {cmd}"
       let b__0 := (_get_htif_cmd_device cmd)
       bif (b__0 == (0x00 : (BitVec 8)))
       then
@@ -738,4 +739,3 @@ def handle_illegal (instbits : (BitVec 32)) : SailM Unit := do
 
 def platform_wfi (_ : Unit) : Unit :=
   ()
-
