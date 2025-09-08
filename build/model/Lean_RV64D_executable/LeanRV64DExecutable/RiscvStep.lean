@@ -330,7 +330,7 @@ def wait_is_nop (wr : WaitReason) : Bool :=
 
 /-- Type quantifiers: k_ex151353# : Bool, step_no : Nat, 0 ≤ step_no -/
 def try_step (step_no : Nat) (exit_wait : Bool) : SailM Bool := do
-  dbg_trace "jln try_step: {step_no}"
+  dbg_trace "try_step: {step_no}"
   let _ : Unit := (ext_pre_step_hook ())
   writeReg minstret_increment (← (should_inc_minstret (← readReg cur_privilege)))
   let step_val ← (( do
@@ -350,7 +350,9 @@ def try_step (step_no : Nat) (exit_wait : Bool) : SailM Bool := do
   | .Step_Waiting _ =>
     assert (hart_is_waiting (← readReg hart_state)) "cannot be Waiting in a non-Wait state"
   | .Step_Execute (.Retire_Success (), _) =>
-    assert (hart_is_active (← readReg hart_state)) "riscv_step.sail:190.74-190.75"
+    do (dbg_trace "step execute retire success"
+      assert (hart_is_active (← readReg hart_state)) "riscv_step.sail:190.74-190.75"
+    )
   | .Step_Execute (.Trap (priv, ctl, pc), _) => (set_next_pc (← (exception_handler priv ctl pc)))
   | .Step_Execute (.Memory_Exception (vaddr, e), _) => (handle_mem_exception vaddr e)
   | .Step_Execute (.Illegal_Instruction (), instbits) => (handle_illegal instbits)
