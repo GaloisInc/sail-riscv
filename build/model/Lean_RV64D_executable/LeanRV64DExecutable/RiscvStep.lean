@@ -330,7 +330,7 @@ def wait_is_nop (wr : WaitReason) : Bool :=
 
 /-- Type quantifiers: k_ex151353# : Bool, step_no : Nat, 0 ≤ step_no -/
 def try_step (step_no : Nat) (exit_wait : Bool) : SailM Bool := do
-  dbg_trace "try_step: {step_no}"
+  dbg_trace "jln try_step: {step_no}"
   let _ : Unit := (ext_pre_step_hook ())
   writeReg minstret_increment (← (should_inc_minstret (← readReg cur_privilege)))
   let step_val ← (( do
@@ -451,4 +451,3 @@ def init_model (_ : Unit) : SailM Unit := do
   writeReg hart_state (HART_ACTIVE ())
   (init_platform ())
   (reset ())
-
