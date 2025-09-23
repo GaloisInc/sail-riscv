@@ -52,7 +52,7 @@ def plat_rom_size (_:Unit) : BitVec n := 0x100
 def plat_enable_htif (_ : Unit) := false
 def plat_htif_tohost (_:Unit) : SailM (BitVec n) := do
   let r <- PreSail.readReg Register.htif_tohost
-  dbg_trace "jln plat_htif_tohost: {r}"
+  dbg_trace "plat_htif_tohost: {r}"
   pure r
 def plat_clint_base (_:Unit) : BitVec n := 0x2000000
 def plat_clint_size (_:Unit) : BitVec n := 0xc0000

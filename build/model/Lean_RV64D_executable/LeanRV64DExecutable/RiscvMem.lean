@@ -311,6 +311,7 @@ def phys_mem_write (wk : write_kind) (paddr : physaddr) (width : Nat) (data : (B
 /-- Type quantifiers: k_ex132972# : Bool, k_ex132971# : Bool, k_ex132970# : Bool, width : Nat, 0 <
   width ∧ width ≤ max_mem_access -/
 def checked_mem_write (paddr : physaddr) (width : Nat) (data : (BitVec (8 * width))) (typ : (AccessType Unit)) (priv : Privilege) (meta' : Unit) (aq : Bool) (rl : Bool) (con : Bool) : SailM (Result Bool ExceptionType) := do
+  dbg_trace("checked_mem_write")
   match (← (phys_access_check typ priv paddr width)) with
   | .some e => (pure (Err e))
   | none =>
@@ -331,6 +332,7 @@ def checked_mem_write (paddr : physaddr) (width : Nat) (data : (BitVec (8 * widt
 /-- Type quantifiers: k_ex132986# : Bool, k_ex132985# : Bool, k_ex132984# : Bool, width : Nat, 0 <
   width ∧ width ≤ max_mem_access -/
 def mem_write_value_priv_meta (paddr : physaddr) (width : Nat) (value : (BitVec (8 * width))) (typ : (AccessType Unit)) (priv : Privilege) (meta' : Unit) (aq : Bool) (rl : Bool) (con : Bool) : SailM (Result Bool ExceptionType) := do
+  dbg_trace("mem_write_value_priv_meta")
   bif ((rl || con) && (not (is_aligned_paddr paddr width)))
   then (pure (Err (E_SAMO_Addr_Align ())))
   else
@@ -350,6 +352,7 @@ def mem_write_value_priv (paddr : physaddr) (width : Nat) (value : (BitVec (8 * 
 /-- Type quantifiers: k_ex133002# : Bool, k_ex133001# : Bool, k_ex133000# : Bool, width : Nat, 0 <
   width ∧ width ≤ max_mem_access -/
 def mem_write_value_meta (paddr : physaddr) (width : Nat) (value : (BitVec (8 * width))) (ext_acc : Unit) (meta' : Unit) (aq : Bool) (rl : Bool) (con : Bool) : SailM (Result Bool ExceptionType) := do
+  dbg_trace("mem_write_value_meta")
   let typ := (Write ext_acc)
   let ep ← do (effectivePrivilege typ (← readReg mstatus) (← readReg cur_privilege))
   (mem_write_value_priv_meta paddr width value typ ep meta' aq rl con)
@@ -357,5 +360,5 @@ def mem_write_value_meta (paddr : physaddr) (width : Nat) (value : (BitVec (8 * 
 /-- Type quantifiers: k_ex133005# : Bool, k_ex133004# : Bool, k_ex133003# : Bool, width : Nat, 0 <
   width ∧ width ≤ max_mem_access -/
 def mem_write_value (paddr : physaddr) (width : Nat) (value : (BitVec (8 * width))) (aq : Bool) (rl : Bool) (con : Bool) : SailM (Result Bool ExceptionType) := do
+  dbg_trace("mem_write_value")
   (mem_write_value_meta paddr width value default_write_acc default_meta aq rl con)
-
