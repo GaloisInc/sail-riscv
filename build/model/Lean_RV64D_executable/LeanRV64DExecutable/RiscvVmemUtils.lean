@@ -345,6 +345,7 @@ def vmem_read (rs : regidx) (offset : (BitVec (2 ^ 3 * 8))) (width : Nat) (acc :
 
 /-- Type quantifiers: k_ex134062# : Bool, k_ex134061# : Bool, k_ex134060# : Bool, width : Nat, is_mem_width(width) -/
 def vmem_write (rs_addr : regidx) (offset : (BitVec (2 ^ 3 * 8))) (width : Nat) (data : (BitVec (8 * width))) (acc : (AccessType Unit)) (aq : Bool) (rl : Bool) (res : Bool) : SailM (Result Bool ExecutionResult) := SailME.run do
+  dbg_trace("vmem_write")
   let vaddr ← (( do
     match (← (ext_data_get_addr rs_addr offset acc width)) with
     | .Ext_DataAddr_OK vaddr => (pure vaddr)

@@ -12874,6 +12874,7 @@ def execute_UTYPE (imm : (BitVec 20)) (rd : regidx) (op : uop) : SailM Execution
 
 /-- Type quantifiers: k_ex150196# : Bool, k_ex150195# : Bool -/
 def execute_STORECON (aq : Bool) (rl : Bool) (rs2 : regidx) (rs1 : regidx) (width : word_width) (rd : regidx) : SailM ExecutionResult := do
+  dbg_trace("execute_STORECON")
   let width_bytes := (size_bytes_forwards width)
   assert (width_bytes ≤b xlen_bytes) "riscv_insts_zalrsc.sail:69.34-69.35"
   bif ((← (speculate_conditional ())) == false)
@@ -12896,6 +12897,7 @@ def execute_STORECON (aq : Bool) (rl : Bool) (rs2 : regidx) (rs1 : regidx) (widt
 
 /-- Type quantifiers: k_ex150203# : Bool, k_ex150202# : Bool -/
 def execute_STORE (imm : (BitVec 12)) (rs2 : regidx) (rs1 : regidx) (width : word_width) (aq : Bool) (rl : Bool) : SailM ExecutionResult := do
+  dbg_trace("execute_STORE")
   let offset : xlenbits := (sign_extend (m := ((2 ^i 3) *i 8)) imm)
   let width_bytes := (size_bytes_forwards width)
   assert (width_bytes ≤b xlen_bytes) "riscv_insts_base.sail:338.34-338.35"

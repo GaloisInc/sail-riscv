@@ -49,7 +49,7 @@ def plat_enable_misaligned_access (_:Unit) : Bool := false
 def plat_mtval_has_illegal_inst_bits  (_:Unit) : Bool := false
 def plat_rom_base (_:Unit) : BitVec n := 0x1000
 def plat_rom_size (_:Unit) : BitVec n := 0x100
-def plat_enable_htif (_ : Unit) := false
+def plat_enable_htif (_ : Unit) := true
 def plat_htif_tohost (_:Unit) : SailM (BitVec n) := do
   let r <- PreSail.readReg Register.htif_tohost
   dbg_trace "plat_htif_tohost: {r}"

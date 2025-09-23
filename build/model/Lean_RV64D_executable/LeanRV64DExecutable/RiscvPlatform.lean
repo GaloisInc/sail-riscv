@@ -209,6 +209,7 @@ def within_phys_mem (typ_0 : physaddr) (width : Int) : SailM Bool := do
 
 /-- Type quantifiers: width : Nat, 0 < width ∧ width ≤ max_mem_access -/
 def within_clint (typ_0 : physaddr) (width : Nat) : SailM Bool := do
+  dbg_trace "within_clint typ_0 addr {repr typ_0} width {width}"
   let .Physaddr addr : physaddr := typ_0
   let addr_int := (BitVec.toNat addr)
   let clint_base_int ← do (pure (BitVec.toNat (← readReg plat_clint_base)))
@@ -217,6 +218,7 @@ def within_clint (typ_0 : physaddr) (width : Nat) : SailM Bool := do
 
 /-- Type quantifiers: width : Nat, 0 < width ∧ width ≤ max_mem_access -/
 def within_htif_writable (typ_0 : physaddr) (width : Nat) : SailM Bool := do
+  dbg_trace "within_htif_writable typ_0 addr {repr typ_0} width {width}"
   let .Physaddr addr : physaddr := typ_0
   (pure ((plat_enable_htif ()) && (((← (plat_htif_tohost ())) == addr) || (((BitVec.addInt
               (← (plat_htif_tohost ())) 4) == addr) && (width == 4)))))
@@ -691,10 +693,13 @@ def within_mmio_readable (addr : physaddr) (width : Nat) : SailM Bool := do
 
 /-- Type quantifiers: width : Nat, 0 < width ∧ width ≤ max_mem_access -/
 def within_mmio_writable (addr : physaddr) (width : Nat) : SailM Bool := do
+  dbg_trace "within mmio writable"
   bif (get_config_rvfi ())
-  then (pure false)
+  then (dbg_trace "then branch of within mmio writable"
+    (pure false))
   else
-    (pure ((← (within_clint addr width)) || ((← (within_htif_writable addr width)) && (width ≤b 8))))
+    (dbg_trace "else branch of within mmio writable"
+    (pure ((← (within_clint addr width)) || ((← (within_htif_writable addr width)) && (width ≤b 8)))))
 
 /-- Type quantifiers: width : Nat, 0 < width ∧ width ≤ max_mem_access -/
 def mmio_read (t : (AccessType Unit)) (paddr : physaddr) (width : Nat) : SailM (Result (BitVec (8 * width)) ExceptionType) := do
