@@ -268,7 +268,7 @@ def run_hart_waiting (step_no : Int) (wr : WaitReason) (instbits : (BitVec 32)) 
 
 /-- Type quantifiers: step_no : Nat, 0 ≤ step_no -/
 def run_hart_active (step_no : Nat) : SailM Step := do
-  dbg_trace("run hart active step no: {step_no}")
+  dbg_trace "run hart active step no: {step_no}"
   match (← (dispatchInterrupt (← readReg cur_privilege))) with
   | .some (intr, priv) => (pure (Step_Pending_Interrupt (intr, priv)))
   | none =>

@@ -13507,7 +13507,7 @@ def execute_CSRImm (csr : (BitVec 12)) (imm : (BitVec 5)) (rd : regidx) (op : cs
 
 /-- Type quantifiers: k_ex150617# : Bool, k_ex150616# : Bool -/
 def execute_AMO (op : amoop) (aq : Bool) (rl : Bool) (rs2 : regidx) (rs1 : regidx) (width : word_width) (rd : regidx) : SailM ExecutionResult := do
-  dbg_trace("execute_AMO")
+  dbg_trace "execute_AMO"
   let width_bytes := (size_bytes_forwards width)
   assert (width_bytes ≤b xlen_bytes) "riscv_insts_zaamo.sail:50.34-50.35"
   match (← (ext_data_get_addr rs1 (zeros (n := ((2 ^i 3) *i 8))) (ReadWrite (Data, Data))
@@ -13568,7 +13568,7 @@ def execute_AMO (op : amoop) (aq : Bool) (rl : Bool) (rs2 : regidx) (rs1 : regid
                       | .Err e => (pure (Memory_Exception (vaddr, e))))))))
 
 def execute (merge_var : ast) : SailM ExecutionResult := do
-  dbg_trace("execute")
+  dbg_trace "execute {repr merge_var}"
   match merge_var with
   | .UTYPE (imm, rd, op) => (execute_UTYPE imm rd op)
   | .JAL (imm, rd) => (execute_JAL imm rd)
