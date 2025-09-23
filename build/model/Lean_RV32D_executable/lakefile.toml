@@ -1,7 +1,0 @@
-name = "Lean_RV32D_executable"
-defaultTargets = ["LeanRV32DExecutable"]
-moreLeanArgs = ["--tstack=400000"]
-
-[[lean_lib]]
-name = "LeanRV32DExecutable"
-leanOptions.weak.linter.style.nameCheck = false

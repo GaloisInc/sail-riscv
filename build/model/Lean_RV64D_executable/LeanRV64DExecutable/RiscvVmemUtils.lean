@@ -223,6 +223,7 @@ def misaligned_order (n : Int) : (Int × Int × Int) :=
 
 /-- Type quantifiers: k_ex133977# : Bool, k_ex133976# : Bool, k_ex133975# : Bool, width : Nat, is_mem_width(width) -/
 def vmem_write_addr (vaddr : virtaddr) (width : Nat) (data : (BitVec (8 * width))) (acc : (AccessType Unit)) (aq : Bool) (rl : Bool) (res : Bool) : SailM (Result Bool ExecutionResult) := SailME.run do
+  dbg_trace "vmem_write_addr"
   let (n, bytes) ← do (split_misaligned vaddr width)
   let (first, last, step) := (misaligned_order n)
   let i : Nat := first
@@ -353,4 +354,3 @@ def vmem_write (rs_addr : regidx) (offset : (BitVec (2 ^ 3 * 8))) (width : Nat) 
   bif (check_misaligned vaddr (size_bytes_backwards width))
   then (pure (Err (Memory_Exception (vaddr, (E_SAMO_Addr_Align ())))))
   else (vmem_write_addr vaddr width data acc aq rl res)
-
