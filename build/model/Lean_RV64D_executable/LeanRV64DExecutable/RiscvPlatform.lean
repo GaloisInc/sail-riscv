@@ -694,7 +694,7 @@ def within_mmio_readable (addr : physaddr) (width : Nat) : SailM Bool := do
 /-- Type quantifiers: width : Nat, 0 < width ∧ width ≤ max_mem_access -/
 def within_mmio_writable (addr : physaddr) (width : Nat) : SailM Bool := do
   dbg_trace "within mmio writable"
-  bif (get_config_rvfi ())
+  if (get_config_rvfi ())
   then (dbg_trace "then branch of within mmio writable"
     (pure false))
   else
