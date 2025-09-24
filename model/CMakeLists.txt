@@ -226,7 +226,7 @@ foreach (xlen IN ITEMS 32 64)
             )
 
             set(vext_srcs
-                "core/insts_vext_utils.sail"
+                "extensions/V/vext_utils_insts.sail"
                 # "core/insts_vext_fp_utils.sail"
                 # "core/insts_vext_vset.sail"
                 # "core/insts_vext_arith.sail"
@@ -240,14 +240,14 @@ foreach (xlen IN ITEMS 32 64)
             )
 
             set(sail_default_inst
-                "riscv_insts_base.sail"
-                "riscv_insts_zifencei.sail"
-                "riscv_insts_zaamo.sail"
-                "riscv_insts_zalrsc.sail"
-                "riscv_insts_zca.sail"
-                "riscv_insts_mext.sail"
-                "riscv_insts_zicsr.sail"
-                "riscv_insts_hints.sail"
+                "extensions/I/base_insts.sail"
+                "extensions/Zifenci/zifencei_insts.sail"
+                "extensions/A/zaamo_insts.sail"
+                "extensions/A/zalrsc_insts.sail"
+                "extensions/C/zca_insts.sail"
+                "extensions/M/mext_insts.sail"
+                "extensions/Zicsr/zicsr_insts.sail"
+                "extensions/C/zca_insts.sail"
                 # "riscv_insts_fext.sail"
                 # "riscv_insts_zcf.sail"
                 # "riscv_insts_dext.sail"
@@ -271,58 +271,58 @@ foreach (xlen IN ITEMS 32 64)
                 # "riscv_insts_zicbom.sail"
                 # "riscv_insts_zicboz.sail"
                 # "riscv_insts_zawrs.sail"
-                "riscv_insts_zvbb.sail"
-                "riscv_insts_zvbc.sail"
+                "extensions/vector_crypto/zvbb_insts.sail"
+                "extensions/vector_crypto/zvbc_insts.sail"
                 # "riscv_insts_zvkg.sail"
                 # "riscv_insts_zvkned.sail"
                 # "riscv_insts_zvknhab.sail"
                 # "riscv_insts_zvksh.sail"
                 # Zimop and Zcmop should be at the end so they can be overridden by earlier extensions
-                "riscv_insts_zimop.sail"
-                "riscv_insts_zcmop.sail"
+                "mops/Zimop/zimop_insts.sail"
+                "mops/Zcmop/zcmop_insts.sail"
             )
 
             if (variant STREQUAL "rmem")
                 set(sail_seq_inst
                     ${sail_default_inst}
-                    "riscv_jalr_rmem.sail"
-                    "riscv_insts_rmem.sail"
+                    "extensions/I/jalr_rmem.sail"
+                    "extensions/rmem/insts_rmem.sail"
                 )
             else()
                 set(sail_seq_inst
                     ${sail_default_inst}
-                    "riscv_jalr_seq.sail"
+                    "extensions/I/jalr_seq.sail"
                 )
             endif()
 
             set(sail_seq_inst_srcs
-                "riscv_insts_begin.sail"
+                "sys/insts_begin.sail"
                 ${sail_seq_inst}
-                "riscv_insts_end.sail"
-                "riscv_csr_end.sail"
+                "postlude/insts_end.sail"
+                "postlude/csr_end.sail"
             )
 
             set(sail_sys_srcs
-                "riscv_vext_control.sail"
-                "riscv_sys_exceptions.sail"
-                "riscv_sync_exception.sail"
-                "riscv_zihpm.sail"
-                "riscv_sscofpmf.sail"
-                "riscv_zkr_control.sail"
-                "riscv_zicntr_control.sail"
+                "extensions/V/vext_control.sail"
+                "exceptions/sys_exceptions.sail"
+                "exceptions/sync_exception.sail"
+                "extensions/Zihpm/zihpm.sail"
+                "extensions/Sscofpmf/sscofpmf.sail"
+                "extensions/K/zkr_control.sail"
+                "extensions/Zicntr/zicntr_control.sail"
                 # "riscv_softfloat_interface.sail"
                 # "riscv_fdext_regs.sail"
                 # "riscv_fdext_control.sail"
-                "riscv_smcntrpmf.sail"
-                "riscv_sys_control.sail"
+                "extensions/Smcntrpmf/smcntrpmf.sail"
+                "sys/sys_control.sail"
             )
 
             set(sail_vm_srcs
-                "riscv_vmem_pte.sail"
-                "riscv_vmem_ptw.sail"
-                "riscv_vmem_tlb.sail"
-                "riscv_vmem.sail"
-                "riscv_vmem_utils.sail"
+                "sys/vmem_pte.sail"
+                "sys/vmem_ptw.sail"
+                "sys/vmem_tlb.sail"
+                "sys/vmem.sail"
+                "sys/vmem_utils.sail"
             )
 
             set(prelude
@@ -339,47 +339,47 @@ foreach (xlen IN ITEMS 32 64)
             )
 
             set(sail_regs_srcs
-                "riscv_csr_begin.sail"
-                "riscv_callbacks.sail"
-                "riscv_reg_type.sail"
-                "riscv_freg_type.sail"
-                "riscv_regs.sail"
-                "riscv_pc_access.sail"
-                "riscv_sys_regs.sail"
-                "riscv_pmp_regs.sail"
-                "riscv_pmp_control.sail"
-                "riscv_ext_regs.sail"
+                "core/csr_begin.sail"
+                "core/callbacks.sail"
+                "core/reg_type.sail"
+                "extensions/FD/freg_type.sail"
+                "core/regs.sail"
+                "core/pc_access.sail"
+                "core/sys_regs.sail"
+                "pmp/pmp_regs.sail"
+                "pmp/pmp_control.sail"
+                "core/ext_regs.sail"
                 ${sail_check_srcs}
-                "riscv_vreg_type.sail"
-                "riscv_vext_regs.sail"
+                "extensions/V/vreg_type.sail"
+                "extensions/V/vext_regs.sail"
             )
 
             set(sail_arch_srcs
                 ${prelude}
-                "riscv_extensions.sail"
-                "riscv_types_common.sail"
-                "riscv_types_ext.sail"
-                "riscv_types.sail"
-                "riscv_vmem_types.sail"
+                "core/extensions.sail"
+                "core/types_common.sail"
+                "core/types_ext.sail"
+                "core/types.sail"
+                "core/vmem_types.sail"
                 ${sail_regs_srcs}
                 ${sail_sys_srcs}
-                "riscv_platform.sail"
-                "riscv_sstc.sail"
-                "riscv_mem.sail"
-                "riscv_inst_retire.sail"
+                "sys/platform.sail"
+                "extensions/Sstc/sstc.sail"
+                "sys/mem.sail"
+                "sys/inst_retire.sail"
                 ${sail_vm_srcs}
                 # Shared/common code for the cryptography extension.
-                "riscv_types_kext.sail"
-                "riscv_zvk_utils.sail"
+                "extensions/K/types_kext.sail"
+                "extensions/vector_crypto/zvk_utils.sail"
             )
 
             set(sail_step_srcs
-                "riscv_step_common.sail"
-                "riscv_step_ext.sail"
-                "riscv_decode_ext.sail"
-                "riscv_fetch_rvfi.sail"
-                "riscv_fetch.sail"
-                "riscv_step.sail"
+                "postlude/step_common.sail"
+                "postlude/step_ext.sail"
+                "postlude/decode_ext.sail"
+                "postlude/fetch_rvfi.sail"
+                "postlude/fetch.sail"
+                "postlude/step.sail"
             )
 
             if (variant STREQUAL "rocq" OR variant STREQUAL "lean")

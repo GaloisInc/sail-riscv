@@ -1,6 +1,0 @@
-{"plugins": [],
- "options": {"weak.linter.style.nameCheck": false},
- "name": "LeanRV64DExecutable.RiscvVmemTypes",
- "isModule": false,
- "importArts": {},
- "dynlibs": []}
