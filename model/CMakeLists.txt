@@ -216,6 +216,186 @@ foreach (xlen IN ITEMS 32 64)
     # for backwards compatibility.
     set(arch "rv${xlen}d")
 
+            set(sail_vlen "core/vlen.sail")
+
+            # Instruction sources, depending on target
+            set(sail_check_srcs
+                "core/addr_checks_common.sail"
+                "core/addr_checks.sail"
+                "core/misa_ext.sail"
+            )
+
+            set(vext_srcs
+                "core/insts_vext_utils.sail"
+                # "core/insts_vext_fp_utils.sail"
+                # "core/insts_vext_vset.sail"
+                # "core/insts_vext_arith.sail"
+                # "core/insts_vext_fp.sail"
+                # "core/insts_vext_mem.sail"
+                # "core/insts_vext_mask.sail"
+                # "core/insts_vext_vm.sail"
+                # "core/insts_vext_fp_vm.sail"
+                # "core/insts_vext_red.sail"
+                # "riscv_insts_vext_fp_red.sail"
+            )
+
+            set(sail_default_inst
+                "riscv_insts_base.sail"
+                "riscv_insts_zifencei.sail"
+                "riscv_insts_zaamo.sail"
+                "riscv_insts_zalrsc.sail"
+                "riscv_insts_zca.sail"
+                "riscv_insts_mext.sail"
+                "riscv_insts_zicsr.sail"
+                "riscv_insts_hints.sail"
+                # "riscv_insts_fext.sail"
+                # "riscv_insts_zcf.sail"
+                # "riscv_insts_dext.sail"
+                # "riscv_insts_zcd.sail"
+                # "riscv_insts_svinval.sail"
+                # "riscv_insts_zba.sail"
+                # "riscv_insts_zbb.sail"
+                # "riscv_insts_zbc.sail"
+                # "riscv_insts_zbs.sail"
+                # "riscv_insts_zcb.sail"
+                # "riscv_insts_zfh.sail"
+                # Zfa needs to be added after fext, dext and Zfh (as it needs
+                # definitions from those)
+                # "riscv_insts_zfa.sail"
+                # "riscv_insts_zkn.sail"
+                # "riscv_insts_zks.sail"
+                # "riscv_insts_zbkb.sail"
+                # "riscv_insts_zbkx.sail"
+                # "riscv_insts_zicond.sail"
+                ${vext_srcs}
+                # "riscv_insts_zicbom.sail"
+                # "riscv_insts_zicboz.sail"
+                # "riscv_insts_zawrs.sail"
+                "riscv_insts_zvbb.sail"
+                "riscv_insts_zvbc.sail"
+                # "riscv_insts_zvkg.sail"
+                # "riscv_insts_zvkned.sail"
+                # "riscv_insts_zvknhab.sail"
+                # "riscv_insts_zvksh.sail"
+                # Zimop and Zcmop should be at the end so they can be overridden by earlier extensions
+                "riscv_insts_zimop.sail"
+                "riscv_insts_zcmop.sail"
+            )
+
+            if (variant STREQUAL "rmem")
+                set(sail_seq_inst
+                    ${sail_default_inst}
+                    "riscv_jalr_rmem.sail"
+                    "riscv_insts_rmem.sail"
+                )
+            else()
+                set(sail_seq_inst
+                    ${sail_default_inst}
+                    "riscv_jalr_seq.sail"
+                )
+            endif()
+
+            set(sail_seq_inst_srcs
+                "riscv_insts_begin.sail"
+                ${sail_seq_inst}
+                "riscv_insts_end.sail"
+                "riscv_csr_end.sail"
+            )
+
+            set(sail_sys_srcs
+                "riscv_vext_control.sail"
+                "riscv_sys_exceptions.sail"
+                "riscv_sync_exception.sail"
+                "riscv_zihpm.sail"
+                "riscv_sscofpmf.sail"
+                "riscv_zkr_control.sail"
+                "riscv_zicntr_control.sail"
+                # "riscv_softfloat_interface.sail"
+                # "riscv_fdext_regs.sail"
+                # "riscv_fdext_control.sail"
+                "riscv_smcntrpmf.sail"
+                "riscv_sys_control.sail"
+            )
+
+            set(sail_vm_srcs
+                "riscv_vmem_pte.sail"
+                "riscv_vmem_ptw.sail"
+                "riscv_vmem_tlb.sail"
+                "riscv_vmem.sail"
+                "riscv_vmem_utils.sail"
+            )
+
+            set(prelude
+                "core/prelude.sail"
+                "core/errors.sail"
+                ${sail_xlen}
+                ${sail_flen}
+                ${sail_vlen}
+                "core/prelude_mem_addrtype.sail"
+                "core/prelude_mem_metadata.sail"
+                "core/prelude_mem.sail"
+                "core/arithmetic.sail"
+                "core/rvfi_dii.sail"
+            )
+
+            set(sail_regs_srcs
+                "riscv_csr_begin.sail"
+                "riscv_callbacks.sail"
+                "riscv_reg_type.sail"
+                "riscv_freg_type.sail"
+                "riscv_regs.sail"
+                "riscv_pc_access.sail"
+                "riscv_sys_regs.sail"
+                "riscv_pmp_regs.sail"
+                "riscv_pmp_control.sail"
+                "riscv_ext_regs.sail"
+                ${sail_check_srcs}
+                "riscv_vreg_type.sail"
+                "riscv_vext_regs.sail"
+            )
+
+            set(sail_arch_srcs
+                ${prelude}
+                "riscv_extensions.sail"
+                "riscv_types_common.sail"
+                "riscv_types_ext.sail"
+                "riscv_types.sail"
+                "riscv_vmem_types.sail"
+                ${sail_regs_srcs}
+                ${sail_sys_srcs}
+                "riscv_platform.sail"
+                "riscv_sstc.sail"
+                "riscv_mem.sail"
+                "riscv_inst_retire.sail"
+                ${sail_vm_srcs}
+                # Shared/common code for the cryptography extension.
+                "riscv_types_kext.sail"
+                "riscv_zvk_utils.sail"
+            )
+
+            set(sail_step_srcs
+                "riscv_step_common.sail"
+                "riscv_step_ext.sail"
+                "riscv_decode_ext.sail"
+                "riscv_fetch_rvfi.sail"
+                "riscv_fetch.sail"
+                "riscv_step.sail"
+            )
+
+            if (variant STREQUAL "rocq" OR variant STREQUAL "lean")
+                list(APPEND sail_step_srcs
+                    # "riscv_termination.sail"
+                )
+            endif()
+
+            # Final file list.
+            set(sail_srcs
+                ${sail_arch_srcs}
+                ${sail_seq_inst_srcs}
+                ${sail_step_srcs}
+                # "main.sail"
+            )
+
     ############# SMT #############
 
     # Generate smtlib2 code from the Sail code.
