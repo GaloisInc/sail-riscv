@@ -1,0 +1,6 @@
+{"plugins": [],
+ "options": {"weak.linter.style.nameCheck": false},
+ "name": "LeanRV64DExecutable.RiscvFetch",
+ "isModule": false,
+ "importArts": {},
+ "dynlibs": []}

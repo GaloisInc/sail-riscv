@@ -1,0 +1,6 @@
+{"plugins": [],
+ "options": {"weak.linter.style.nameCheck": false},
+ "name": "LeanRV64DExecutable.Sail.BitVec",
+ "isModule": false,
+ "importArts": {},
+ "dynlibs": []}

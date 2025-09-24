@@ -1,0 +1,54 @@
+{"synthetic": false,
+ "outputs":
+ {"o": ["3011106881031270413"],
+  "i": "836530391864960087",
+  "c": "8321754739602268789"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=/Users/newcomb/galois/SAILRISCV/glssail/sail-riscv/build/model/Lean_RV64D_executable/.lake/build/lib/lean /Users/newcomb/.elan/toolchains/leanprover--lean4-nightly---nightly-2025-07-10/bin/lean --tstack=400000 /Users/newcomb/galois/SAILRISCV/glssail/sail-riscv/build/model/Lean_RV64D_executable/LeanRV64DExecutable/RiscvExtensions.lean -o /Users/newcomb/galois/SAILRISCV/glssail/sail-riscv/build/model/Lean_RV64D_executable/.lake/build/lib/lean/LeanRV64DExecutable/RiscvExtensions.olean -i /Users/newcomb/galois/SAILRISCV/glssail/sail-riscv/build/model/Lean_RV64D_executable/.lake/build/lib/lean/LeanRV64DExecutable/RiscvExtensions.ilean -c /Users/newcomb/galois/SAILRISCV/glssail/sail-riscv/build/model/Lean_RV64D_executable/.lake/build/ir/LeanRV64DExecutable/RiscvExtensions.c --setup /Users/newcomb/galois/SAILRISCV/glssail/sail-riscv/build/model/Lean_RV64D_executable/.lake/build/ir/LeanRV64DExecutable/RiscvExtensions.setup.json --json",
+   "level": "trace"},
+  {"message":
+   "LeanRV64DExecutable/RiscvExtensions.lean:168:4: declaration uses 'sorry'",
+   "level": "warning"},
+  {"message":
+   "LeanRV64DExecutable/RiscvExtensions.lean:168:4: declaration uses 'sorry'",
+   "level": "warning"},
+  {"message":
+   "LeanRV64DExecutable/RiscvExtensions.lean:168:4: declaration uses 'sorry'",
+   "level": "warning"},
+  {"message":
+   "LeanRV64DExecutable/RiscvExtensions.lean:168:4: declaration uses 'sorry'",
+   "level": "warning"},
+  {"message":
+   "LeanRV64DExecutable/RiscvExtensions.lean:168:4: declaration uses 'sorry'",
+   "level": "warning"}],
+ "inputs":
+ [["LeanRV64DExecutable.RiscvExtensions:deps",
+   [["deps",
+     [["Lean_RV64D_executable/LeanRV64DExecutable:extraDep",
+       [["@Lean_RV64D_executable:extraDep", "1723"]]],
+      ["import oleans",
+       [["LeanRV64DExecutable.Flow:olean",
+         [["LeanRV64DExecutable.Flow:deps", "11445142439830965580"],
+          ["/Users/newcomb/galois/SAILRISCV/glssail/sail-riscv/build/model/Lean_RV64D_executable/.lake/build/lib/lean/LeanRV64DExecutable/Flow.olean",
+           "16768047926373402406"]]],
+        ["LeanRV64DExecutable.Prelude:olean",
+         [["LeanRV64DExecutable.Prelude:deps", "5697893746860788066"],
+          ["/Users/newcomb/galois/SAILRISCV/glssail/sail-riscv/build/model/Lean_RV64D_executable/.lake/build/lib/lean/LeanRV64DExecutable/Prelude.olean",
+           "13102004705625250643"]]],
+        ["LeanRV64DExecutable.RiscvXlen:olean",
+         [["LeanRV64DExecutable.RiscvXlen:deps", "11445142439830965580"],
+          ["/Users/newcomb/galois/SAILRISCV/glssail/sail-riscv/build/model/Lean_RV64D_executable/.lake/build/lib/lean/LeanRV64DExecutable/RiscvXlen.olean",
+           "18339709477768402598"]]]]]]],
+    ["libs",
+     [["import dynlibs", "1723"],
+      ["package external libraries", "1723"],
+      ["module dynlibs", "1723"],
+      ["module plugins", "1723"]]]]],
+  ["Lean 4.23.0, commit 18a82c04fc59d3dba392308e09d65ee431240d89",
+   "1151218723830368976"],
+  ["/Users/newcomb/galois/SAILRISCV/glssail/sail-riscv/build/model/Lean_RV64D_executable/LeanRV64DExecutable/RiscvExtensions.lean",
+   "18327170484237930412"],
+  ["options", [["-Dweak.linter.style.nameCheck=false", "4240153834754761459"]]],
+  ["Module.leanArgs: #[--tstack=400000]", "7360337374730004835"]],
+ "depHash": "10754502474149114016"}
