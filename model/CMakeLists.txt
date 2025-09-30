@@ -20,6 +20,7 @@ set(sail_common
 )
 
 set(project_file "riscv.sail_project")
+set(executable_project_file "riscv_executable.sail_project")
 
 # Reconfigure if the project file changes.
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${project_file})
@@ -123,10 +124,12 @@ add_custom_command(
         ${project_file}
 )
 
-add_custom_target(generated_sail_riscv_model DEPENDS ${c_model} ${c_model_header})
+add_custom_target(generated_sail_riscv_model DEPENDS ${c_model} ${c_model_header} ${schema_file})
 install(FILES ${schema_file}
     DESTINATION ${CMAKE_INSTALL_DATADIR}/${CMAKE_PROJECT_NAME}
 )
+# Make schema location visible to c_emulator build.
+set(schema_file "${schema_file}" PARENT_SCOPE)
 
 ############# JSON #############
 
@@ -155,6 +158,9 @@ add_custom_command(
         # Actually embed the code snippets in the JSON as plain text rather
         # than referencing them. The other option is base64.
         --doc-embed plain
+        # Also embed the file:line locations for code. This allows hyperlinking
+        # identifiers to their source code.
+        --doc-embed-with-location
         # The directory that the JSON will be saved in.
         -o ${CMAKE_CURRENT_BINARY_DIR}
         # The name of the JSON file.
@@ -215,186 +221,6 @@ foreach (xlen IN ITEMS 32 64)
     # This name is used in a lot of places so it excludes the `_v256_e{xlen}`
     # for backwards compatibility.
     set(arch "rv${xlen}d")
-
-            set(sail_vlen "core/vlen.sail")
-
-            # Instruction sources, depending on target
-            set(sail_check_srcs
-                "core/addr_checks_common.sail"
-                "core/addr_checks.sail"
-                "core/misa_ext.sail"
-            )
-
-            set(vext_srcs
-                "extensions/V/vext_utils_insts.sail"
-                # "core/insts_vext_fp_utils.sail"
-                # "core/insts_vext_vset.sail"
-                # "core/insts_vext_arith.sail"
-                # "core/insts_vext_fp.sail"
-                # "core/insts_vext_mem.sail"
-                # "core/insts_vext_mask.sail"
-                # "core/insts_vext_vm.sail"
-                # "core/insts_vext_fp_vm.sail"
-                # "core/insts_vext_red.sail"
-                # "riscv_insts_vext_fp_red.sail"
-            )
-
-            set(sail_default_inst
-                "extensions/I/base_insts.sail"
-                "extensions/Zifenci/zifencei_insts.sail"
-                "extensions/A/zaamo_insts.sail"
-                "extensions/A/zalrsc_insts.sail"
-                "extensions/C/zca_insts.sail"
-                "extensions/M/mext_insts.sail"
-                "extensions/Zicsr/zicsr_insts.sail"
-                "extensions/C/zca_insts.sail"
-                # "riscv_insts_fext.sail"
-                # "riscv_insts_zcf.sail"
-                # "riscv_insts_dext.sail"
-                # "riscv_insts_zcd.sail"
-                # "riscv_insts_svinval.sail"
-                # "riscv_insts_zba.sail"
-                # "riscv_insts_zbb.sail"
-                # "riscv_insts_zbc.sail"
-                # "riscv_insts_zbs.sail"
-                # "riscv_insts_zcb.sail"
-                # "riscv_insts_zfh.sail"
-                # Zfa needs to be added after fext, dext and Zfh (as it needs
-                # definitions from those)
-                # "riscv_insts_zfa.sail"
-                # "riscv_insts_zkn.sail"
-                # "riscv_insts_zks.sail"
-                # "riscv_insts_zbkb.sail"
-                # "riscv_insts_zbkx.sail"
-                # "riscv_insts_zicond.sail"
-                ${vext_srcs}
-                # "riscv_insts_zicbom.sail"
-                # "riscv_insts_zicboz.sail"
-                # "riscv_insts_zawrs.sail"
-                "extensions/vector_crypto/zvbb_insts.sail"
-                "extensions/vector_crypto/zvbc_insts.sail"
-                # "riscv_insts_zvkg.sail"
-                # "riscv_insts_zvkned.sail"
-                # "riscv_insts_zvknhab.sail"
-                # "riscv_insts_zvksh.sail"
-                # Zimop and Zcmop should be at the end so they can be overridden by earlier extensions
-                "mops/Zimop/zimop_insts.sail"
-                "mops/Zcmop/zcmop_insts.sail"
-            )
-
-            if (variant STREQUAL "rmem")
-                set(sail_seq_inst
-                    ${sail_default_inst}
-                    "extensions/I/jalr_rmem.sail"
-                    "extensions/rmem/insts_rmem.sail"
-                )
-            else()
-                set(sail_seq_inst
-                    ${sail_default_inst}
-                    "extensions/I/jalr_seq.sail"
-                )
-            endif()
-
-            set(sail_seq_inst_srcs
-                "sys/insts_begin.sail"
-                ${sail_seq_inst}
-                "postlude/insts_end.sail"
-                "postlude/csr_end.sail"
-            )
-
-            set(sail_sys_srcs
-                "extensions/V/vext_control.sail"
-                "exceptions/sys_exceptions.sail"
-                "exceptions/sync_exception.sail"
-                "extensions/Zihpm/zihpm.sail"
-                "extensions/Sscofpmf/sscofpmf.sail"
-                "extensions/K/zkr_control.sail"
-                "extensions/Zicntr/zicntr_control.sail"
-                # "riscv_softfloat_interface.sail"
-                # "riscv_fdext_regs.sail"
-                # "riscv_fdext_control.sail"
-                "extensions/Smcntrpmf/smcntrpmf.sail"
-                "sys/sys_control.sail"
-            )
-
-            set(sail_vm_srcs
-                "sys/vmem_pte.sail"
-                "sys/vmem_ptw.sail"
-                "sys/vmem_tlb.sail"
-                "sys/vmem.sail"
-                "sys/vmem_utils.sail"
-            )
-
-            set(prelude
-                "core/prelude.sail"
-                "core/errors.sail"
-                ${sail_xlen}
-                ${sail_flen}
-                ${sail_vlen}
-                "core/prelude_mem_addrtype.sail"
-                "core/prelude_mem_metadata.sail"
-                "core/prelude_mem.sail"
-                "core/arithmetic.sail"
-                "core/rvfi_dii.sail"
-            )
-
-            set(sail_regs_srcs
-                "core/csr_begin.sail"
-                "core/callbacks.sail"
-                "core/reg_type.sail"
-                "extensions/FD/freg_type.sail"
-                "core/regs.sail"
-                "core/pc_access.sail"
-                "core/sys_regs.sail"
-                "pmp/pmp_regs.sail"
-                "pmp/pmp_control.sail"
-                "core/ext_regs.sail"
-                ${sail_check_srcs}
-                "extensions/V/vreg_type.sail"
-                "extensions/V/vext_regs.sail"
-            )
-
-            set(sail_arch_srcs
-                ${prelude}
-                "core/extensions.sail"
-                "core/types_common.sail"
-                "core/types_ext.sail"
-                "core/types.sail"
-                "core/vmem_types.sail"
-                ${sail_regs_srcs}
-                ${sail_sys_srcs}
-                "sys/platform.sail"
-                "extensions/Sstc/sstc.sail"
-                "sys/mem.sail"
-                "sys/inst_retire.sail"
-                ${sail_vm_srcs}
-                # Shared/common code for the cryptography extension.
-                "extensions/K/types_kext.sail"
-                "extensions/vector_crypto/zvk_utils.sail"
-            )
-
-            set(sail_step_srcs
-                "postlude/step_common.sail"
-                "postlude/step_ext.sail"
-                "postlude/decode_ext.sail"
-                "postlude/fetch_rvfi.sail"
-                "postlude/fetch.sail"
-                "postlude/step.sail"
-            )
-
-            if (variant STREQUAL "rocq" OR variant STREQUAL "lean")
-                list(APPEND sail_step_srcs
-                    # "riscv_termination.sail"
-                )
-            endif()
-
-            # Final file list.
-            set(sail_srcs
-                ${sail_arch_srcs}
-                ${sail_seq_inst_srcs}
-                ${sail_step_srcs}
-                # "main.sail"
-            )
 
     ############# SMT #############
 
@@ -625,7 +451,7 @@ foreach (xlen IN ITEMS 32 64)
     add_custom_command(
         DEPENDS
             ${sail_srcs}
-            ${project_file}
+            ${executable_project_file}
             ${config_file}
             ${CMAKE_SOURCE_DIR}/handwritten_support/RiscvExtrasExecutable.lean
         VERBATIM
@@ -639,7 +465,7 @@ foreach (xlen IN ITEMS 32 64)
             ${lean_sail_executable}
             --all-modules
             --variable "TERMINATION_FILE = true"
-            ${project_file}
+            ${executable_project_file}
     )
 
     add_custom_target(generated_lean_${arch} DEPENDS "Lean_${arch_uppercase}/Lean${arch_uppercase}.lean")
