@@ -47,6 +47,8 @@ mapping clause assembly = C_ADDI4SPN(rdc, nzimm)
   <-> "c.addi4spn" ^ spc() ^ creg_name(rdc) ^ sep() ^ sp_reg_name() ^ sep() ^ hex_bits_10(nzimm @ 0b00)
       if nzimm != 0b00000000
 
+function clause compressed_measure(C_ADDI4SPN(_, _)) = 1
+
 // *****************************************************************
 union clause instruction = C_LW : (bits(5), cregidx, cregidx)
 
@@ -63,6 +65,8 @@ function clause execute (C_LW(uimm, rsc, rdc)) = {
 
 mapping clause assembly = C_LW(uimm, rsc, rdc)
   <-> "c.lw" ^ spc() ^ creg_name(rdc) ^ sep() ^ hex_bits_7(uimm @ 0b00) ^ "(" ^ creg_name(rsc) ^ ")"
+
+function clause compressed_measure(C_LW(_, _, _)) = 1
 
 // *****************************************************************
 union clause instruction = C_LD : (bits(5), cregidx, cregidx)
@@ -82,6 +86,8 @@ mapping clause assembly = C_LD(uimm, rsc, rdc)
   <-> "c.ld" ^ spc() ^ creg_name(rdc) ^ sep() ^ hex_bits_8(uimm @ 0b000) ^ "(" ^ creg_name(rsc) ^ ")"
   when xlen == 64
 
+function clause compressed_measure(C_LD(_, _, _)) = 1
+
 // *****************************************************************
 union clause instruction = C_SW : (bits(5), cregidx, cregidx)
 
@@ -98,6 +104,8 @@ function clause execute (C_SW(uimm, rsc1, rsc2)) = {
 
 mapping clause assembly = C_SW(uimm, rsc1, rsc2)
   <-> "c.sw" ^ spc() ^ creg_name(rsc2) ^ sep() ^ hex_bits_7(uimm @ 0b00) ^ "(" ^ creg_name(rsc1) ^ ")"
+
+function clause compressed_measure(C_SW(_, _, _)) = 1
 
 // *****************************************************************
 union clause instruction = C_SD : (bits(5), cregidx, cregidx)
@@ -119,6 +127,8 @@ mapping clause assembly = C_SD(uimm, rsc1, rsc2)
   <-> "c.sd" ^ spc() ^ creg_name(rsc2) ^ sep() ^ hex_bits_8(uimm @ 0b000) ^ "(" ^ creg_name(rsc1) ^ ")"
       if xlen == 64
 
+function clause compressed_measure(C_SD(_, _, _)) = 1
+
 // *****************************************************************
 union clause instruction = C_ADDI : (bits(6), regidx)
 
@@ -137,6 +147,8 @@ mapping clause assembly = C_ADDI(imm, rsd)
   <-> "c.addi" ^ spc() ^ reg_name(rsd) ^ sep() ^ hex_bits_signed_6(imm)
   when rsd != zreg
 
+function clause compressed_measure(C_ADDI(_, _)) = 1
+
 // *****************************************************************
 union clause instruction = C_JAL : (bits(11))
 
@@ -151,6 +163,8 @@ mapping clause assembly = C_JAL(imm)
   <-> "c.jal" ^ spc() ^ hex_bits_signed_12(imm @ 0b0)
   when xlen == 32
 
+function clause compressed_measure(C_JAL(_)) = 1
+
 // *****************************************************************
 union clause instruction = C_ADDIW : (bits(6), regidx)
 
@@ -164,6 +178,8 @@ function clause execute (C_ADDIW(imm, rsd)) =
 mapping clause assembly = C_ADDIW(imm, rsd)
   <-> "c.addiw" ^ spc() ^ reg_name(rsd) ^ sep() ^ hex_bits_signed_6(imm)
   when xlen == 64
+
+function clause compressed_measure(C_ADDIW(_, _)) = 1
 
 // *****************************************************************
 union clause instruction = C_LI : (bits(6), regidx)
@@ -181,6 +197,8 @@ function clause execute (C_LI(imm, rd)) = {
 mapping clause assembly = C_LI(imm, rd)
   <-> "c.li" ^ spc() ^ reg_name(rd) ^ sep() ^ hex_bits_signed_6(imm)
 
+function clause compressed_measure(C_LI(_, _)) = 1
+
 // *****************************************************************
 union clause instruction = C_ADDI16SP : (bits(6))
 
@@ -196,6 +214,8 @@ function clause execute (C_ADDI16SP(imm)) = {
 mapping clause assembly = C_ADDI16SP(imm)
   <-> "c.addi16sp" ^ spc() ^ sp_reg_name() ^ sep() ^ hex_bits_signed_10(imm @ 0x0)
   when imm != 0b000000
+
+function clause compressed_measure(C_ADDI16SP(_)) = 1
 
 // *****************************************************************
 union clause instruction = C_LUI : (bits(6), regidx)
@@ -216,6 +236,8 @@ mapping clause assembly = C_LUI(imm, rd)
   <-> "c.lui" ^ spc() ^ reg_name(rd) ^ sep() ^ hex_bits_signed_6(imm)
   when rd != sp & imm != 0b000000
 
+function clause compressed_measure(C_LUI(_, _)) = 1
+
 // *****************************************************************
 union clause instruction = C_SRLI : (bits(6), cregidx)
 
@@ -231,6 +253,8 @@ function clause execute (C_SRLI(shamt, rsd)) = {
 
 mapping clause assembly = C_SRLI(shamt, rsd)
   <-> "c.srli" ^ spc() ^ creg_name(rsd) ^ sep() ^ hex_bits_6(shamt)
+
+function clause compressed_measure(C_SRLI(_, _)) = 1
 
 // *****************************************************************
 union clause instruction = C_SRAI : (bits(6), cregidx)
@@ -248,6 +272,8 @@ function clause execute (C_SRAI(shamt, rsd)) = {
 mapping clause assembly = C_SRAI(shamt, rsd)
   <-> "c.srai" ^ spc() ^ creg_name(rsd) ^ sep() ^ hex_bits_6(shamt)
 
+function clause compressed_measure(C_SRAI(_, _)) = 1
+
 // *****************************************************************
 union clause instruction = C_ANDI : (bits(6), cregidx)
 
@@ -262,6 +288,8 @@ function clause execute (C_ANDI(imm, rsd)) = {
 
 mapping clause assembly = C_ANDI(imm, rsd)
   <-> "c.andi" ^ spc() ^ creg_name(rsd) ^ sep() ^ hex_bits_signed_6(imm)
+
+function clause compressed_measure(C_ANDI(_, _)) = 1
 
 // *****************************************************************
 union clause instruction = C_SUB : (cregidx, cregidx)
@@ -279,6 +307,8 @@ function clause execute (C_SUB(rsd, rs2)) = {
 mapping clause assembly = C_SUB(rsd, rs2)
   <-> "c.sub" ^ spc() ^ creg_name(rsd) ^ sep() ^ creg_name(rs2)
 
+function clause compressed_measure(C_SUB(_, _)) = 1
+
 // *****************************************************************
 union clause instruction = C_XOR : (cregidx, cregidx)
 
@@ -294,6 +324,8 @@ function clause execute (C_XOR(rsd, rs2)) = {
 
 mapping clause assembly = C_XOR(rsd, rs2)
   <-> "c.xor" ^ spc() ^ creg_name(rsd) ^ sep() ^ creg_name(rs2)
+
+function clause compressed_measure(C_XOR(_, _)) = 1
 
 // *****************************************************************
 union clause instruction = C_OR : (cregidx, cregidx)
@@ -311,6 +343,8 @@ function clause execute (C_OR(rsd, rs2)) = {
 mapping clause assembly = C_OR(rsd, rs2)
   <-> "c.or" ^ spc() ^ creg_name(rsd) ^ sep() ^ creg_name(rs2)
 
+function clause compressed_measure(C_OR(_, _)) = 1
+
 // *****************************************************************
 union clause instruction = C_AND : (cregidx, cregidx)
 
@@ -326,6 +360,8 @@ function clause execute (C_AND(rsd, rs2)) = {
 
 mapping clause assembly = C_AND(rsd, rs2)
   <-> "c.and" ^ spc() ^ creg_name(rsd) ^ sep() ^ creg_name(rs2)
+
+function clause compressed_measure(C_AND(_, _)) = 1
 
 // *****************************************************************
 union clause instruction = C_SUBW : (cregidx, cregidx)
@@ -344,6 +380,8 @@ mapping clause assembly = C_SUBW(rsd, rs2)
   <-> "c.subw" ^ spc() ^ creg_name(rsd) ^ sep() ^ creg_name(rs2)
   when xlen == 64
 
+function clause compressed_measure(C_SUBW(_, _)) = 1
+
 // *****************************************************************
 union clause instruction = C_ADDW : (cregidx, cregidx)
 
@@ -361,6 +399,8 @@ mapping clause assembly = C_ADDW(rsd, rs2)
   <-> "c.addw" ^ spc() ^ creg_name(rsd) ^ sep() ^ creg_name(rs2)
   when xlen == 64
 
+function clause compressed_measure(C_ADDW(_, _)) = 1
+
 // *****************************************************************
 union clause instruction = C_J : (bits(11))
 
@@ -373,6 +413,8 @@ function clause execute (C_J(imm)) =
 
 mapping clause assembly = C_J(imm)
   <-> "c.j" ^ spc() ^ hex_bits_signed_12(imm @ 0b0)
+
+function clause compressed_measure(C_J(_)) = 1
 
 // *****************************************************************
 union clause instruction = C_BEQZ : (bits(8), cregidx)
@@ -387,6 +429,8 @@ function clause execute (C_BEQZ(imm, rs)) =
 mapping clause assembly = C_BEQZ(imm, rs)
   <-> "c.beqz" ^ spc() ^ creg_name(rs) ^ sep() ^ hex_bits_signed_9(imm @ 0b0)
 
+function clause compressed_measure(C_BEQZ(_, _)) = 1
+
 // *****************************************************************
 union clause instruction = C_BNEZ : (bits(8), cregidx)
 
@@ -399,6 +443,8 @@ function clause execute (C_BNEZ(imm, rs)) =
 
 mapping clause assembly = C_BNEZ(imm, rs)
   <-> "c.bnez" ^ spc() ^ creg_name(rs) ^ sep() ^ hex_bits_signed_9(imm @ 0b0)
+
+function clause compressed_measure(C_BNEZ(_, _)) = 1
 
 // *****************************************************************
 union clause instruction = C_SLLI : (bits(6), regidx)
@@ -413,6 +459,8 @@ function clause execute (C_SLLI(shamt, rsd)) =
 
 mapping clause assembly = C_SLLI(shamt, rsd)
   <-> "c.slli" ^ spc() ^ reg_name(rsd) ^ sep() ^ hex_bits_6(shamt)
+
+function clause compressed_measure(C_SLLI(_, _)) = 1
 
 // *****************************************************************
 union clause instruction = C_LWSP : (bits(6), regidx)
@@ -430,6 +478,8 @@ mapping clause assembly = C_LWSP(uimm, rd)
   <-> "c.lwsp" ^ spc() ^ reg_name(rd) ^ sep() ^ hex_bits_8(uimm @ 0b00) ^ "(" ^ sp_reg_name() ^ ")"
   when rd != zreg
 
+function clause compressed_measure(C_LWSP(_, _)) = 1
+
 // *****************************************************************
 union clause instruction = C_LDSP : (bits(6), regidx)
 
@@ -446,6 +496,8 @@ mapping clause assembly = C_LDSP(uimm, rd)
   <-> "c.ldsp" ^ spc() ^ reg_name(rd) ^ sep() ^ hex_bits_9(uimm @ 0b000) ^ "(" ^ sp_reg_name() ^ ")"
   when rd != zreg & xlen == 64
 
+function clause compressed_measure(C_LDSP(_, _)) = 1
+
 // *****************************************************************
 union clause instruction = C_SWSP : (bits(6), regidx)
 
@@ -460,6 +512,8 @@ function clause execute (C_SWSP(uimm, rs2)) = {
 
 mapping clause assembly = C_SWSP(uimm, rs2)
   <-> "c.swsp" ^ spc() ^ reg_name(rs2) ^ sep() ^ hex_bits_8(uimm @ 0b00) ^ "(" ^ sp_reg_name() ^ ")"
+
+function clause compressed_measure(C_SWSP(_, _)) = 1
 
 // *****************************************************************
 union clause instruction = C_SDSP : (bits(6), regidx)
@@ -477,6 +531,8 @@ mapping clause assembly = C_SDSP(uimm, rs2)
   <-> "c.sdsp" ^ spc() ^ reg_name(rs2) ^ sep() ^ hex_bits_9(uimm @ 0b000) ^ "(" ^ sp_reg_name() ^ ")"
   when xlen == 64
 
+function clause compressed_measure(C_SDSP(_, _)) = 1
+
 // *****************************************************************
 union clause instruction = C_JR : (regidx)
 
@@ -491,6 +547,8 @@ mapping clause assembly = C_JR(rs1)
   <-> "c.jr" ^ spc() ^ reg_name(rs1)
   when rs1 != zreg
 
+function clause compressed_measure(C_JR(_)) = 1
+
 // *****************************************************************
 union clause instruction = C_JALR : (regidx)
 
@@ -504,6 +562,8 @@ function clause execute (C_JALR(rs1)) =
 mapping clause assembly = C_JALR(rs1)
   <-> "c.jalr" ^ spc() ^ reg_name(rs1)
   when rs1 != zreg
+
+function clause compressed_measure(C_JALR(_)) = 1
 
 // *****************************************************************
 union clause instruction = C_MV : (regidx, regidx)
@@ -521,6 +581,8 @@ mapping clause assembly = C_MV(rd, rs2)
   <-> "c.mv" ^ spc() ^ reg_name(rd) ^ sep() ^ reg_name(rs2)
   when rs2 != zreg
 
+function clause compressed_measure(C_MV(_, _)) = 1
+
 // *****************************************************************
 union clause instruction = C_EBREAK : unit
 
@@ -532,6 +594,8 @@ function clause execute C_EBREAK() =
   execute(EBREAK())
 
 mapping clause assembly = C_EBREAK() <-> "c.ebreak"
+
+function clause compressed_measure(C_EBREAK(_)) = 1
 
 // *****************************************************************
 union clause instruction = C_ADD : (regidx, regidx)
@@ -548,3 +612,5 @@ function clause execute (C_ADD(rsd, rs2)) =
 mapping clause assembly = C_ADD(rsd, rs2)
   <-> "c.add" ^ spc() ^ reg_name(rsd) ^ sep() ^ reg_name(rs2)
   when rs2 != zreg
+
+function clause compressed_measure(C_ADD(_, _)) = 1

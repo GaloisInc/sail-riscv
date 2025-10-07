@@ -459,7 +459,7 @@ postlude {
 
 termination {
   after postlude
-  requires core, sys, extensions
+  requires core, sys, Zca, FD
 
   files
     if $TERMINATION_FILE then
