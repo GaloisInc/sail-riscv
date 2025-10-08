@@ -79,7 +79,7 @@ instantiation sail_mem_write with
 
 val write_ram : forall 'n, 0 < 'n <= max_mem_access. (write_kind, physaddr, int('n), bits(8 * 'n), mem_meta) -> bool
 
-function write_ram(wk, Physaddr(addr), width, data, meta) = {
+function write_ram(wk, Physaddr(addr), width, data, _meta) = {
   let request : Mem_write_request('n, 64, physaddrbits, unit, RISCV_strong_access) = struct {
     access_kind = match wk {
       Write_plain => AK_explicit(struct { variety = AV_plain, strength = AS_normal }),
@@ -104,7 +104,7 @@ function write_ram(wk, Physaddr(addr), width, data, meta) = {
   // metadata to ensure atomicity.
   match sail_mem_write(request) {
     Ok(_) => {
-      __WriteRAM_Meta(addr, width, meta);
+      __WriteRAM_Meta(addr, width, _meta);
       true
     },
     Err() => false,
@@ -119,7 +119,7 @@ instantiation sail_mem_read with
 
 val read_ram : forall 'n, 0 < 'n <= max_mem_access.  (read_kind, physaddr, int('n), bool) -> (bits(8 * 'n), mem_meta)
 function read_ram(rk, Physaddr(addr), width, read_meta) = {
-  let meta = if read_meta then __ReadRAM_Meta(addr, width) else default_meta;
+  let _meta = if read_meta then __ReadRAM_Meta(addr, width) else default_meta;
   let request : Mem_read_request('n, 64, physaddrbits, unit, RISCV_strong_access) = struct {
     access_kind = match rk {
       Read_plain => AK_explicit(struct { variety = AV_plain, strength = AS_normal }),
@@ -137,7 +137,7 @@ function read_ram(rk, Physaddr(addr), width, read_meta) = {
     tag = false,
   };
   match sail_mem_read(request) {
-    Ok((value, _)) => (value, meta),
+    Ok((value, _)) => (value, _meta),
     Err() => exit(),
   }
 }
