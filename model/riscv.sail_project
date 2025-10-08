@@ -459,7 +459,7 @@ postlude {
 
 termination {
   after postlude
-  requires core, sys, Zca, FD
+  requires core, sys, Zca, FD, Zicfilp_regs
 
   files
     if $TERMINATION_FILE then
