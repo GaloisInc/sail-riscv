@@ -52,6 +52,7 @@ open vfunary0
 open vfnunary0
 open vextfunct6
 open vector_support
+open seed_opst
 open rounding_mode
 open rmvvfunct6
 open rivvfunct6
@@ -121,6 +122,7 @@ open f_bin_f_op_D
 open extension
 open exception
 open ctl_result
+open csrop
 open cregidx
 open checked_cbop
 open cfregidx
@@ -603,6 +605,8 @@ def currentlyEnabled (merge_var : extension) : SailM Bool := do
   | Ext_Svnapot => (pure false)
   | Ext_Svpbmt => (pure false)
   | Ext_Svrsw60t59b => (pure ((hartSupports Ext_Svrsw60t59b) && (← (currentlyEnabled Ext_Sv39))))
+  | Ext_Zkr => (pure (hartSupports Ext_Zkr))
+  | Ext_Zicsr => (pure (hartSupports Ext_Zicsr))
   | Ext_Zicbom => (pure (hartSupports Ext_Zicbom))
   | Ext_Zicboz => (pure (hartSupports Ext_Zicboz))
   | _ =>
@@ -1398,8 +1402,13 @@ def csr_name_map_forwards (arg_ : (BitVec 12)) : SailM String := do
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   then
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     (pure "satp")
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   else
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    (hex_bits_12_forwards
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      b__0)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    (do
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      bif (b__0 == (0x015 : (BitVec 12)))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      then
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        (pure "seed")
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      else
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        (hex_bits_12_forwards
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          b__0))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
 
 def csr_name (csr : (BitVec 12)) : SailM String := do
   (csr_name_map_forwards csr)
@@ -1497,6 +1506,12 @@ def cbop_mnemonic_forwards (arg_ : cbop_zicbom) : String :=
   | CBO_CLEAN => "cbo.clean"
   | CBO_FLUSH => "cbo.flush"
   | CBO_INVAL => "cbo.inval"
+
+def csr_mnemonic_forwards (arg_ : csrop) : String :=
+  match arg_ with
+  | CSRRW => "csrrw"
+  | CSRRS => "csrrs"
+  | CSRRC => "csrrc"
 
 def encdec_reg_forwards (arg_ : regidx) : (BitVec 5) :=
   match arg_ with
@@ -1733,6 +1748,22 @@ def assembly_forwards (arg_ : instruction) : SailM String := do
   | .LPAD lpl =>
     (pure (String.append "lpad"
         (String.append (spc_forwards ()) (String.append (← (hex_bits_20_forwards lpl)) ""))))
+  | .CSRImm (csr, imm, rd, op) =>
+    (pure (String.append (csr_mnemonic_forwards op)
+        (String.append "i"
+          (String.append (spc_forwards ())
+            (String.append (← (reg_name_forwards rd))
+              (String.append (sep_forwards ())
+                (String.append (← (csr_name_map_forwards csr))
+                  (String.append (sep_forwards ())
+                    (String.append (← (hex_bits_5_forwards imm)) "")))))))))
+  | .CSRReg (csr, rs1, rd, op) =>
+    (pure (String.append (csr_mnemonic_forwards op)
+        (String.append (spc_forwards ())
+          (String.append (← (reg_name_forwards rd))
+            (String.append (sep_forwards ())
+              (String.append (← (csr_name_map_forwards csr))
+                (String.append (sep_forwards ()) (String.append (← (reg_name_forwards rs1)) ""))))))))
   | .ZICBOM (cbop, rs1) =>
     (pure (String.append (cbop_mnemonic_forwards cbop)
         (String.append (spc_forwards ())

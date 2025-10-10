@@ -48,6 +48,7 @@ open vfunary0
 open vfnunary0
 open vextfunct6
 open vector_support
+open seed_opst
 open rounding_mode
 open rmvvfunct6
 open rivvfunct6
@@ -117,6 +118,7 @@ open f_bin_f_op_D
 open extension
 open exception
 open ctl_result
+open csrop
 open cregidx
 open checked_cbop
 open cfregidx
@@ -294,7 +296,7 @@ def pmpWriteCfgReg (n : Nat) (v : (BitVec 64)) : SailM Unit := do
           (Sail.BitVec.extractLsb v ((8 *i i) +i 7) (8 *i i))))
   (pure loop_vars)
 
-/-- Type quantifiers: k_ex85337# : Bool, k_ex85336# : Bool -/
+/-- Type quantifiers: k_ex89428# : Bool, k_ex89427# : Bool -/
 def pmpWriteAddr (locked : Bool) (tor_locked : Bool) (reg : (BitVec 64)) (v : (BitVec 64)) : (BitVec 64) :=
   bif (locked || tor_locked)
   then reg

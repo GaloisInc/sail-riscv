@@ -229,12 +229,17 @@ structure PMA_Region where
 inductive cbop_zicbom where | CBO_CLEAN | CBO_FLUSH | CBO_INVAL
   deriving BEq, Inhabited, Repr
 
+inductive csrop where | CSRRW | CSRRS | CSRRC
+  deriving BEq, Inhabited, Repr
+
 abbrev landing_pad_label := (BitVec 20)
 
 inductive instruction where
   | ILLEGAL (_ : word)
   | C_ILLEGAL (_ : half)
   | LPAD (_ : landing_pad_label)
+  | CSRReg (_ : (csreg × regidx × regidx × csrop))
+  | CSRImm (_ : (csreg × (BitVec 5) × regidx × csrop))
   | ZICBOM (_ : (cbop_zicbom × regidx))
   | ZICBOZ (_ : regidx)
   deriving Inhabited, Repr
@@ -744,6 +749,9 @@ abbrev PTW_Result k_v := (Result ((PTW_Output k_v) × ext_ptw) (PTW_Error × ext
 abbrev TR_Result k_paddr k_failure := (Result (k_paddr × ext_ptw) (k_failure × ext_ptw))
 
 
+
+inductive seed_opst where | BIST | ES16 | WAIT | DEAD
+  deriving BEq, Inhabited, Repr
 
 inductive cbie where | CBIE_ILLEGAL | CBIE_EXEC_FLUSH | CBIE_EXEC_INVAL
   deriving BEq, Inhabited, Repr

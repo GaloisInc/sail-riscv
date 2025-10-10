@@ -1,4 +1,4 @@
-import LeanRV64DExecutable.InstsEnd
+import LeanRV64DExecutable.Prelude
 
 set_option maxHeartbeats 1_000_000_000
 set_option maxRecDepth 1_000_000
@@ -148,9 +148,72 @@ open AtomicSupport
 open Architecture
 open AccessType
 
-def ext_decode_compressed (bv : (BitVec 16)) : instruction :=
-  (encdec_compressed_backwards bv)
+def undefined_seed_opst (_ : Unit) : SailM seed_opst := do
+  (internal_pick [BIST, ES16, WAIT, DEAD])
 
-def ext_decode (bv : (BitVec 32)) : SailM instruction := do
-  (encdec_backwards bv)
+/-- Type quantifiers: arg_ : Nat, 0 ≤ arg_ ∧ arg_ ≤ 3 -/
+def seed_opst_of_num (arg_ : Nat) : seed_opst :=
+  match arg_ with
+  | 0 => BIST
+  | 1 => ES16
+  | 2 => WAIT
+  | _ => DEAD
+
+def num_of_seed_opst (arg_ : seed_opst) : Int :=
+  match arg_ with
+  | BIST => 0
+  | ES16 => 1
+  | WAIT => 2
+  | DEAD => 3
+
+def opst_code_forwards (arg_ : seed_opst) : (BitVec 2) :=
+  match arg_ with
+  | BIST => (0b00 : (BitVec 2))
+  | WAIT => (0b01 : (BitVec 2))
+  | ES16 => (0b10 : (BitVec 2))
+  | DEAD => (0b11 : (BitVec 2))
+
+def opst_code_backwards (arg_ : (BitVec 2)) : seed_opst :=
+  let b__0 := arg_
+  bif (b__0 == (0b00 : (BitVec 2)))
+  then BIST
+  else
+    (bif (b__0 == (0b01 : (BitVec 2)))
+    then WAIT
+    else
+      (bif (b__0 == (0b10 : (BitVec 2)))
+      then ES16
+      else DEAD))
+
+def opst_code_forwards_matches (arg_ : seed_opst) : Bool :=
+  match arg_ with
+  | BIST => true
+  | WAIT => true
+  | ES16 => true
+  | DEAD => true
+
+def opst_code_backwards_matches (arg_ : (BitVec 2)) : Bool :=
+  let b__0 := arg_
+  bif (b__0 == (0b00 : (BitVec 2)))
+  then true
+  else
+    (bif (b__0 == (0b01 : (BitVec 2)))
+    then true
+    else
+      (bif (b__0 == (0b10 : (BitVec 2)))
+      then true
+      else
+        (bif (b__0 == (0b11 : (BitVec 2)))
+        then true
+        else false)))
+
+def read_seed_csr (_ : Unit) : SailM (BitVec 64) := do
+  let reserved_bits : (BitVec 6) := (0b000000 : (BitVec 6))
+  let custom_bits : (BitVec 8) := (0x00 : (BitVec 8))
+  let seed ← (( do (get_16_random_bits ()) ) : SailM (BitVec 16) )
+  (pure (zero_extend (m := 64)
+      ((opst_code_forwards ES16) ++ (reserved_bits ++ (custom_bits ++ seed)))))
+
+def write_seed_csr (_ : Unit) : (BitVec 64) :=
+  (zeros (n := 64))
 

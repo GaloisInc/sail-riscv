@@ -57,6 +57,7 @@ open vfunary0
 open vfnunary0
 open vextfunct6
 open vector_support
+open seed_opst
 open rounding_mode
 open rmvvfunct6
 open rivvfunct6
@@ -126,6 +127,7 @@ open f_bin_f_op_D
 open extension
 open exception
 open ctl_result
+open csrop
 open cregidx
 open checked_cbop
 open cfregidx
@@ -172,11 +174,11 @@ def csrPriv (csr : (BitVec 12)) : (BitVec 2) :=
 def check_CSR_priv (csr : (BitVec 12)) (p : Privilege) : Bool :=
   (zopz0zKzJ_u (privLevel_to_bits p) (csrPriv csr))
 
-/-- Type quantifiers: k_ex86471# : Bool -/
+/-- Type quantifiers: k_ex91191# : Bool -/
 def check_CSR_access (csr : (BitVec 12)) (isWrite : Bool) : Bool :=
   (not (isWrite && ((csrAccess csr) == (0b11 : (BitVec 2)))))
 
-/-- Type quantifiers: k_ex86481# : Bool -/
+/-- Type quantifiers: k_ex91201# : Bool -/
 def is_CSR_accessible (b__0 : (BitVec 12)) (g__2 : Privilege) (g__3 : Bool) : SailM Bool := do
   bif (b__0 == (0x301 : (BitVec 12)))
   then (pure true)
@@ -508,9 +510,34 @@ def is_CSR_accessible (b__0 : (BitVec 12)) (g__2 : Privilege) (g__3 : Bool) : Sa
                                                                                                                                                                                                                                   ((g__2 == Supervisor) && ((_get_Mstatus_TVM
                                                                                                                                                                                                                                         (← readReg mstatus)) == (0b1 : (BitVec 1)))))))
                                                                                                                                                                                                                           else
-                                                                                                                                                                                                                            (pure false)))))))))))))))))))))))))))))))))))))))))))))))))))))))
+                                                                                                                                                                                                                            (do
+                                                                                                                                                                                                                              bif (b__0 == (0x015 : (BitVec 12)))
+                                                                                                                                                                                                                              then
+                                                                                                                                                                                                                                (pure ((← (currentlyEnabled
+                                                                                                                                                                                                                                        Ext_Zkr)) && (g__3 && (← do
+                                                                                                                                                                                                                                        match g__2 with
+                                                                                                                                                                                                                                        | Machine =>
+                                                                                                                                                                                                                                          (pure true)
+                                                                                                                                                                                                                                        | Supervisor =>
+                                                                                                                                                                                                                                          (pure ((_get_Seccfg_SSEED
+                                                                                                                                                                                                                                                (← readReg mseccfg)) == (0b1 : (BitVec 1))))
+                                                                                                                                                                                                                                        | User =>
+                                                                                                                                                                                                                                          (pure ((_get_Seccfg_USEED
+                                                                                                                                                                                                                                                (← readReg mseccfg)) == (0b1 : (BitVec 1))))
+                                                                                                                                                                                                                                        | VirtualSupervisor =>
+                                                                                                                                                                                                                                          (internal_error
+                                                                                                                                                                                                                                            "./extensions/K/zkr_control.sail"
+                                                                                                                                                                                                                                            52
+                                                                                                                                                                                                                                            "Hypervisor extension not supported")
+                                                                                                                                                                                                                                        | VirtualUser =>
+                                                                                                                                                                                                                                          (internal_error
+                                                                                                                                                                                                                                            "./extensions/K/zkr_control.sail"
+                                                                                                                                                                                                                                            53
+                                                                                                                                                                                                                                            "Hypervisor extension not supported")))))
+                                                                                                                                                                                                                              else
+                                                                                                                                                                                                                                (pure false))))))))))))))))))))))))))))))))))))))))))))))))))))))))
 
-/-- Type quantifiers: k_ex86692# : Bool -/
+/-- Type quantifiers: k_ex91428# : Bool -/
 def check_CSR (csr : (BitVec 12)) (p : Privilege) (isWrite : Bool) : SailM Bool := do
   (pure ((check_CSR_priv csr p) && ((check_CSR_access csr isWrite) && (← (is_CSR_accessible csr p
             isWrite)))))
@@ -598,7 +625,7 @@ def track_trap (p : Privilege) : SailM Unit := do
   | VirtualSupervisor =>
     (internal_error "./sys/sys_control.sail" 150 "Hypervisor extension not supported")
 
-/-- Type quantifiers: k_ex86758# : Bool -/
+/-- Type quantifiers: k_ex91494# : Bool -/
 def trap_handler (del_priv : Privilege) (intr : Bool) (c : (BitVec 6)) (pc : (BitVec 64)) (info : (Option (BitVec 64))) (ext : (Option Unit)) : SailM (BitVec 64) := do
   let _ : Unit := (trap_callback ())
   bif (get_config_print_platform ())

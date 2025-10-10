@@ -50,6 +50,7 @@ open vfunary0
 open vfnunary0
 open vextfunct6
 open vector_support
+open seed_opst
 open rounding_mode
 open rmvvfunct6
 open rivvfunct6
@@ -119,6 +120,7 @@ open f_bin_f_op_D
 open extension
 open exception
 open ctl_result
+open csrop
 open cregidx
 open checked_cbop
 open cfregidx
@@ -210,7 +212,7 @@ def pte_is_invalid (pte_flags : (BitVec 8)) (pte_ext : (BitVec 10)) : SailM Bool
                     pte_ext) != (zeros (n := 2))) && (not (← (currentlyEnabled Ext_Svrsw60t59b)))) || ((_get_PTE_Ext_reserved
                   pte_ext) != (zeros (n := 5)))))))))
 
-/-- Type quantifiers: k_ex88146# : Bool, k_ex88145# : Bool -/
+/-- Type quantifiers: k_ex92882# : Bool, k_ex92881# : Bool -/
 def check_PTE_permission (ac : (AccessType Unit)) (priv : Privilege) (mxr : Bool) (do_sum : Bool) (pte_flags : (BitVec 8)) (ext : (BitVec 10)) (ext_ptw : Unit) : SailM PTE_Check := do
   let pte_U := (bits_to_bool (_get_PTE_Flags_U pte_flags))
   let pte_R := (bits_to_bool (_get_PTE_Flags_R pte_flags))

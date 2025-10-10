@@ -1,4 +1,10 @@
-import LeanRV64DExecutable.InstsEnd
+import LeanRV64DExecutable.Sail.Sail
+import LeanRV64DExecutable.Sail.BitVec
+import LeanRV64DExecutable.Sail.IntRange
+import LeanRV64DExecutable.Defs
+import LeanRV64DExecutable.Specialization
+import LeanRV64DExecutable.FakeReal
+import LeanRV64DExecutable.RiscvExtrasExecutable
 
 set_option maxHeartbeats 1_000_000_000
 set_option maxRecDepth 1_000_000
@@ -148,9 +154,19 @@ open AtomicSupport
 open Architecture
 open AccessType
 
-def ext_decode_compressed (bv : (BitVec 16)) : instruction :=
-  (encdec_compressed_backwards bv)
+def undefined_csrop (_ : Unit) : SailM csrop := do
+  (internal_pick [CSRRW, CSRRS, CSRRC])
 
-def ext_decode (bv : (BitVec 32)) : SailM instruction := do
-  (encdec_backwards bv)
+/-- Type quantifiers: arg_ : Nat, 0 ≤ arg_ ∧ arg_ ≤ 2 -/
+def csrop_of_num (arg_ : Nat) : csrop :=
+  match arg_ with
+  | 0 => CSRRW
+  | 1 => CSRRS
+  | _ => CSRRC
+
+def num_of_csrop (arg_ : csrop) : Int :=
+  match arg_ with
+  | CSRRW => 0
+  | CSRRS => 1
+  | CSRRC => 2
 
