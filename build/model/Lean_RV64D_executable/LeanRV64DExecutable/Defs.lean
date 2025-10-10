@@ -19,12 +19,12 @@ inductive option (k_a : Type) where
 abbrev bits k_n := (BitVec k_n)
 
 inductive regidx where
-  | Regidx (_ : (BitVec (if ( false  : Bool) then 4 else 5)))
+  | Regidx (_ : (BitVec (bif false then 4 else 5)))
   deriving Inhabited, BEq, Repr
 
 abbrev base_E_enabled : Bool := false
 
-abbrev regidx_bit_width : Int := (if ( base_E_enabled  : Bool) then 4 else 5)
+abbrev regidx_bit_width : Int := (bif base_E_enabled then 4 else 5)
 
 inductive vregidx where
   | Vregidx (_ : (BitVec 5))
@@ -49,23 +49,23 @@ inductive exception where
 
 abbrev xlen : Int := 64
 
-abbrev log2_xlen : Int := (if ( xlen = 32  : Bool) then 5 else 6)
+abbrev log2_xlen : Int := (bif xlen = 32 then 5 else 6)
 
-abbrev xlen_bytes : Int := (if ( xlen = 32  : Bool) then 4 else 8)
+abbrev xlen_bytes : Int := (bif xlen = 32 then 4 else 8)
 
-abbrev physaddrbits_len : Int := (if ( xlen = 32  : Bool) then 34 else 64)
+abbrev physaddrbits_len : Int := (bif xlen = 32 then 34 else 64)
 
-abbrev asidlen : Int := (if ( xlen = 32  : Bool) then 9 else 16)
+abbrev asidlen : Int := (bif xlen = 32 then 9 else 16)
 
-abbrev asidbits := (BitVec (if ( 64 = 32  : Bool) then 9 else 16))
+abbrev asidbits := (BitVec (bif 64 = 32 then 9 else 16))
 
 abbrev ext_d_supported : Bool := true
 
-abbrev flen_bytes : Int := (if ( ext_d_supported  : Bool) then 8 else 4)
+abbrev flen_bytes : Int := (bif ext_d_supported then 8 else 4)
 
-abbrev flen : Int := (if ( true  : Bool) then 8 else 4 * 8)
+abbrev flen : Int := (bif true then 8 else 4 * 8)
 
-abbrev flenbits := (BitVec (if ( true  : Bool) then 8 else 4 * 8))
+abbrev flenbits := (BitVec (bif true then 8 else 4 * 8))
 
 inductive vector_support where | Disabled | Integer | Float_single | Float_double | Full
   deriving BEq, Inhabited, Repr
@@ -78,7 +78,7 @@ abbrev vlen : Int := (2 ^ 8)
 
 abbrev elen : Int := (2 ^ 6)
 
-abbrev physaddrbits := (BitVec (if ( 64 = 32  : Bool) then 34 else 64))
+abbrev physaddrbits := (BitVec (bif 64 = 32 then 34 else 64))
 
 inductive physaddr where
   | Physaddr (_ : physaddrbits)
@@ -232,6 +232,7 @@ inductive instruction where
   | ILLEGAL (_ : word)
   | C_ILLEGAL (_ : half)
   | LPAD (_ : landing_pad_label)
+  | ZICBOZ (_ : regidx)
   deriving Inhabited, Repr
 
 inductive PTW_Error where
@@ -283,9 +284,9 @@ abbrev word_width_wide := Int
 
 abbrev level_range (k_v : Nat) := Nat
 
-abbrev pte_bits k_v := (BitVec (if ( k_v = 32  : Bool) then 32 else 64))
+abbrev pte_bits k_v := (BitVec (bif k_v = 32 then 32 else 64))
 
-abbrev ppn_bits k_v := (BitVec (if ( k_v = 32  : Bool) then 22 else 44))
+abbrev ppn_bits k_v := (BitVec (bif k_v = 32 then 22 else 44))
 
 abbrev vpn_bits k_v := (BitVec (k_v - 12))
 
@@ -942,9 +943,9 @@ abbrev RegisterType : Register → Type
   | .htif_tohost => (BitVec 64)
   | .stimecmp => (BitVec 64)
   | .mtimecmp => (BitVec 64)
-  | .htif_tohost_base => (Option (BitVec (if ( 64 = 32  : Bool) then 34 else 64)))
-  | .plat_clint_size => (BitVec (if ( 64 = 32  : Bool) then 34 else 64))
-  | .plat_clint_base => (BitVec (if ( 64 = 32  : Bool) then 34 else 64))
+  | .htif_tohost_base => (Option (BitVec (bif 64 = 32 then 34 else 64)))
+  | .plat_clint_size => (BitVec (bif 64 = 32 then 34 else 64))
+  | .plat_clint_base => (BitVec (bif 64 = 32 then 34 else 64))
   | .pc_reset_address => (BitVec 64)
   | .elp => (BitVec 1)
   | .minstretcfg => (BitVec 64)
@@ -986,38 +987,38 @@ abbrev RegisterType : Register → Type
   | .vr1 => (BitVec (2 ^ 8))
   | .vr0 => (BitVec (2 ^ 8))
   | .fcsr => (BitVec 32)
-  | .f31 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
-  | .f30 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
-  | .f29 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
-  | .f28 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
-  | .f27 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
-  | .f26 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
-  | .f25 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
-  | .f24 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
-  | .f23 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
-  | .f22 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
-  | .f21 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
-  | .f20 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
-  | .f19 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
-  | .f18 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
-  | .f17 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
-  | .f16 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
-  | .f15 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
-  | .f14 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
-  | .f13 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
-  | .f12 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
-  | .f11 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
-  | .f10 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
-  | .f9 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
-  | .f8 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
-  | .f7 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
-  | .f6 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
-  | .f5 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
-  | .f4 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
-  | .f3 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
-  | .f2 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
-  | .f1 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
-  | .f0 => (BitVec (if ( true  : Bool) then 8 else 4 * 8))
+  | .f31 => (BitVec (bif true then 8 else 4 * 8))
+  | .f30 => (BitVec (bif true then 8 else 4 * 8))
+  | .f29 => (BitVec (bif true then 8 else 4 * 8))
+  | .f28 => (BitVec (bif true then 8 else 4 * 8))
+  | .f27 => (BitVec (bif true then 8 else 4 * 8))
+  | .f26 => (BitVec (bif true then 8 else 4 * 8))
+  | .f25 => (BitVec (bif true then 8 else 4 * 8))
+  | .f24 => (BitVec (bif true then 8 else 4 * 8))
+  | .f23 => (BitVec (bif true then 8 else 4 * 8))
+  | .f22 => (BitVec (bif true then 8 else 4 * 8))
+  | .f21 => (BitVec (bif true then 8 else 4 * 8))
+  | .f20 => (BitVec (bif true then 8 else 4 * 8))
+  | .f19 => (BitVec (bif true then 8 else 4 * 8))
+  | .f18 => (BitVec (bif true then 8 else 4 * 8))
+  | .f17 => (BitVec (bif true then 8 else 4 * 8))
+  | .f16 => (BitVec (bif true then 8 else 4 * 8))
+  | .f15 => (BitVec (bif true then 8 else 4 * 8))
+  | .f14 => (BitVec (bif true then 8 else 4 * 8))
+  | .f13 => (BitVec (bif true then 8 else 4 * 8))
+  | .f12 => (BitVec (bif true then 8 else 4 * 8))
+  | .f11 => (BitVec (bif true then 8 else 4 * 8))
+  | .f10 => (BitVec (bif true then 8 else 4 * 8))
+  | .f9 => (BitVec (bif true then 8 else 4 * 8))
+  | .f8 => (BitVec (bif true then 8 else 4 * 8))
+  | .f7 => (BitVec (bif true then 8 else 4 * 8))
+  | .f6 => (BitVec (bif true then 8 else 4 * 8))
+  | .f5 => (BitVec (bif true then 8 else 4 * 8))
+  | .f4 => (BitVec (bif true then 8 else 4 * 8))
+  | .f3 => (BitVec (bif true then 8 else 4 * 8))
+  | .f2 => (BitVec (bif true then 8 else 4 * 8))
+  | .f1 => (BitVec (bif true then 8 else 4 * 8))
+  | .f0 => (BitVec (bif true then 8 else 4 * 8))
   | .pmpaddr_n => (Vector (BitVec 64) 64)
   | .pmpcfg_n => (Vector (BitVec 8) 64)
   | .tselect => (BitVec 64)
@@ -1107,6 +1108,8 @@ instance : Inhabited (RegisterRef RegisterType (BitVec 128)) where
   default := .Reg rvfi_pc_data
 instance : Inhabited (RegisterRef RegisterType (BitVec 192)) where
   default := .Reg rvfi_inst_data
+instance : Inhabited (RegisterRef RegisterType (BitVec (2 ^ 8))) where
+  default := .Reg vr0
 instance : Inhabited (RegisterRef RegisterType (BitVec 3)) where
   default := .Reg vcsr
 instance : Inhabited (RegisterRef RegisterType (BitVec 32)) where
@@ -1119,13 +1122,11 @@ instance : Inhabited (RegisterRef RegisterType (BitVec 64)) where
   default := .Reg rvfi_instruction
 instance : Inhabited (RegisterRef RegisterType (BitVec 704)) where
   default := .Reg rvfi_mem_data
-instance : Inhabited (RegisterRef RegisterType (BitVec (2 ^ 8))) where
-  default := .Reg vr0
 instance : Inhabited (RegisterRef RegisterType Bool) where
   default := .Reg rvfi_int_data_present
 instance : Inhabited (RegisterRef RegisterType (List PMA_Region)) where
   default := .Reg pma_regions
-instance : Inhabited (RegisterRef RegisterType (Option (BitVec (if ( 64 = 32  : Bool) then 34 else 64)))) where
+instance : Inhabited (RegisterRef RegisterType (Option (BitVec (bif 64 = 32 then 34 else 64)))) where
   default := .Reg htif_tohost_base
 instance : Inhabited (RegisterRef RegisterType (Vector (BitVec 64) 64)) where
   default := .Reg pmpaddr_n
@@ -1137,8 +1138,7 @@ abbrev SailM := PreSailM RegisterType trivialChoiceSource exception
 
 instance : Arch where
   va_size := 64
-  pa := (BitVec (if ( 64 = 32  : Bool) then 34 else 64))
-  pa_OfNat := BitVec.instOfNat
+  pa := (BitVec (bif 64 = 32 then 34 else 64))
   abort := Unit
   translation := Unit
   trans_start := Unit

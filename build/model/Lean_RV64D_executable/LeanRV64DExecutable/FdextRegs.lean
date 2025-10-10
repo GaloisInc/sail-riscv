@@ -176,11 +176,11 @@ def nan_box {n : _} (x : (BitVec k_n)) : (BitVec n) :=
 
 /-- Type quantifiers: k_n : Nat, k_n ≥ 0, m : Nat, m ≥ 0, m ∈ {16, 32, 64, 128} ∧ k_n ≥ m -/
 def nan_unbox {m : _} (x : (BitVec k_n)) : (BitVec m) :=
-  if (((Sail.BitVec.length x) == m) : Bool)
+  bif ((Sail.BitVec.length x) == m)
   then x
   else
-    (if (((Sail.BitVec.extractLsb x ((Sail.BitVec.length x) -i 1) m) == (ones
-           (n := ((((Sail.BitVec.length x) -i 1) -i m) +i 1)))) : Bool)
+    (bif ((Sail.BitVec.extractLsb x ((Sail.BitVec.length x) -i 1) m) == (ones
+           (n := ((((Sail.BitVec.length x) -i 1) -i m) +i 1))))
     then (Sail.BitVec.extractLsb x (m -i 1) 0)
     else (canonical_NaN (n := m)))
 
@@ -228,25 +228,25 @@ def encdec_freg_backwards_matches (arg_ : (BitVec 5)) : Bool :=
   match arg_ with
   | r => true
 
-def freg_write_callback (x_0 : fregidx) (x_1 : (BitVec (if ( true  : Bool) then 8 else 4 * 8))) : Unit :=
+def freg_write_callback (x_0 : fregidx) (x_1 : (BitVec (bif true then 8 else 4 * 8))) : Unit :=
   ()
 
 def dirty_fd_context (_ : Unit) : SailM Unit := do
-  assert (hartSupports Ext_F) "extensions/FD/fdext_regs.sail:110.28-110.29"
+  assert (hartSupports Ext_F) "./extensions/FD/fdext_regs.sail:110.28-110.29"
   writeReg mstatus (Sail.BitVec.updateSubrange (← readReg mstatus) 14 13 (extStatus_to_bits Dirty))
   writeReg mstatus (Sail.BitVec.updateSubrange (← readReg mstatus) (64 -i 1) (64 -i 1)
     (0b1 : (BitVec 1)))
   (long_csr_write_callback "mstatus" "mstatush" (← readReg mstatus))
 
 def dirty_fd_context_if_present (_ : Unit) : SailM Unit := do
-  assert (neq_bool (hartSupports Ext_F) (hartSupports Ext_Zfinx)) "extensions/FD/fdext_regs.sail:117.55-117.56"
-  if ((hartSupports Ext_F) : Bool)
+  assert (neq_bool (hartSupports Ext_F) (hartSupports Ext_Zfinx)) "./extensions/FD/fdext_regs.sail:117.55-117.56"
+  bif (hartSupports Ext_F)
   then (dirty_fd_context ())
   else (pure ())
 
-def rF (app_0 : fregno) : SailM (BitVec (if ( true  : Bool) then 8 else 4 * 8)) := do
+def rF (app_0 : fregno) : SailM (BitVec (bif true then 8 else 4 * 8)) := do
   let .Fregno r := app_0
-  assert (hartSupports Ext_F) "extensions/FD/fdext_regs.sail:122.28-122.29"
+  assert (hartSupports Ext_F) "./extensions/FD/fdext_regs.sail:122.28-122.29"
   let v ← (( do
     match r with
     | 0 => readReg f0
@@ -287,9 +287,9 @@ def rF (app_0 : fregno) : SailM (BitVec (if ( true  : Bool) then 8 else 4 * 8)) 
         throw Error.Exit) ) : SailM fregtype )
   (pure (fregval_from_freg v))
 
-def wF (typ_0 : fregno) (in_v : (BitVec (if ( true  : Bool) then 8 else 4 * 8))) : SailM Unit := do
+def wF (typ_0 : fregno) (in_v : (BitVec (bif true then 8 else 4 * 8))) : SailM Unit := do
   let .Fregno r : fregno := typ_0
-  assert (hartSupports Ext_F) "extensions/FD/fdext_regs.sail:163.28-163.29"
+  assert (hartSupports Ext_F) "./extensions/FD/fdext_regs.sail:163.28-163.29"
   let v := (fregval_into_freg in_v)
   match r with
   | 0 => writeReg f0 v
@@ -327,11 +327,11 @@ def wF (typ_0 : fregno) (in_v : (BitVec (if ( true  : Bool) then 8 else 4 * 8)))
   let _ : Unit := (freg_write_callback (Fregidx (to_bits (l := 5) r)) in_v)
   (dirty_fd_context ())
 
-def rF_bits (app_0 : fregidx) : SailM (BitVec (if ( true  : Bool) then 8 else 4 * 8)) := do
+def rF_bits (app_0 : fregidx) : SailM (BitVec (bif true then 8 else 4 * 8)) := do
   let .Fregidx i := app_0
   (rF (Fregno (BitVec.toNat i)))
 
-def wF_bits (typ_0 : fregidx) (data : (BitVec (if ( true  : Bool) then 8 else 4 * 8))) : SailM Unit := do
+def wF_bits (typ_0 : fregidx) (data : (BitVec (bif true then 8 else 4 * 8))) : SailM Unit := do
   let .Fregidx i : fregidx := typ_0
   (wF (Fregno (BitVec.toNat i)) data)
 
@@ -342,170 +342,170 @@ def wF_BF16 (i : fregidx) (data : (BitVec 16)) : SailM Unit := do
   (wF_bits i (nan_box (n := (8 *i 8)) data))
 
 def rF_H (i : fregidx) : SailM (BitVec 16) := do
-  assert (flen ≥b 16) "extensions/FD/fdext_regs.sail:224.19-224.20"
-  assert ((hartSupports Ext_F) && (not (hartSupports Ext_Zfinx))) "extensions/FD/fdext_regs.sail:225.59-225.60"
+  assert (flen ≥b 16) "./extensions/FD/fdext_regs.sail:224.19-224.20"
+  assert ((hartSupports Ext_F) && (not (hartSupports Ext_Zfinx))) "./extensions/FD/fdext_regs.sail:225.59-225.60"
   (pure (nan_unbox (m := 16) (← (rF_bits i))))
 
 def wF_H (i : fregidx) (data : (BitVec 16)) : SailM Unit := do
-  assert (flen ≥b 16) "extensions/FD/fdext_regs.sail:231.19-231.20"
-  assert ((hartSupports Ext_F) && (not (hartSupports Ext_Zfinx))) "extensions/FD/fdext_regs.sail:232.59-232.60"
+  assert (flen ≥b 16) "./extensions/FD/fdext_regs.sail:231.19-231.20"
+  assert ((hartSupports Ext_F) && (not (hartSupports Ext_Zfinx))) "./extensions/FD/fdext_regs.sail:232.59-232.60"
   (wF_bits i (nan_box (n := (8 *i 8)) data))
 
 def rF_S (i : fregidx) : SailM (BitVec 32) := do
-  assert (flen ≥b 32) "extensions/FD/fdext_regs.sail:238.19-238.20"
-  assert ((hartSupports Ext_F) && (not (hartSupports Ext_Zfinx))) "extensions/FD/fdext_regs.sail:239.59-239.60"
+  assert (flen ≥b 32) "./extensions/FD/fdext_regs.sail:238.19-238.20"
+  assert ((hartSupports Ext_F) && (not (hartSupports Ext_Zfinx))) "./extensions/FD/fdext_regs.sail:239.59-239.60"
   (pure (nan_unbox (m := 32) (← (rF_bits i))))
 
 def wF_S (i : fregidx) (data : (BitVec 32)) : SailM Unit := do
-  assert (flen ≥b 32) "extensions/FD/fdext_regs.sail:245.19-245.20"
-  assert ((hartSupports Ext_F) && (not (hartSupports Ext_Zfinx))) "extensions/FD/fdext_regs.sail:246.59-246.60"
+  assert (flen ≥b 32) "./extensions/FD/fdext_regs.sail:245.19-245.20"
+  assert ((hartSupports Ext_F) && (not (hartSupports Ext_Zfinx))) "./extensions/FD/fdext_regs.sail:246.59-246.60"
   (wF_bits i (nan_box (n := (8 *i 8)) data))
 
 def rF_D (i : fregidx) : SailM (BitVec 64) := do
-  assert (flen ≥b 64) "extensions/FD/fdext_regs.sail:252.19-252.20"
-  assert ((hartSupports Ext_F) && (not (hartSupports Ext_Zfinx))) "extensions/FD/fdext_regs.sail:253.59-253.60"
+  assert (flen ≥b 64) "./extensions/FD/fdext_regs.sail:252.19-252.20"
+  assert ((hartSupports Ext_F) && (not (hartSupports Ext_Zfinx))) "./extensions/FD/fdext_regs.sail:253.59-253.60"
   (rF_bits i)
 
 def wF_D (i : fregidx) (data : (BitVec 64)) : SailM Unit := do
-  assert (flen ≥b 64) "extensions/FD/fdext_regs.sail:259.19-259.20"
-  assert ((hartSupports Ext_F) && (not (hartSupports Ext_Zfinx))) "extensions/FD/fdext_regs.sail:260.59-260.60"
+  assert (flen ≥b 64) "./extensions/FD/fdext_regs.sail:259.19-259.20"
+  assert ((hartSupports Ext_F) && (not (hartSupports Ext_Zfinx))) "./extensions/FD/fdext_regs.sail:260.59-260.60"
   (wF_bits i data)
 
 def rF_or_X_H (i : fregidx) : SailM (BitVec 16) := do
-  assert (flen ≥b 16) "extensions/FD/fdext_regs.sail:271.19-271.20"
-  assert (neq_bool (hartSupports Ext_F) (hartSupports Ext_Zfinx)) "extensions/FD/fdext_regs.sail:272.55-272.56"
-  if ((hartSupports Ext_F) : Bool)
+  assert (flen ≥b 16) "./extensions/FD/fdext_regs.sail:271.19-271.20"
+  assert (neq_bool (hartSupports Ext_F) (hartSupports Ext_Zfinx)) "./extensions/FD/fdext_regs.sail:272.55-272.56"
+  bif (hartSupports Ext_F)
   then (rF_H i)
   else (pure (Sail.BitVec.extractLsb (← (rX_bits (fregidx_to_regidx i))) 15 0))
 
 def rF_or_X_S (i : fregidx) : SailM (BitVec 32) := do
-  assert (flen ≥b 32) "extensions/FD/fdext_regs.sail:280.19-280.20"
-  assert (neq_bool (hartSupports Ext_F) (hartSupports Ext_Zfinx)) "extensions/FD/fdext_regs.sail:281.55-281.56"
-  if ((hartSupports Ext_F) : Bool)
+  assert (flen ≥b 32) "./extensions/FD/fdext_regs.sail:280.19-280.20"
+  assert (neq_bool (hartSupports Ext_F) (hartSupports Ext_Zfinx)) "./extensions/FD/fdext_regs.sail:281.55-281.56"
+  bif (hartSupports Ext_F)
   then (rF_S i)
   else (pure (Sail.BitVec.extractLsb (← (rX_bits (fregidx_to_regidx i))) 31 0))
 
 def rF_or_X_D (i : fregidx) : SailM (BitVec 64) := do
-  assert (flen ≥b 64) "extensions/FD/fdext_regs.sail:289.19-289.20"
-  assert (neq_bool (hartSupports Ext_F) (hartSupports Ext_Zfinx)) "extensions/FD/fdext_regs.sail:290.55-290.56"
-  if ((hartSupports Ext_F) : Bool)
+  assert (flen ≥b 64) "./extensions/FD/fdext_regs.sail:289.19-289.20"
+  assert (neq_bool (hartSupports Ext_F) (hartSupports Ext_Zfinx)) "./extensions/FD/fdext_regs.sail:290.55-290.56"
+  bif (hartSupports Ext_F)
   then (rF_D i)
   else (pure (Sail.BitVec.extractLsb (← (rX_bits (fregidx_to_regidx i))) 63 0))
 
 def wF_or_X_H (i : fregidx) (data : (BitVec 16)) : SailM Unit := do
-  assert (flen ≥b 16) "extensions/FD/fdext_regs.sail:304.19-304.20"
-  assert (neq_bool (hartSupports Ext_F) (hartSupports Ext_Zfinx)) "extensions/FD/fdext_regs.sail:305.55-305.56"
-  if ((hartSupports Ext_F) : Bool)
+  assert (flen ≥b 16) "./extensions/FD/fdext_regs.sail:304.19-304.20"
+  assert (neq_bool (hartSupports Ext_F) (hartSupports Ext_Zfinx)) "./extensions/FD/fdext_regs.sail:305.55-305.56"
+  bif (hartSupports Ext_F)
   then (wF_H i data)
   else (wX_bits (fregidx_to_regidx i) (sign_extend (m := 64) data))
 
 def wF_or_X_S (i : fregidx) (data : (BitVec 32)) : SailM Unit := do
-  assert (flen ≥b 32) "extensions/FD/fdext_regs.sail:313.19-313.20"
-  assert (neq_bool (hartSupports Ext_F) (hartSupports Ext_Zfinx)) "extensions/FD/fdext_regs.sail:314.55-314.56"
-  if ((hartSupports Ext_F) : Bool)
+  assert (flen ≥b 32) "./extensions/FD/fdext_regs.sail:313.19-313.20"
+  assert (neq_bool (hartSupports Ext_F) (hartSupports Ext_Zfinx)) "./extensions/FD/fdext_regs.sail:314.55-314.56"
+  bif (hartSupports Ext_F)
   then (wF_S i data)
   else (wX_bits (fregidx_to_regidx i) (sign_extend (m := 64) data))
 
 def wF_or_X_D (i : fregidx) (data : (BitVec 64)) : SailM Unit := do
-  assert (flen ≥b 64) "extensions/FD/fdext_regs.sail:322.20-322.21"
-  assert (neq_bool (hartSupports Ext_F) (hartSupports Ext_Zfinx)) "extensions/FD/fdext_regs.sail:323.55-323.56"
-  if ((hartSupports Ext_F) : Bool)
+  assert (flen ≥b 64) "./extensions/FD/fdext_regs.sail:322.20-322.21"
+  assert (neq_bool (hartSupports Ext_F) (hartSupports Ext_Zfinx)) "./extensions/FD/fdext_regs.sail:323.55-323.56"
+  bif (hartSupports Ext_F)
   then (wF_D i data)
   else (wX_bits (fregidx_to_regidx i) (sign_extend (m := 64) data))
 
 def freg_abi_name_raw_forwards (arg_ : (BitVec 5)) : String :=
   let b__0 := arg_
-  if ((b__0 == (0b00000 : (BitVec 5))) : Bool)
+  bif (b__0 == (0b00000 : (BitVec 5)))
   then "ft0"
   else
-    (if ((b__0 == (0b00001 : (BitVec 5))) : Bool)
+    (bif (b__0 == (0b00001 : (BitVec 5)))
     then "ft1"
     else
-      (if ((b__0 == (0b00010 : (BitVec 5))) : Bool)
+      (bif (b__0 == (0b00010 : (BitVec 5)))
       then "ft2"
       else
-        (if ((b__0 == (0b00011 : (BitVec 5))) : Bool)
+        (bif (b__0 == (0b00011 : (BitVec 5)))
         then "ft3"
         else
-          (if ((b__0 == (0b00100 : (BitVec 5))) : Bool)
+          (bif (b__0 == (0b00100 : (BitVec 5)))
           then "ft4"
           else
-            (if ((b__0 == (0b00101 : (BitVec 5))) : Bool)
+            (bif (b__0 == (0b00101 : (BitVec 5)))
             then "ft5"
             else
-              (if ((b__0 == (0b00110 : (BitVec 5))) : Bool)
+              (bif (b__0 == (0b00110 : (BitVec 5)))
               then "ft6"
               else
-                (if ((b__0 == (0b00111 : (BitVec 5))) : Bool)
+                (bif (b__0 == (0b00111 : (BitVec 5)))
                 then "ft7"
                 else
-                  (if ((b__0 == (0b01000 : (BitVec 5))) : Bool)
+                  (bif (b__0 == (0b01000 : (BitVec 5)))
                   then "fs0"
                   else
-                    (if ((b__0 == (0b01001 : (BitVec 5))) : Bool)
+                    (bif (b__0 == (0b01001 : (BitVec 5)))
                     then "fs1"
                     else
-                      (if ((b__0 == (0b01010 : (BitVec 5))) : Bool)
+                      (bif (b__0 == (0b01010 : (BitVec 5)))
                       then "fa0"
                       else
-                        (if ((b__0 == (0b01011 : (BitVec 5))) : Bool)
+                        (bif (b__0 == (0b01011 : (BitVec 5)))
                         then "fa1"
                         else
-                          (if ((b__0 == (0b01100 : (BitVec 5))) : Bool)
+                          (bif (b__0 == (0b01100 : (BitVec 5)))
                           then "fa2"
                           else
-                            (if ((b__0 == (0b01101 : (BitVec 5))) : Bool)
+                            (bif (b__0 == (0b01101 : (BitVec 5)))
                             then "fa3"
                             else
-                              (if ((b__0 == (0b01110 : (BitVec 5))) : Bool)
+                              (bif (b__0 == (0b01110 : (BitVec 5)))
                               then "fa4"
                               else
-                                (if ((b__0 == (0b01111 : (BitVec 5))) : Bool)
+                                (bif (b__0 == (0b01111 : (BitVec 5)))
                                 then "fa5"
                                 else
-                                  (if ((b__0 == (0b10000 : (BitVec 5))) : Bool)
+                                  (bif (b__0 == (0b10000 : (BitVec 5)))
                                   then "fa6"
                                   else
-                                    (if ((b__0 == (0b10001 : (BitVec 5))) : Bool)
+                                    (bif (b__0 == (0b10001 : (BitVec 5)))
                                     then "fa7"
                                     else
-                                      (if ((b__0 == (0b10010 : (BitVec 5))) : Bool)
+                                      (bif (b__0 == (0b10010 : (BitVec 5)))
                                       then "fs2"
                                       else
-                                        (if ((b__0 == (0b10011 : (BitVec 5))) : Bool)
+                                        (bif (b__0 == (0b10011 : (BitVec 5)))
                                         then "fs3"
                                         else
-                                          (if ((b__0 == (0b10100 : (BitVec 5))) : Bool)
+                                          (bif (b__0 == (0b10100 : (BitVec 5)))
                                           then "fs4"
                                           else
-                                            (if ((b__0 == (0b10101 : (BitVec 5))) : Bool)
+                                            (bif (b__0 == (0b10101 : (BitVec 5)))
                                             then "fs5"
                                             else
-                                              (if ((b__0 == (0b10110 : (BitVec 5))) : Bool)
+                                              (bif (b__0 == (0b10110 : (BitVec 5)))
                                               then "fs6"
                                               else
-                                                (if ((b__0 == (0b10111 : (BitVec 5))) : Bool)
+                                                (bif (b__0 == (0b10111 : (BitVec 5)))
                                                 then "fs7"
                                                 else
-                                                  (if ((b__0 == (0b11000 : (BitVec 5))) : Bool)
+                                                  (bif (b__0 == (0b11000 : (BitVec 5)))
                                                   then "fs8"
                                                   else
-                                                    (if ((b__0 == (0b11001 : (BitVec 5))) : Bool)
+                                                    (bif (b__0 == (0b11001 : (BitVec 5)))
                                                     then "fs9"
                                                     else
-                                                      (if ((b__0 == (0b11010 : (BitVec 5))) : Bool)
+                                                      (bif (b__0 == (0b11010 : (BitVec 5)))
                                                       then "fs10"
                                                       else
-                                                        (if ((b__0 == (0b11011 : (BitVec 5))) : Bool)
+                                                        (bif (b__0 == (0b11011 : (BitVec 5)))
                                                         then "fs11"
                                                         else
-                                                          (if ((b__0 == (0b11100 : (BitVec 5))) : Bool)
+                                                          (bif (b__0 == (0b11100 : (BitVec 5)))
                                                           then "ft8"
                                                           else
-                                                            (if ((b__0 == (0b11101 : (BitVec 5))) : Bool)
+                                                            (bif (b__0 == (0b11101 : (BitVec 5)))
                                                             then "ft9"
                                                             else
-                                                              (if ((b__0 == (0b11110 : (BitVec 5))) : Bool)
+                                                              (bif (b__0 == (0b11110 : (BitVec 5)))
                                                               then "ft10"
                                                               else "ft11"))))))))))))))))))))))))))))))
 
@@ -550,100 +550,100 @@ def freg_abi_name_raw_backwards (arg_ : String) : SailM (BitVec 5) := do
 
 def freg_abi_name_raw_forwards_matches (arg_ : (BitVec 5)) : Bool :=
   let b__0 := arg_
-  if ((b__0 == (0b00000 : (BitVec 5))) : Bool)
+  bif (b__0 == (0b00000 : (BitVec 5)))
   then true
   else
-    (if ((b__0 == (0b00001 : (BitVec 5))) : Bool)
+    (bif (b__0 == (0b00001 : (BitVec 5)))
     then true
     else
-      (if ((b__0 == (0b00010 : (BitVec 5))) : Bool)
+      (bif (b__0 == (0b00010 : (BitVec 5)))
       then true
       else
-        (if ((b__0 == (0b00011 : (BitVec 5))) : Bool)
+        (bif (b__0 == (0b00011 : (BitVec 5)))
         then true
         else
-          (if ((b__0 == (0b00100 : (BitVec 5))) : Bool)
+          (bif (b__0 == (0b00100 : (BitVec 5)))
           then true
           else
-            (if ((b__0 == (0b00101 : (BitVec 5))) : Bool)
+            (bif (b__0 == (0b00101 : (BitVec 5)))
             then true
             else
-              (if ((b__0 == (0b00110 : (BitVec 5))) : Bool)
+              (bif (b__0 == (0b00110 : (BitVec 5)))
               then true
               else
-                (if ((b__0 == (0b00111 : (BitVec 5))) : Bool)
+                (bif (b__0 == (0b00111 : (BitVec 5)))
                 then true
                 else
-                  (if ((b__0 == (0b01000 : (BitVec 5))) : Bool)
+                  (bif (b__0 == (0b01000 : (BitVec 5)))
                   then true
                   else
-                    (if ((b__0 == (0b01001 : (BitVec 5))) : Bool)
+                    (bif (b__0 == (0b01001 : (BitVec 5)))
                     then true
                     else
-                      (if ((b__0 == (0b01010 : (BitVec 5))) : Bool)
+                      (bif (b__0 == (0b01010 : (BitVec 5)))
                       then true
                       else
-                        (if ((b__0 == (0b01011 : (BitVec 5))) : Bool)
+                        (bif (b__0 == (0b01011 : (BitVec 5)))
                         then true
                         else
-                          (if ((b__0 == (0b01100 : (BitVec 5))) : Bool)
+                          (bif (b__0 == (0b01100 : (BitVec 5)))
                           then true
                           else
-                            (if ((b__0 == (0b01101 : (BitVec 5))) : Bool)
+                            (bif (b__0 == (0b01101 : (BitVec 5)))
                             then true
                             else
-                              (if ((b__0 == (0b01110 : (BitVec 5))) : Bool)
+                              (bif (b__0 == (0b01110 : (BitVec 5)))
                               then true
                               else
-                                (if ((b__0 == (0b01111 : (BitVec 5))) : Bool)
+                                (bif (b__0 == (0b01111 : (BitVec 5)))
                                 then true
                                 else
-                                  (if ((b__0 == (0b10000 : (BitVec 5))) : Bool)
+                                  (bif (b__0 == (0b10000 : (BitVec 5)))
                                   then true
                                   else
-                                    (if ((b__0 == (0b10001 : (BitVec 5))) : Bool)
+                                    (bif (b__0 == (0b10001 : (BitVec 5)))
                                     then true
                                     else
-                                      (if ((b__0 == (0b10010 : (BitVec 5))) : Bool)
+                                      (bif (b__0 == (0b10010 : (BitVec 5)))
                                       then true
                                       else
-                                        (if ((b__0 == (0b10011 : (BitVec 5))) : Bool)
+                                        (bif (b__0 == (0b10011 : (BitVec 5)))
                                         then true
                                         else
-                                          (if ((b__0 == (0b10100 : (BitVec 5))) : Bool)
+                                          (bif (b__0 == (0b10100 : (BitVec 5)))
                                           then true
                                           else
-                                            (if ((b__0 == (0b10101 : (BitVec 5))) : Bool)
+                                            (bif (b__0 == (0b10101 : (BitVec 5)))
                                             then true
                                             else
-                                              (if ((b__0 == (0b10110 : (BitVec 5))) : Bool)
+                                              (bif (b__0 == (0b10110 : (BitVec 5)))
                                               then true
                                               else
-                                                (if ((b__0 == (0b10111 : (BitVec 5))) : Bool)
+                                                (bif (b__0 == (0b10111 : (BitVec 5)))
                                                 then true
                                                 else
-                                                  (if ((b__0 == (0b11000 : (BitVec 5))) : Bool)
+                                                  (bif (b__0 == (0b11000 : (BitVec 5)))
                                                   then true
                                                   else
-                                                    (if ((b__0 == (0b11001 : (BitVec 5))) : Bool)
+                                                    (bif (b__0 == (0b11001 : (BitVec 5)))
                                                     then true
                                                     else
-                                                      (if ((b__0 == (0b11010 : (BitVec 5))) : Bool)
+                                                      (bif (b__0 == (0b11010 : (BitVec 5)))
                                                       then true
                                                       else
-                                                        (if ((b__0 == (0b11011 : (BitVec 5))) : Bool)
+                                                        (bif (b__0 == (0b11011 : (BitVec 5)))
                                                         then true
                                                         else
-                                                          (if ((b__0 == (0b11100 : (BitVec 5))) : Bool)
+                                                          (bif (b__0 == (0b11100 : (BitVec 5)))
                                                           then true
                                                           else
-                                                            (if ((b__0 == (0b11101 : (BitVec 5))) : Bool)
+                                                            (bif (b__0 == (0b11101 : (BitVec 5)))
                                                             then true
                                                             else
-                                                              (if ((b__0 == (0b11110 : (BitVec 5))) : Bool)
+                                                              (bif (b__0 == (0b11110 : (BitVec 5)))
                                                               then true
                                                               else
-                                                                (if ((b__0 == (0b11111 : (BitVec 5))) : Bool)
+                                                                (bif (b__0 == (0b11111 : (BitVec 5)))
                                                                 then true
                                                                 else false)))))))))))))))))))))))))))))))
 
@@ -685,97 +685,97 @@ def freg_abi_name_raw_backwards_matches (arg_ : String) : Bool :=
 
 def freg_arch_name_raw_forwards (arg_ : (BitVec 5)) : String :=
   let b__0 := arg_
-  if ((b__0 == (0b00000 : (BitVec 5))) : Bool)
+  bif (b__0 == (0b00000 : (BitVec 5)))
   then "f0"
   else
-    (if ((b__0 == (0b00001 : (BitVec 5))) : Bool)
+    (bif (b__0 == (0b00001 : (BitVec 5)))
     then "f1"
     else
-      (if ((b__0 == (0b00010 : (BitVec 5))) : Bool)
+      (bif (b__0 == (0b00010 : (BitVec 5)))
       then "f2"
       else
-        (if ((b__0 == (0b00011 : (BitVec 5))) : Bool)
+        (bif (b__0 == (0b00011 : (BitVec 5)))
         then "f3"
         else
-          (if ((b__0 == (0b00100 : (BitVec 5))) : Bool)
+          (bif (b__0 == (0b00100 : (BitVec 5)))
           then "f4"
           else
-            (if ((b__0 == (0b00101 : (BitVec 5))) : Bool)
+            (bif (b__0 == (0b00101 : (BitVec 5)))
             then "f5"
             else
-              (if ((b__0 == (0b00110 : (BitVec 5))) : Bool)
+              (bif (b__0 == (0b00110 : (BitVec 5)))
               then "f6"
               else
-                (if ((b__0 == (0b00111 : (BitVec 5))) : Bool)
+                (bif (b__0 == (0b00111 : (BitVec 5)))
                 then "f7"
                 else
-                  (if ((b__0 == (0b01000 : (BitVec 5))) : Bool)
+                  (bif (b__0 == (0b01000 : (BitVec 5)))
                   then "f8"
                   else
-                    (if ((b__0 == (0b01001 : (BitVec 5))) : Bool)
+                    (bif (b__0 == (0b01001 : (BitVec 5)))
                     then "f9"
                     else
-                      (if ((b__0 == (0b01010 : (BitVec 5))) : Bool)
+                      (bif (b__0 == (0b01010 : (BitVec 5)))
                       then "f10"
                       else
-                        (if ((b__0 == (0b01011 : (BitVec 5))) : Bool)
+                        (bif (b__0 == (0b01011 : (BitVec 5)))
                         then "f11"
                         else
-                          (if ((b__0 == (0b01100 : (BitVec 5))) : Bool)
+                          (bif (b__0 == (0b01100 : (BitVec 5)))
                           then "f12"
                           else
-                            (if ((b__0 == (0b01101 : (BitVec 5))) : Bool)
+                            (bif (b__0 == (0b01101 : (BitVec 5)))
                             then "f13"
                             else
-                              (if ((b__0 == (0b01110 : (BitVec 5))) : Bool)
+                              (bif (b__0 == (0b01110 : (BitVec 5)))
                               then "f14"
                               else
-                                (if ((b__0 == (0b01111 : (BitVec 5))) : Bool)
+                                (bif (b__0 == (0b01111 : (BitVec 5)))
                                 then "f15"
                                 else
-                                  (if ((b__0 == (0b10000 : (BitVec 5))) : Bool)
+                                  (bif (b__0 == (0b10000 : (BitVec 5)))
                                   then "f16"
                                   else
-                                    (if ((b__0 == (0b10001 : (BitVec 5))) : Bool)
+                                    (bif (b__0 == (0b10001 : (BitVec 5)))
                                     then "f17"
                                     else
-                                      (if ((b__0 == (0b10010 : (BitVec 5))) : Bool)
+                                      (bif (b__0 == (0b10010 : (BitVec 5)))
                                       then "f18"
                                       else
-                                        (if ((b__0 == (0b10011 : (BitVec 5))) : Bool)
+                                        (bif (b__0 == (0b10011 : (BitVec 5)))
                                         then "f19"
                                         else
-                                          (if ((b__0 == (0b10100 : (BitVec 5))) : Bool)
+                                          (bif (b__0 == (0b10100 : (BitVec 5)))
                                           then "f20"
                                           else
-                                            (if ((b__0 == (0b10101 : (BitVec 5))) : Bool)
+                                            (bif (b__0 == (0b10101 : (BitVec 5)))
                                             then "f21"
                                             else
-                                              (if ((b__0 == (0b10110 : (BitVec 5))) : Bool)
+                                              (bif (b__0 == (0b10110 : (BitVec 5)))
                                               then "f22"
                                               else
-                                                (if ((b__0 == (0b10111 : (BitVec 5))) : Bool)
+                                                (bif (b__0 == (0b10111 : (BitVec 5)))
                                                 then "f23"
                                                 else
-                                                  (if ((b__0 == (0b11000 : (BitVec 5))) : Bool)
+                                                  (bif (b__0 == (0b11000 : (BitVec 5)))
                                                   then "f24"
                                                   else
-                                                    (if ((b__0 == (0b11001 : (BitVec 5))) : Bool)
+                                                    (bif (b__0 == (0b11001 : (BitVec 5)))
                                                     then "f25"
                                                     else
-                                                      (if ((b__0 == (0b11010 : (BitVec 5))) : Bool)
+                                                      (bif (b__0 == (0b11010 : (BitVec 5)))
                                                       then "f26"
                                                       else
-                                                        (if ((b__0 == (0b11011 : (BitVec 5))) : Bool)
+                                                        (bif (b__0 == (0b11011 : (BitVec 5)))
                                                         then "f27"
                                                         else
-                                                          (if ((b__0 == (0b11100 : (BitVec 5))) : Bool)
+                                                          (bif (b__0 == (0b11100 : (BitVec 5)))
                                                           then "f28"
                                                           else
-                                                            (if ((b__0 == (0b11101 : (BitVec 5))) : Bool)
+                                                            (bif (b__0 == (0b11101 : (BitVec 5)))
                                                             then "f29"
                                                             else
-                                                              (if ((b__0 == (0b11110 : (BitVec 5))) : Bool)
+                                                              (bif (b__0 == (0b11110 : (BitVec 5)))
                                                               then "f30"
                                                               else "f31"))))))))))))))))))))))))))))))
 
@@ -820,100 +820,100 @@ def freg_arch_name_raw_backwards (arg_ : String) : SailM (BitVec 5) := do
 
 def freg_arch_name_raw_forwards_matches (arg_ : (BitVec 5)) : Bool :=
   let b__0 := arg_
-  if ((b__0 == (0b00000 : (BitVec 5))) : Bool)
+  bif (b__0 == (0b00000 : (BitVec 5)))
   then true
   else
-    (if ((b__0 == (0b00001 : (BitVec 5))) : Bool)
+    (bif (b__0 == (0b00001 : (BitVec 5)))
     then true
     else
-      (if ((b__0 == (0b00010 : (BitVec 5))) : Bool)
+      (bif (b__0 == (0b00010 : (BitVec 5)))
       then true
       else
-        (if ((b__0 == (0b00011 : (BitVec 5))) : Bool)
+        (bif (b__0 == (0b00011 : (BitVec 5)))
         then true
         else
-          (if ((b__0 == (0b00100 : (BitVec 5))) : Bool)
+          (bif (b__0 == (0b00100 : (BitVec 5)))
           then true
           else
-            (if ((b__0 == (0b00101 : (BitVec 5))) : Bool)
+            (bif (b__0 == (0b00101 : (BitVec 5)))
             then true
             else
-              (if ((b__0 == (0b00110 : (BitVec 5))) : Bool)
+              (bif (b__0 == (0b00110 : (BitVec 5)))
               then true
               else
-                (if ((b__0 == (0b00111 : (BitVec 5))) : Bool)
+                (bif (b__0 == (0b00111 : (BitVec 5)))
                 then true
                 else
-                  (if ((b__0 == (0b01000 : (BitVec 5))) : Bool)
+                  (bif (b__0 == (0b01000 : (BitVec 5)))
                   then true
                   else
-                    (if ((b__0 == (0b01001 : (BitVec 5))) : Bool)
+                    (bif (b__0 == (0b01001 : (BitVec 5)))
                     then true
                     else
-                      (if ((b__0 == (0b01010 : (BitVec 5))) : Bool)
+                      (bif (b__0 == (0b01010 : (BitVec 5)))
                       then true
                       else
-                        (if ((b__0 == (0b01011 : (BitVec 5))) : Bool)
+                        (bif (b__0 == (0b01011 : (BitVec 5)))
                         then true
                         else
-                          (if ((b__0 == (0b01100 : (BitVec 5))) : Bool)
+                          (bif (b__0 == (0b01100 : (BitVec 5)))
                           then true
                           else
-                            (if ((b__0 == (0b01101 : (BitVec 5))) : Bool)
+                            (bif (b__0 == (0b01101 : (BitVec 5)))
                             then true
                             else
-                              (if ((b__0 == (0b01110 : (BitVec 5))) : Bool)
+                              (bif (b__0 == (0b01110 : (BitVec 5)))
                               then true
                               else
-                                (if ((b__0 == (0b01111 : (BitVec 5))) : Bool)
+                                (bif (b__0 == (0b01111 : (BitVec 5)))
                                 then true
                                 else
-                                  (if ((b__0 == (0b10000 : (BitVec 5))) : Bool)
+                                  (bif (b__0 == (0b10000 : (BitVec 5)))
                                   then true
                                   else
-                                    (if ((b__0 == (0b10001 : (BitVec 5))) : Bool)
+                                    (bif (b__0 == (0b10001 : (BitVec 5)))
                                     then true
                                     else
-                                      (if ((b__0 == (0b10010 : (BitVec 5))) : Bool)
+                                      (bif (b__0 == (0b10010 : (BitVec 5)))
                                       then true
                                       else
-                                        (if ((b__0 == (0b10011 : (BitVec 5))) : Bool)
+                                        (bif (b__0 == (0b10011 : (BitVec 5)))
                                         then true
                                         else
-                                          (if ((b__0 == (0b10100 : (BitVec 5))) : Bool)
+                                          (bif (b__0 == (0b10100 : (BitVec 5)))
                                           then true
                                           else
-                                            (if ((b__0 == (0b10101 : (BitVec 5))) : Bool)
+                                            (bif (b__0 == (0b10101 : (BitVec 5)))
                                             then true
                                             else
-                                              (if ((b__0 == (0b10110 : (BitVec 5))) : Bool)
+                                              (bif (b__0 == (0b10110 : (BitVec 5)))
                                               then true
                                               else
-                                                (if ((b__0 == (0b10111 : (BitVec 5))) : Bool)
+                                                (bif (b__0 == (0b10111 : (BitVec 5)))
                                                 then true
                                                 else
-                                                  (if ((b__0 == (0b11000 : (BitVec 5))) : Bool)
+                                                  (bif (b__0 == (0b11000 : (BitVec 5)))
                                                   then true
                                                   else
-                                                    (if ((b__0 == (0b11001 : (BitVec 5))) : Bool)
+                                                    (bif (b__0 == (0b11001 : (BitVec 5)))
                                                     then true
                                                     else
-                                                      (if ((b__0 == (0b11010 : (BitVec 5))) : Bool)
+                                                      (bif (b__0 == (0b11010 : (BitVec 5)))
                                                       then true
                                                       else
-                                                        (if ((b__0 == (0b11011 : (BitVec 5))) : Bool)
+                                                        (bif (b__0 == (0b11011 : (BitVec 5)))
                                                         then true
                                                         else
-                                                          (if ((b__0 == (0b11100 : (BitVec 5))) : Bool)
+                                                          (bif (b__0 == (0b11100 : (BitVec 5)))
                                                           then true
                                                           else
-                                                            (if ((b__0 == (0b11101 : (BitVec 5))) : Bool)
+                                                            (bif (b__0 == (0b11101 : (BitVec 5)))
                                                             then true
                                                             else
-                                                              (if ((b__0 == (0b11110 : (BitVec 5))) : Bool)
+                                                              (bif (b__0 == (0b11110 : (BitVec 5)))
                                                               then true
                                                               else
-                                                                (if ((b__0 == (0b11111 : (BitVec 5))) : Bool)
+                                                                (bif (b__0 == (0b11111 : (BitVec 5)))
                                                                 then true
                                                                 else false)))))))))))))))))))))))))))))))
 
@@ -957,11 +957,11 @@ def freg_name_forwards (arg_ : fregidx) : SailM String := do
   match arg_ with
   | .Fregidx i =>
     (do
-      if ((get_config_use_abi_names ()) : Bool)
+      bif (get_config_use_abi_names ())
       then (pure (freg_abi_name_raw_forwards i))
       else
         (do
-          if ((not (get_config_use_abi_names ())) : Bool)
+          bif (not (get_config_use_abi_names ()))
           then (pure (freg_arch_name_raw_forwards i))
           else
             (do
@@ -972,7 +972,7 @@ def freg_name_backwards (arg_ : String) : SailM fregidx := do
   let head_exp_ := arg_
   match (← do
     let mapping0_ := head_exp_
-    if ((freg_abi_name_raw_backwards_matches mapping0_) : Bool)
+    bif (freg_abi_name_raw_backwards_matches mapping0_)
     then
       (do
         match (← (freg_abi_name_raw_backwards mapping0_)) with
@@ -983,7 +983,7 @@ def freg_name_backwards (arg_ : String) : SailM fregidx := do
     (do
       match (← do
         let mapping1_ := head_exp_
-        if ((freg_arch_name_raw_backwards_matches mapping1_) : Bool)
+        bif (freg_arch_name_raw_backwards_matches mapping1_)
         then
           (do
             match (← (freg_arch_name_raw_backwards mapping1_)) with
@@ -998,10 +998,10 @@ def freg_name_backwards (arg_ : String) : SailM fregidx := do
 def freg_name_forwards_matches (arg_ : fregidx) : Bool :=
   match arg_ with
   | .Fregidx i =>
-    (if ((get_config_use_abi_names ()) : Bool)
+    (bif (get_config_use_abi_names ())
     then true
     else
-      (if ((not (get_config_use_abi_names ())) : Bool)
+      (bif (not (get_config_use_abi_names ()))
       then true
       else false))
 
@@ -1009,7 +1009,7 @@ def freg_name_backwards_matches (arg_ : String) : SailM Bool := do
   let head_exp_ := arg_
   match (← do
     let mapping0_ := head_exp_
-    if ((freg_abi_name_raw_backwards_matches mapping0_) : Bool)
+    bif (freg_abi_name_raw_backwards_matches mapping0_)
     then
       (do
         match (← (freg_abi_name_raw_backwards mapping0_)) with
@@ -1020,7 +1020,7 @@ def freg_name_backwards_matches (arg_ : String) : SailM Bool := do
     (do
       match (← do
         let mapping1_ := head_exp_
-        if ((freg_arch_name_raw_backwards_matches mapping1_) : Bool)
+        bif (freg_arch_name_raw_backwards_matches mapping1_)
         then
           (do
             match (← (freg_arch_name_raw_backwards mapping1_)) with
@@ -1033,7 +1033,7 @@ def freg_name_backwards_matches (arg_ : String) : SailM Bool := do
 
 def freg_or_reg_name_forwards (arg_ : fregidx) : SailM String := do
   let f := arg_
-  if ((hartSupports Ext_Zfinx) : Bool)
+  bif (hartSupports Ext_Zfinx)
   then (reg_name_forwards (fregidx_to_regidx f))
   else (freg_name_forwards f)
 
@@ -1041,12 +1041,12 @@ def freg_or_reg_name_backwards (arg_ : String) : SailM fregidx := do
   let head_exp_ := arg_
   match (← do
     let mapping0_ := head_exp_
-    if ((← (reg_name_backwards_matches mapping0_)) : Bool)
+    bif (← (reg_name_backwards_matches mapping0_))
     then
       (do
         match (← (reg_name_backwards mapping0_)) with
         | .Regidx i =>
-          (if ((hartSupports Ext_Zfinx) : Bool)
+          (bif (hartSupports Ext_Zfinx)
           then (pure (some (Fregidx (zero_extend (m := 5) i))))
           else (pure none)))
     else (pure none)) with
@@ -1055,7 +1055,7 @@ def freg_or_reg_name_backwards (arg_ : String) : SailM fregidx := do
     (do
       match (← do
         let mapping1_ := head_exp_
-        if ((← (freg_name_backwards_matches mapping1_)) : Bool)
+        bif (← (freg_name_backwards_matches mapping1_))
         then
           (do
             match (← (freg_name_backwards mapping1_)) with
@@ -1069,7 +1069,7 @@ def freg_or_reg_name_backwards (arg_ : String) : SailM fregidx := do
 
 def freg_or_reg_name_forwards_matches (arg_ : fregidx) : Bool :=
   let f := arg_
-  if ((hartSupports Ext_Zfinx) : Bool)
+  bif (hartSupports Ext_Zfinx)
   then true
   else true
 
@@ -1077,12 +1077,12 @@ def freg_or_reg_name_backwards_matches (arg_ : String) : SailM Bool := do
   let head_exp_ := arg_
   match (← do
     let mapping0_ := head_exp_
-    if ((← (reg_name_backwards_matches mapping0_)) : Bool)
+    bif (← (reg_name_backwards_matches mapping0_))
     then
       (do
         match (← (reg_name_backwards mapping0_)) with
         | .Regidx i =>
-          (if ((hartSupports Ext_Zfinx) : Bool)
+          (bif (hartSupports Ext_Zfinx)
           then (pure (some true))
           else (pure none)))
     else (pure none)) with
@@ -1091,7 +1091,7 @@ def freg_or_reg_name_backwards_matches (arg_ : String) : SailM Bool := do
     (do
       match (← do
         let mapping1_ := head_exp_
-        if ((← (freg_name_backwards_matches mapping1_)) : Bool)
+        bif (← (freg_name_backwards_matches mapping1_))
         then
           (do
             match (← (freg_name_backwards mapping1_)) with
@@ -1110,12 +1110,12 @@ def cfreg_name_backwards (arg_ : String) : SailM cfregidx := do
   let head_exp_ := arg_
   match (← do
     let mapping0_ := head_exp_
-    if ((← (freg_name_backwards_matches mapping0_)) : Bool)
+    bif (← (freg_name_backwards_matches mapping0_))
     then
       (do
         match (← (freg_name_backwards mapping0_)) with
         | .Fregidx v__4 =>
-          (if (((Sail.BitVec.extractLsb v__4 4 3) == (0b01 : (BitVec 2))) : Bool)
+          (bif ((Sail.BitVec.extractLsb v__4 4 3) == (0b01 : (BitVec 2)))
           then
             (let i : (BitVec 3) := (Sail.BitVec.extractLsb v__4 2 0)
             (pure (some (Cfregidx i))))
@@ -1135,12 +1135,12 @@ def cfreg_name_backwards_matches (arg_ : String) : SailM Bool := do
   let head_exp_ := arg_
   match (← do
     let mapping0_ := head_exp_
-    if ((← (freg_name_backwards_matches mapping0_)) : Bool)
+    bif (← (freg_name_backwards_matches mapping0_))
     then
       (do
         match (← (freg_name_backwards mapping0_)) with
         | .Fregidx v__6 =>
-          (if (((Sail.BitVec.extractLsb v__6 4 3) == (0b01 : (BitVec 2))) : Bool)
+          (bif ((Sail.BitVec.extractLsb v__6 4 3) == (0b01 : (BitVec 2)))
           then (pure (some true))
           else (pure none)))
     else (pure none)) with
@@ -1182,7 +1182,7 @@ def write_fcsr (frm : (BitVec 3)) (fflags : (BitVec 5)) : SailM Unit := do
 
 def accrue_fflags (flags : (BitVec 5)) : SailM Unit := do
   let f ← do (pure ((_get_Fcsr_FFLAGS (← readReg fcsr)) ||| flags))
-  if (((_get_Fcsr_FFLAGS (← readReg fcsr)) != f) : Bool)
+  bif ((_get_Fcsr_FFLAGS (← readReg fcsr)) != f)
   then
     (do
       writeReg fcsr (Sail.BitVec.updateSubrange (← readReg fcsr) 4 0 f)

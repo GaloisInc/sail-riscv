@@ -1,7 +1,6 @@
 import LeanRV64DExecutable.Xlen
 import LeanRV64DExecutable.Common
 import LeanRV64DExecutable.Callbacks
-import LeanRV64DExecutable.Regs
 
 set_option maxHeartbeats 1_000_000_000
 set_option maxRecDepth 1_000_000

@@ -3,7 +3,6 @@ import LeanRV64DExecutable.Mapping
 import LeanRV64DExecutable.HexBits
 import LeanRV64DExecutable.Prelude
 import LeanRV64DExecutable.Errors
-import LeanRV64DExecutable.Xlen
 import LeanRV64DExecutable.Flen
 import LeanRV64DExecutable.Extensions
 import LeanRV64DExecutable.TypesExt
@@ -157,7 +156,7 @@ def base_E_enabled := false
 
 def regidx_bit_width := 5
 
-def regidx_bits (app_0 : regidx) : (BitVec (if ( false  : Bool) then 4 else 5)) :=
+def regidx_bits (app_0 : regidx) : (BitVec (bif false then 4 else 5)) :=
   let .Regidx b := app_0
   b
 
@@ -195,17 +194,17 @@ def architecture_bits_forwards (arg_ : Architecture) : (BitVec 2) :=
 
 def architecture_bits_backwards (arg_ : (BitVec 2)) : SailM Architecture := do
   let b__0 := arg_
-  if ((b__0 == (0b01 : (BitVec 2))) : Bool)
+  bif (b__0 == (0b01 : (BitVec 2)))
   then (pure RV32)
   else
     (do
-      if ((b__0 == (0b10 : (BitVec 2))) : Bool)
+      bif (b__0 == (0b10 : (BitVec 2)))
       then (pure RV64)
       else
         (do
-          if ((b__0 == (0b11 : (BitVec 2))) : Bool)
+          bif (b__0 == (0b11 : (BitVec 2)))
           then (pure RV128)
-          else (internal_error "core/types.sail" 61 "architecture(0b00) is invalid")))
+          else (internal_error "./core/types.sail" 61 "architecture(0b00) is invalid")))
 
 def architecture_bits_forwards_matches (arg_ : Architecture) : Bool :=
   match arg_ with
@@ -215,16 +214,16 @@ def architecture_bits_forwards_matches (arg_ : Architecture) : Bool :=
 
 def architecture_bits_backwards_matches (arg_ : (BitVec 2)) : Bool :=
   let b__0 := arg_
-  if ((b__0 == (0b01 : (BitVec 2))) : Bool)
+  bif (b__0 == (0b01 : (BitVec 2)))
   then true
   else
-    (if ((b__0 == (0b10 : (BitVec 2))) : Bool)
+    (bif (b__0 == (0b10 : (BitVec 2)))
     then true
     else
-      (if ((b__0 == (0b11 : (BitVec 2))) : Bool)
+      (bif (b__0 == (0b11 : (BitVec 2)))
       then true
       else
-        (if ((b__0 == (0b00 : (BitVec 2))) : Bool)
+        (bif (b__0 == (0b00 : (BitVec 2)))
         then true
         else false)))
 
@@ -252,70 +251,70 @@ def privLevel_bits_forwards (arg_ : ((BitVec 2) × (BitVec 1))) : SailM Privileg
   match arg_ with
   | (b__0, 0#1) =>
     (do
-      if ((b__0 == (0b00 : (BitVec 2))) : Bool)
+      bif (b__0 == (0b00 : (BitVec 2)))
       then (pure User)
       else
         (do
           match (b__0, 0#1) with
           | (b__2, 0#1) =>
             (do
-              if ((b__2 == (0b01 : (BitVec 2))) : Bool)
+              bif (b__2 == (0b01 : (BitVec 2)))
               then (pure Supervisor)
               else
                 (do
                   match (b__2, 0#1) with
                   | (b__4, 0#1) =>
                     (do
-                      if ((b__4 == (0b11 : (BitVec 2))) : Bool)
+                      bif (b__4 == (0b11 : (BitVec 2)))
                       then (pure Machine)
                       else
-                        (internal_error "core/types.sail" 78
+                        (internal_error "./core/types.sail" 78
                           "Invalid privilege level or virtual mode"))
                   | _ =>
-                    (internal_error "core/types.sail" 78 "Invalid privilege level or virtual mode")))
+                    (internal_error "./core/types.sail" 78 "Invalid privilege level or virtual mode")))
           | (b__4, 0#1) =>
             (do
-              if ((b__4 == (0b11 : (BitVec 2))) : Bool)
+              bif (b__4 == (0b11 : (BitVec 2)))
               then (pure Machine)
-              else (internal_error "core/types.sail" 78 "Invalid privilege level or virtual mode"))
-          | _ => (internal_error "core/types.sail" 78 "Invalid privilege level or virtual mode")))
+              else (internal_error "./core/types.sail" 78 "Invalid privilege level or virtual mode"))
+          | _ => (internal_error "./core/types.sail" 78 "Invalid privilege level or virtual mode")))
   | (b__1, 1#1) =>
     (do
-      if ((b__1 == (0b00 : (BitVec 2))) : Bool)
+      bif (b__1 == (0b00 : (BitVec 2)))
       then (pure VirtualUser)
       else
         (do
           match (b__1, 1#1) with
           | (b__3, 1#1) =>
             (do
-              if ((b__3 == (0b01 : (BitVec 2))) : Bool)
+              bif (b__3 == (0b01 : (BitVec 2)))
               then (pure VirtualSupervisor)
-              else (internal_error "core/types.sail" 78 "Invalid privilege level or virtual mode"))
-          | _ => (internal_error "core/types.sail" 78 "Invalid privilege level or virtual mode")))
+              else (internal_error "./core/types.sail" 78 "Invalid privilege level or virtual mode"))
+          | _ => (internal_error "./core/types.sail" 78 "Invalid privilege level or virtual mode")))
   | (b__2, 0#1) =>
     (do
-      if ((b__2 == (0b01 : (BitVec 2))) : Bool)
+      bif (b__2 == (0b01 : (BitVec 2)))
       then (pure Supervisor)
       else
         (do
           match (b__2, 0#1) with
           | (b__4, 0#1) =>
             (do
-              if ((b__4 == (0b11 : (BitVec 2))) : Bool)
+              bif (b__4 == (0b11 : (BitVec 2)))
               then (pure Machine)
-              else (internal_error "core/types.sail" 78 "Invalid privilege level or virtual mode"))
-          | _ => (internal_error "core/types.sail" 78 "Invalid privilege level or virtual mode")))
+              else (internal_error "./core/types.sail" 78 "Invalid privilege level or virtual mode"))
+          | _ => (internal_error "./core/types.sail" 78 "Invalid privilege level or virtual mode")))
   | (b__3, 1#1) =>
     (do
-      if ((b__3 == (0b01 : (BitVec 2))) : Bool)
+      bif (b__3 == (0b01 : (BitVec 2)))
       then (pure VirtualSupervisor)
-      else (internal_error "core/types.sail" 78 "Invalid privilege level or virtual mode"))
+      else (internal_error "./core/types.sail" 78 "Invalid privilege level or virtual mode"))
   | (b__4, 0#1) =>
     (do
-      if ((b__4 == (0b11 : (BitVec 2))) : Bool)
+      bif (b__4 == (0b11 : (BitVec 2)))
       then (pure Machine)
-      else (internal_error "core/types.sail" 78 "Invalid privilege level or virtual mode"))
-  | _ => (internal_error "core/types.sail" 78 "Invalid privilege level or virtual mode")
+      else (internal_error "./core/types.sail" 78 "Invalid privilege level or virtual mode"))
+  | _ => (internal_error "./core/types.sail" 78 "Invalid privilege level or virtual mode")
 
 def privLevel_bits_backwards (arg_ : Privilege) : ((BitVec 2) × (BitVec 1)) :=
   match arg_ with
@@ -328,61 +327,61 @@ def privLevel_bits_backwards (arg_ : Privilege) : ((BitVec 2) × (BitVec 1)) :=
 def privLevel_bits_forwards_matches (arg_ : ((BitVec 2) × (BitVec 1))) : Bool :=
   match arg_ with
   | (b__0, 0#1) =>
-    (if ((b__0 == (0b00 : (BitVec 2))) : Bool)
+    (bif (b__0 == (0b00 : (BitVec 2)))
     then true
     else
       (match (b__0, 0#1) with
       | (b__2, 0#1) =>
-        (if ((b__2 == (0b01 : (BitVec 2))) : Bool)
+        (bif (b__2 == (0b01 : (BitVec 2)))
         then true
         else
           (match (b__2, 0#1) with
           | (b__4, 0#1) =>
-            (if ((b__4 == (0b11 : (BitVec 2))) : Bool)
+            (bif (b__4 == (0b11 : (BitVec 2)))
             then true
             else
               (let g__5 := (b__4, 0#1)
               true))
           | g__5 => true))
       | (b__4, 0#1) =>
-        (if ((b__4 == (0b11 : (BitVec 2))) : Bool)
+        (bif (b__4 == (0b11 : (BitVec 2)))
         then true
         else
           (let g__5 := (b__4, 0#1)
           true))
       | g__5 => true))
   | (b__1, 1#1) =>
-    (if ((b__1 == (0b00 : (BitVec 2))) : Bool)
+    (bif (b__1 == (0b00 : (BitVec 2)))
     then true
     else
       (match (b__1, 1#1) with
       | (b__3, 1#1) =>
-        (if ((b__3 == (0b01 : (BitVec 2))) : Bool)
+        (bif (b__3 == (0b01 : (BitVec 2)))
         then true
         else
           (let g__5 := (b__3, 1#1)
           true))
       | g__5 => true))
   | (b__2, 0#1) =>
-    (if ((b__2 == (0b01 : (BitVec 2))) : Bool)
+    (bif (b__2 == (0b01 : (BitVec 2)))
     then true
     else
       (match (b__2, 0#1) with
       | (b__4, 0#1) =>
-        (if ((b__4 == (0b11 : (BitVec 2))) : Bool)
+        (bif (b__4 == (0b11 : (BitVec 2)))
         then true
         else
           (let g__5 := (b__4, 0#1)
           true))
       | g__5 => true))
   | (b__3, 1#1) =>
-    (if ((b__3 == (0b01 : (BitVec 2))) : Bool)
+    (bif (b__3 == (0b01 : (BitVec 2)))
     then true
     else
       (let g__5 := (b__3, 1#1)
       true))
   | (b__4, 0#1) =>
-    (if ((b__4 == (0b11 : (BitVec 2))) : Bool)
+    (bif (b__4 == (0b11 : (BitVec 2)))
     then true
     else
       (let g__5 := (b__4, 0#1)
@@ -601,10 +600,10 @@ def currentlyEnabled (merge_var : extension) : SailM Bool := do
   | Ext_Svnapot => (pure false)
   | Ext_Svpbmt => (pure false)
   | Ext_Svrsw60t59b => (pure ((hartSupports Ext_Svrsw60t59b) && (← (currentlyEnabled Ext_Sv39))))
+  | Ext_Zicboz => (pure (hartSupports Ext_Zicboz))
   | _ =>
     (do
-      dbg_trace "merge var {repr merge_var}"
-      assert false "Pattern match failure at sys/vmem_pte.sail:78.0-78.110"
+      assert false s!"Pattern match failure at ./extensions/Zicboz/zicboz_insts.sail:11.0-11.71 {repr merge_var}"
       throw Error.Exit)
 termination_by let ext := merge_var; ((currentlyEnabled_measure ext)).toNat
 def get_xLPE (p : Privilege) : SailM Bool := do
@@ -613,13 +612,13 @@ def get_xLPE (p : Privilege) : SailM Bool := do
   | Supervisor => (pure (bool_bits_backwards (_get_MEnvcfg_LPE (← readReg menvcfg))))
   | User =>
     (do
-      if ((← (currentlyEnabled Ext_S)) : Bool)
+      bif (← (currentlyEnabled Ext_S))
       then (pure (bool_bits_backwards (_get_SEnvcfg_LPE (← readReg senvcfg))))
       else (pure (bool_bits_backwards (_get_MEnvcfg_LPE (← readReg menvcfg)))))
   | VirtualSupervisor =>
-    (internal_error "extensions/cfi/zicfilp_regs.sail" 31 "Hypervisor extension not supported")
+    (internal_error "./extensions/cfi/zicfilp_regs.sail" 31 "Hypervisor extension not supported")
   | VirtualUser =>
-    (internal_error "extensions/cfi/zicfilp_regs.sail" 32 "Hypervisor extension not supported")
+    (internal_error "./extensions/cfi/zicfilp_regs.sail" 32 "Hypervisor extension not supported")
 termination_by let _ := p; (2).toNat
 def legalize_menvcfg (o : (BitVec 64)) (v : (BitVec 64)) : SailM (BitVec 64) := do
   let v := (Mk_MEnvcfg v)
@@ -629,29 +628,29 @@ def legalize_menvcfg (o : (BitVec 64)) (v : (BitVec 64)) : SailM (BitVec 64) := 
           (_update_MEnvcfg_CBZE
             (_update_MEnvcfg_LPE
               (_update_MEnvcfg_FIOM o
-                (if (sys_enable_writable_fiom : Bool)
+                (bif sys_enable_writable_fiom
                 then (_get_MEnvcfg_FIOM v)
                 else (0b0 : (BitVec 1))))
-              (if ((hartSupports Ext_Zicfilp) : Bool)
+              (bif (hartSupports Ext_Zicfilp)
               then (_get_MEnvcfg_LPE v)
               else (0b0 : (BitVec 1))))
             (← do
-              if ((← (currentlyEnabled Ext_Zicboz)) : Bool)
+              bif (← (currentlyEnabled Ext_Zicboz))
               then (pure (_get_MEnvcfg_CBZE v))
               else (pure (0b0 : (BitVec 1)))))
           (← do
-            if ((← (currentlyEnabled Ext_Zicbom)) : Bool)
+            bif (← (currentlyEnabled Ext_Zicbom))
             then (pure (_get_MEnvcfg_CBCFE v))
             else (pure (0b0 : (BitVec 1)))))
         (← do
-          if ((← (currentlyEnabled Ext_Zicbom)) : Bool)
+          bif (← (currentlyEnabled Ext_Zicbom))
           then
-            (if (((_get_MEnvcfg_CBIE v) != (0b10 : (BitVec 2))) : Bool)
+            (bif ((_get_MEnvcfg_CBIE v) != (0b10 : (BitVec 2)))
             then (pure (_get_MEnvcfg_CBIE v))
             else (pure (0b00 : (BitVec 2))))
           else (pure (0b00 : (BitVec 2)))))
       (← do
-        if ((← (currentlyEnabled Ext_Sstc)) : Bool)
+        bif (← (currentlyEnabled Ext_Sstc))
         then (pure (_get_MEnvcfg_STCE v))
         else (pure (0b0 : (BitVec 1))))))
 def legalize_mseccfg (o : (BitVec 64)) (v : (BitVec 64)) : SailM (BitVec 64) := do
@@ -665,13 +664,13 @@ def legalize_mseccfg (o : (BitVec 64)) (v : (BitVec 64)) : SailM (BitVec 64) := 
   (pure (_update_Seccfg_USEED
       (_update_Seccfg_SSEED
         (_update_Seccfg_MLPE o
-          (if ((hartSupports Ext_Zicfilp) : Bool)
+          (bif (hartSupports Ext_Zicfilp)
           then (_get_Seccfg_MLPE v)
           else (0b0 : (BitVec 1))))
-        (if (sseed_read_only_zero : Bool)
+        (bif sseed_read_only_zero
         then (0b0 : (BitVec 1))
         else (_get_Seccfg_SSEED v)))
-      (if (useed_read_only_zero : Bool)
+      (bif useed_read_only_zero
       then (0b0 : (BitVec 1))
       else (_get_Seccfg_USEED v))))
 def legalize_senvcfg (o : (BitVec 64)) (v : (BitVec 64)) : SailM (BitVec 64) := do
@@ -681,24 +680,24 @@ def legalize_senvcfg (o : (BitVec 64)) (v : (BitVec 64)) : SailM (BitVec 64) := 
         (_update_SEnvcfg_CBZE
           (_update_SEnvcfg_LPE
             (_update_SEnvcfg_FIOM o
-              (if (sys_enable_writable_fiom : Bool)
+              (bif sys_enable_writable_fiom
               then (_get_SEnvcfg_FIOM v)
               else (0b0 : (BitVec 1))))
-            (if ((hartSupports Ext_Zicfilp) : Bool)
+            (bif (hartSupports Ext_Zicfilp)
             then (_get_SEnvcfg_LPE v)
             else (0b0 : (BitVec 1))))
           (← do
-            if ((← (currentlyEnabled Ext_Zicboz)) : Bool)
+            bif (← (currentlyEnabled Ext_Zicboz))
             then (pure (_get_SEnvcfg_CBZE v))
             else (pure (0b0 : (BitVec 1)))))
         (← do
-          if ((← (currentlyEnabled Ext_Zicbom)) : Bool)
+          bif (← (currentlyEnabled Ext_Zicbom))
           then (pure (_get_SEnvcfg_CBCFE v))
           else (pure (0b0 : (BitVec 1)))))
       (← do
-        if ((← (currentlyEnabled Ext_Zicbom)) : Bool)
+        bif (← (currentlyEnabled Ext_Zicbom))
         then
-          (if (((_get_SEnvcfg_CBIE v) != (0b10 : (BitVec 2))) : Bool)
+          (bif ((_get_SEnvcfg_CBIE v) != (0b10 : (BitVec 2)))
           then (pure (_get_SEnvcfg_CBIE v))
           else (pure (0b00 : (BitVec 2))))
         else (pure (0b00 : (BitVec 2))))))
@@ -710,7 +709,7 @@ def privLevel_to_str (p : Privilege) : SailM String := do
   | VirtualUser => (pure "VU")
   | Supervisor =>
     (do
-      if ((← (currentlyEnabled Ext_H)) : Bool)
+      bif (← (currentlyEnabled Ext_H))
       then (pure "HS")
       else (pure "S"))
   | VirtualSupervisor => (pure "VS")
@@ -749,649 +748,649 @@ def atomic_support_str_forwards (arg_ : AtomicSupport) : String :=
 
 def csr_name_map_forwards (arg_ : (BitVec 12)) : SailM String := do
   let b__0 := arg_
-  if ((b__0 == (0x301 : (BitVec 12))) : Bool)
+  bif (b__0 == (0x301 : (BitVec 12)))
   then (pure "misa")
   else
     (do
-      if ((b__0 == (0x300 : (BitVec 12))) : Bool)
+      bif (b__0 == (0x300 : (BitVec 12)))
       then (pure "mstatus")
       else
         (do
-          if ((b__0 == (0x310 : (BitVec 12))) : Bool)
+          bif (b__0 == (0x310 : (BitVec 12)))
           then (pure "mstatush")
           else
             (do
-              if ((b__0 == (0x747 : (BitVec 12))) : Bool)
+              bif (b__0 == (0x747 : (BitVec 12)))
               then (pure "mseccfg")
               else
                 (do
-                  if ((b__0 == (0x757 : (BitVec 12))) : Bool)
+                  bif (b__0 == (0x757 : (BitVec 12)))
                   then (pure "mseccfgh")
                   else
                     (do
-                      if ((b__0 == (0x30A : (BitVec 12))) : Bool)
+                      bif (b__0 == (0x30A : (BitVec 12)))
                       then (pure "menvcfg")
                       else
                         (do
-                          if ((b__0 == (0x31A : (BitVec 12))) : Bool)
+                          bif (b__0 == (0x31A : (BitVec 12)))
                           then (pure "menvcfgh")
                           else
                             (do
-                              if ((b__0 == (0x10A : (BitVec 12))) : Bool)
+                              bif (b__0 == (0x10A : (BitVec 12)))
                               then (pure "senvcfg")
                               else
                                 (do
-                                  if ((b__0 == (0x304 : (BitVec 12))) : Bool)
+                                  bif (b__0 == (0x304 : (BitVec 12)))
                                   then (pure "mie")
                                   else
                                     (do
-                                      if ((b__0 == (0x344 : (BitVec 12))) : Bool)
+                                      bif (b__0 == (0x344 : (BitVec 12)))
                                       then (pure "mip")
                                       else
                                         (do
-                                          if ((b__0 == (0x302 : (BitVec 12))) : Bool)
+                                          bif (b__0 == (0x302 : (BitVec 12)))
                                           then (pure "medeleg")
                                           else
                                             (do
-                                              if ((b__0 == (0x312 : (BitVec 12))) : Bool)
+                                              bif (b__0 == (0x312 : (BitVec 12)))
                                               then (pure "medelegh")
                                               else
                                                 (do
-                                                  if ((b__0 == (0x303 : (BitVec 12))) : Bool)
+                                                  bif (b__0 == (0x303 : (BitVec 12)))
                                                   then (pure "mideleg")
                                                   else
                                                     (do
-                                                      if ((b__0 == (0x342 : (BitVec 12))) : Bool)
+                                                      bif (b__0 == (0x342 : (BitVec 12)))
                                                       then (pure "mcause")
                                                       else
                                                         (do
-                                                          if ((b__0 == (0x343 : (BitVec 12))) : Bool)
+                                                          bif (b__0 == (0x343 : (BitVec 12)))
                                                           then (pure "mtval")
                                                           else
                                                             (do
-                                                              if ((b__0 == (0x340 : (BitVec 12))) : Bool)
+                                                              bif (b__0 == (0x340 : (BitVec 12)))
                                                               then (pure "mscratch")
                                                               else
                                                                 (do
-                                                                  if ((b__0 == (0x106 : (BitVec 12))) : Bool)
+                                                                  bif (b__0 == (0x106 : (BitVec 12)))
                                                                   then (pure "scounteren")
                                                                   else
                                                                     (do
-                                                                      if ((b__0 == (0x306 : (BitVec 12))) : Bool)
+                                                                      bif (b__0 == (0x306 : (BitVec 12)))
                                                                       then (pure "mcounteren")
                                                                       else
                                                                         (do
-                                                                          if ((b__0 == (0x320 : (BitVec 12))) : Bool)
+                                                                          bif (b__0 == (0x320 : (BitVec 12)))
                                                                           then
                                                                             (pure "mcountinhibit")
                                                                           else
                                                                             (do
-                                                                              if ((b__0 == (0xF11 : (BitVec 12))) : Bool)
+                                                                              bif (b__0 == (0xF11 : (BitVec 12)))
                                                                               then
                                                                                 (pure "mvendorid")
                                                                               else
                                                                                 (do
-                                                                                  if ((b__0 == (0xF12 : (BitVec 12))) : Bool)
+                                                                                  bif (b__0 == (0xF12 : (BitVec 12)))
                                                                                   then
                                                                                     (pure "marchid")
                                                                                   else
                                                                                     (do
-                                                                                      if ((b__0 == (0xF13 : (BitVec 12))) : Bool)
+                                                                                      bif (b__0 == (0xF13 : (BitVec 12)))
                                                                                       then
                                                                                         (pure "mimpid")
                                                                                       else
                                                                                         (do
-                                                                                          if ((b__0 == (0xF14 : (BitVec 12))) : Bool)
+                                                                                          bif (b__0 == (0xF14 : (BitVec 12)))
                                                                                           then
                                                                                             (pure "mhartid")
                                                                                           else
                                                                                             (do
-                                                                                              if ((b__0 == (0xF15 : (BitVec 12))) : Bool)
+                                                                                              bif (b__0 == (0xF15 : (BitVec 12)))
                                                                                               then
                                                                                                 (pure "mconfigptr")
                                                                                               else
                                                                                                 (do
-                                                                                                  if ((b__0 == (0x100 : (BitVec 12))) : Bool)
+                                                                                                  bif (b__0 == (0x100 : (BitVec 12)))
                                                                                                   then
                                                                                                     (pure "sstatus")
                                                                                                   else
                                                                                                     (do
-                                                                                                      if ((b__0 == (0x144 : (BitVec 12))) : Bool)
+                                                                                                      bif (b__0 == (0x144 : (BitVec 12)))
                                                                                                       then
                                                                                                         (pure "sip")
                                                                                                       else
                                                                                                         (do
-                                                                                                          if ((b__0 == (0x104 : (BitVec 12))) : Bool)
+                                                                                                          bif (b__0 == (0x104 : (BitVec 12)))
                                                                                                           then
                                                                                                             (pure "sie")
                                                                                                           else
                                                                                                             (do
-                                                                                                              if ((b__0 == (0x140 : (BitVec 12))) : Bool)
+                                                                                                              bif (b__0 == (0x140 : (BitVec 12)))
                                                                                                               then
                                                                                                                 (pure "sscratch")
                                                                                                               else
                                                                                                                 (do
-                                                                                                                  if ((b__0 == (0x142 : (BitVec 12))) : Bool)
+                                                                                                                  bif (b__0 == (0x142 : (BitVec 12)))
                                                                                                                   then
                                                                                                                     (pure "scause")
                                                                                                                   else
                                                                                                                     (do
-                                                                                                                      if ((b__0 == (0x143 : (BitVec 12))) : Bool)
+                                                                                                                      bif (b__0 == (0x143 : (BitVec 12)))
                                                                                                                       then
                                                                                                                         (pure "stval")
                                                                                                                       else
                                                                                                                         (do
-                                                                                                                          if ((b__0 == (0x7A0 : (BitVec 12))) : Bool)
+                                                                                                                          bif (b__0 == (0x7A0 : (BitVec 12)))
                                                                                                                           then
                                                                                                                             (pure "tselect")
                                                                                                                           else
                                                                                                                             (do
-                                                                                                                              if ((b__0 == (0x7A1 : (BitVec 12))) : Bool)
+                                                                                                                              bif (b__0 == (0x7A1 : (BitVec 12)))
                                                                                                                               then
                                                                                                                                 (pure "tdata1")
                                                                                                                               else
                                                                                                                                 (do
-                                                                                                                                  if ((b__0 == (0x7A2 : (BitVec 12))) : Bool)
+                                                                                                                                  bif (b__0 == (0x7A2 : (BitVec 12)))
                                                                                                                                   then
                                                                                                                                     (pure "tdata2")
                                                                                                                                   else
                                                                                                                                     (do
-                                                                                                                                      if ((b__0 == (0x7A3 : (BitVec 12))) : Bool)
+                                                                                                                                      bif (b__0 == (0x7A3 : (BitVec 12)))
                                                                                                                                       then
                                                                                                                                         (pure "tdata3")
                                                                                                                                       else
                                                                                                                                         (do
-                                                                                                                                          if ((b__0 == (0x105 : (BitVec 12))) : Bool)
+                                                                                                                                          bif (b__0 == (0x105 : (BitVec 12)))
                                                                                                                                           then
                                                                                                                                             (pure "stvec")
                                                                                                                                           else
                                                                                                                                             (do
-                                                                                                                                              if ((b__0 == (0x141 : (BitVec 12))) : Bool)
+                                                                                                                                              bif (b__0 == (0x141 : (BitVec 12)))
                                                                                                                                               then
                                                                                                                                                 (pure "sepc")
                                                                                                                                               else
                                                                                                                                                 (do
-                                                                                                                                                  if ((b__0 == (0x305 : (BitVec 12))) : Bool)
+                                                                                                                                                  bif (b__0 == (0x305 : (BitVec 12)))
                                                                                                                                                   then
                                                                                                                                                     (pure "mtvec")
                                                                                                                                                   else
                                                                                                                                                     (do
-                                                                                                                                                      if ((b__0 == (0x341 : (BitVec 12))) : Bool)
+                                                                                                                                                      bif (b__0 == (0x341 : (BitVec 12)))
                                                                                                                                                       then
                                                                                                                                                         (pure "mepc")
                                                                                                                                                       else
                                                                                                                                                         (do
-                                                                                                                                                          if ((b__0 == (0x3A0 : (BitVec 12))) : Bool)
+                                                                                                                                                          bif (b__0 == (0x3A0 : (BitVec 12)))
                                                                                                                                                           then
                                                                                                                                                             (pure "pmpcfg0")
                                                                                                                                                           else
                                                                                                                                                             (do
-                                                                                                                                                              if ((b__0 == (0x3A1 : (BitVec 12))) : Bool)
+                                                                                                                                                              bif (b__0 == (0x3A1 : (BitVec 12)))
                                                                                                                                                               then
                                                                                                                                                                 (pure "pmpcfg1")
                                                                                                                                                               else
                                                                                                                                                                 (do
-                                                                                                                                                                  if ((b__0 == (0x3A2 : (BitVec 12))) : Bool)
+                                                                                                                                                                  bif (b__0 == (0x3A2 : (BitVec 12)))
                                                                                                                                                                   then
                                                                                                                                                                     (pure "pmpcfg2")
                                                                                                                                                                   else
                                                                                                                                                                     (do
-                                                                                                                                                                      if ((b__0 == (0x3A3 : (BitVec 12))) : Bool)
+                                                                                                                                                                      bif (b__0 == (0x3A3 : (BitVec 12)))
                                                                                                                                                                       then
                                                                                                                                                                         (pure "pmpcfg3")
                                                                                                                                                                       else
                                                                                                                                                                         (do
-                                                                                                                                                                          if ((b__0 == (0x3A4 : (BitVec 12))) : Bool)
+                                                                                                                                                                          bif (b__0 == (0x3A4 : (BitVec 12)))
                                                                                                                                                                           then
                                                                                                                                                                             (pure "pmpcfg4")
                                                                                                                                                                           else
                                                                                                                                                                             (do
-                                                                                                                                                                              if ((b__0 == (0x3A5 : (BitVec 12))) : Bool)
+                                                                                                                                                                              bif (b__0 == (0x3A5 : (BitVec 12)))
                                                                                                                                                                               then
                                                                                                                                                                                 (pure "pmpcfg5")
                                                                                                                                                                               else
                                                                                                                                                                                 (do
-                                                                                                                                                                                  if ((b__0 == (0x3A6 : (BitVec 12))) : Bool)
+                                                                                                                                                                                  bif (b__0 == (0x3A6 : (BitVec 12)))
                                                                                                                                                                                   then
                                                                                                                                                                                     (pure "pmpcfg6")
                                                                                                                                                                                   else
                                                                                                                                                                                     (do
-                                                                                                                                                                                      if ((b__0 == (0x3A7 : (BitVec 12))) : Bool)
+                                                                                                                                                                                      bif (b__0 == (0x3A7 : (BitVec 12)))
                                                                                                                                                                                       then
                                                                                                                                                                                         (pure "pmpcfg7")
                                                                                                                                                                                       else
                                                                                                                                                                                         (do
-                                                                                                                                                                                          if ((b__0 == (0x3A8 : (BitVec 12))) : Bool)
+                                                                                                                                                                                          bif (b__0 == (0x3A8 : (BitVec 12)))
                                                                                                                                                                                           then
                                                                                                                                                                                             (pure "pmpcfg8")
                                                                                                                                                                                           else
                                                                                                                                                                                             (do
-                                                                                                                                                                                              if ((b__0 == (0x3A9 : (BitVec 12))) : Bool)
+                                                                                                                                                                                              bif (b__0 == (0x3A9 : (BitVec 12)))
                                                                                                                                                                                               then
                                                                                                                                                                                                 (pure "pmpcfg9")
                                                                                                                                                                                               else
                                                                                                                                                                                                 (do
-                                                                                                                                                                                                  if ((b__0 == (0x3AA : (BitVec 12))) : Bool)
+                                                                                                                                                                                                  bif (b__0 == (0x3AA : (BitVec 12)))
                                                                                                                                                                                                   then
                                                                                                                                                                                                     (pure "pmpcfg10")
                                                                                                                                                                                                   else
                                                                                                                                                                                                     (do
-                                                                                                                                                                                                      if ((b__0 == (0x3AB : (BitVec 12))) : Bool)
+                                                                                                                                                                                                      bif (b__0 == (0x3AB : (BitVec 12)))
                                                                                                                                                                                                       then
                                                                                                                                                                                                         (pure "pmpcfg11")
                                                                                                                                                                                                       else
                                                                                                                                                                                                         (do
-                                                                                                                                                                                                          if ((b__0 == (0x3AC : (BitVec 12))) : Bool)
+                                                                                                                                                                                                          bif (b__0 == (0x3AC : (BitVec 12)))
                                                                                                                                                                                                           then
                                                                                                                                                                                                             (pure "pmpcfg12")
                                                                                                                                                                                                           else
                                                                                                                                                                                                             (do
-                                                                                                                                                                                                              if ((b__0 == (0x3AD : (BitVec 12))) : Bool)
+                                                                                                                                                                                                              bif (b__0 == (0x3AD : (BitVec 12)))
                                                                                                                                                                                                               then
                                                                                                                                                                                                                 (pure "pmpcfg13")
                                                                                                                                                                                                               else
                                                                                                                                                                                                                 (do
-                                                                                                                                                                                                                  if ((b__0 == (0x3AE : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                  bif (b__0 == (0x3AE : (BitVec 12)))
                                                                                                                                                                                                                   then
                                                                                                                                                                                                                     (pure "pmpcfg14")
                                                                                                                                                                                                                   else
                                                                                                                                                                                                                     (do
-                                                                                                                                                                                                                      if ((b__0 == (0x3AF : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                      bif (b__0 == (0x3AF : (BitVec 12)))
                                                                                                                                                                                                                       then
                                                                                                                                                                                                                         (pure "pmpcfg15")
                                                                                                                                                                                                                       else
                                                                                                                                                                                                                         (do
-                                                                                                                                                                                                                          if ((b__0 == (0x3B0 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                          bif (b__0 == (0x3B0 : (BitVec 12)))
                                                                                                                                                                                                                           then
                                                                                                                                                                                                                             (pure "pmpaddr0")
                                                                                                                                                                                                                           else
                                                                                                                                                                                                                             (do
-                                                                                                                                                                                                                              if ((b__0 == (0x3B1 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                              bif (b__0 == (0x3B1 : (BitVec 12)))
                                                                                                                                                                                                                               then
                                                                                                                                                                                                                                 (pure "pmpaddr1")
                                                                                                                                                                                                                               else
                                                                                                                                                                                                                                 (do
-                                                                                                                                                                                                                                  if ((b__0 == (0x3B2 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                  bif (b__0 == (0x3B2 : (BitVec 12)))
                                                                                                                                                                                                                                   then
                                                                                                                                                                                                                                     (pure "pmpaddr2")
                                                                                                                                                                                                                                   else
                                                                                                                                                                                                                                     (do
-                                                                                                                                                                                                                                      if ((b__0 == (0x3B3 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                      bif (b__0 == (0x3B3 : (BitVec 12)))
                                                                                                                                                                                                                                       then
                                                                                                                                                                                                                                         (pure "pmpaddr3")
                                                                                                                                                                                                                                       else
                                                                                                                                                                                                                                         (do
-                                                                                                                                                                                                                                          if ((b__0 == (0x3B4 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                          bif (b__0 == (0x3B4 : (BitVec 12)))
                                                                                                                                                                                                                                           then
                                                                                                                                                                                                                                             (pure "pmpaddr4")
                                                                                                                                                                                                                                           else
                                                                                                                                                                                                                                             (do
-                                                                                                                                                                                                                                              if ((b__0 == (0x3B5 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                              bif (b__0 == (0x3B5 : (BitVec 12)))
                                                                                                                                                                                                                                               then
                                                                                                                                                                                                                                                 (pure "pmpaddr5")
                                                                                                                                                                                                                                               else
                                                                                                                                                                                                                                                 (do
-                                                                                                                                                                                                                                                  if ((b__0 == (0x3B6 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                  bif (b__0 == (0x3B6 : (BitVec 12)))
                                                                                                                                                                                                                                                   then
                                                                                                                                                                                                                                                     (pure "pmpaddr6")
                                                                                                                                                                                                                                                   else
                                                                                                                                                                                                                                                     (do
-                                                                                                                                                                                                                                                      if ((b__0 == (0x3B7 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                      bif (b__0 == (0x3B7 : (BitVec 12)))
                                                                                                                                                                                                                                                       then
                                                                                                                                                                                                                                                         (pure "pmpaddr7")
                                                                                                                                                                                                                                                       else
                                                                                                                                                                                                                                                         (do
-                                                                                                                                                                                                                                                          if ((b__0 == (0x3B8 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                          bif (b__0 == (0x3B8 : (BitVec 12)))
                                                                                                                                                                                                                                                           then
                                                                                                                                                                                                                                                             (pure "pmpaddr8")
                                                                                                                                                                                                                                                           else
                                                                                                                                                                                                                                                             (do
-                                                                                                                                                                                                                                                              if ((b__0 == (0x3B9 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                              bif (b__0 == (0x3B9 : (BitVec 12)))
                                                                                                                                                                                                                                                               then
                                                                                                                                                                                                                                                                 (pure "pmpaddr9")
                                                                                                                                                                                                                                                               else
                                                                                                                                                                                                                                                                 (do
-                                                                                                                                                                                                                                                                  if ((b__0 == (0x3BA : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                  bif (b__0 == (0x3BA : (BitVec 12)))
                                                                                                                                                                                                                                                                   then
                                                                                                                                                                                                                                                                     (pure "pmpaddr10")
                                                                                                                                                                                                                                                                   else
                                                                                                                                                                                                                                                                     (do
-                                                                                                                                                                                                                                                                      if ((b__0 == (0x3BB : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                      bif (b__0 == (0x3BB : (BitVec 12)))
                                                                                                                                                                                                                                                                       then
                                                                                                                                                                                                                                                                         (pure "pmpaddr11")
                                                                                                                                                                                                                                                                       else
                                                                                                                                                                                                                                                                         (do
-                                                                                                                                                                                                                                                                          if ((b__0 == (0x3BC : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                          bif (b__0 == (0x3BC : (BitVec 12)))
                                                                                                                                                                                                                                                                           then
                                                                                                                                                                                                                                                                             (pure "pmpaddr12")
                                                                                                                                                                                                                                                                           else
                                                                                                                                                                                                                                                                             (do
-                                                                                                                                                                                                                                                                              if ((b__0 == (0x3BD : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                              bif (b__0 == (0x3BD : (BitVec 12)))
                                                                                                                                                                                                                                                                               then
                                                                                                                                                                                                                                                                                 (pure "pmpaddr13")
                                                                                                                                                                                                                                                                               else
                                                                                                                                                                                                                                                                                 (do
-                                                                                                                                                                                                                                                                                  if ((b__0 == (0x3BE : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                  bif (b__0 == (0x3BE : (BitVec 12)))
                                                                                                                                                                                                                                                                                   then
                                                                                                                                                                                                                                                                                     (pure "pmpaddr14")
                                                                                                                                                                                                                                                                                   else
                                                                                                                                                                                                                                                                                     (do
-                                                                                                                                                                                                                                                                                      if ((b__0 == (0x3BF : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                      bif (b__0 == (0x3BF : (BitVec 12)))
                                                                                                                                                                                                                                                                                       then
                                                                                                                                                                                                                                                                                         (pure "pmpaddr15")
                                                                                                                                                                                                                                                                                       else
                                                                                                                                                                                                                                                                                         (do
-                                                                                                                                                                                                                                                                                          if ((b__0 == (0x3C0 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                          bif (b__0 == (0x3C0 : (BitVec 12)))
                                                                                                                                                                                                                                                                                           then
                                                                                                                                                                                                                                                                                             (pure "pmpaddr16")
                                                                                                                                                                                                                                                                                           else
                                                                                                                                                                                                                                                                                             (do
-                                                                                                                                                                                                                                                                                              if ((b__0 == (0x3C1 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                              bif (b__0 == (0x3C1 : (BitVec 12)))
                                                                                                                                                                                                                                                                                               then
                                                                                                                                                                                                                                                                                                 (pure "pmpaddr17")
                                                                                                                                                                                                                                                                                               else
                                                                                                                                                                                                                                                                                                 (do
-                                                                                                                                                                                                                                                                                                  if ((b__0 == (0x3C2 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                  bif (b__0 == (0x3C2 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                   then
                                                                                                                                                                                                                                                                                                     (pure "pmpaddr18")
                                                                                                                                                                                                                                                                                                   else
                                                                                                                                                                                                                                                                                                     (do
-                                                                                                                                                                                                                                                                                                      if ((b__0 == (0x3C3 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                      bif (b__0 == (0x3C3 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                       then
                                                                                                                                                                                                                                                                                                         (pure "pmpaddr19")
                                                                                                                                                                                                                                                                                                       else
                                                                                                                                                                                                                                                                                                         (do
-                                                                                                                                                                                                                                                                                                          if ((b__0 == (0x3C4 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                          bif (b__0 == (0x3C4 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                           then
                                                                                                                                                                                                                                                                                                             (pure "pmpaddr20")
                                                                                                                                                                                                                                                                                                           else
                                                                                                                                                                                                                                                                                                             (do
-                                                                                                                                                                                                                                                                                                              if ((b__0 == (0x3C5 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                              bif (b__0 == (0x3C5 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                               then
                                                                                                                                                                                                                                                                                                                 (pure "pmpaddr21")
                                                                                                                                                                                                                                                                                                               else
                                                                                                                                                                                                                                                                                                                 (do
-                                                                                                                                                                                                                                                                                                                  if ((b__0 == (0x3C6 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                  bif (b__0 == (0x3C6 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                   then
                                                                                                                                                                                                                                                                                                                     (pure "pmpaddr22")
                                                                                                                                                                                                                                                                                                                   else
                                                                                                                                                                                                                                                                                                                     (do
-                                                                                                                                                                                                                                                                                                                      if ((b__0 == (0x3C7 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                      bif (b__0 == (0x3C7 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                       then
                                                                                                                                                                                                                                                                                                                         (pure "pmpaddr23")
                                                                                                                                                                                                                                                                                                                       else
                                                                                                                                                                                                                                                                                                                         (do
-                                                                                                                                                                                                                                                                                                                          if ((b__0 == (0x3C8 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                          bif (b__0 == (0x3C8 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                           then
                                                                                                                                                                                                                                                                                                                             (pure "pmpaddr24")
                                                                                                                                                                                                                                                                                                                           else
                                                                                                                                                                                                                                                                                                                             (do
-                                                                                                                                                                                                                                                                                                                              if ((b__0 == (0x3C9 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                              bif (b__0 == (0x3C9 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                               then
                                                                                                                                                                                                                                                                                                                                 (pure "pmpaddr25")
                                                                                                                                                                                                                                                                                                                               else
                                                                                                                                                                                                                                                                                                                                 (do
-                                                                                                                                                                                                                                                                                                                                  if ((b__0 == (0x3CA : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                  bif (b__0 == (0x3CA : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                   then
                                                                                                                                                                                                                                                                                                                                     (pure "pmpaddr26")
                                                                                                                                                                                                                                                                                                                                   else
                                                                                                                                                                                                                                                                                                                                     (do
-                                                                                                                                                                                                                                                                                                                                      if ((b__0 == (0x3CB : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                      bif (b__0 == (0x3CB : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                       then
                                                                                                                                                                                                                                                                                                                                         (pure "pmpaddr27")
                                                                                                                                                                                                                                                                                                                                       else
                                                                                                                                                                                                                                                                                                                                         (do
-                                                                                                                                                                                                                                                                                                                                          if ((b__0 == (0x3CC : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                          bif (b__0 == (0x3CC : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                           then
                                                                                                                                                                                                                                                                                                                                             (pure "pmpaddr28")
                                                                                                                                                                                                                                                                                                                                           else
                                                                                                                                                                                                                                                                                                                                             (do
-                                                                                                                                                                                                                                                                                                                                              if ((b__0 == (0x3CD : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                              bif (b__0 == (0x3CD : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                               then
                                                                                                                                                                                                                                                                                                                                                 (pure "pmpaddr29")
                                                                                                                                                                                                                                                                                                                                               else
                                                                                                                                                                                                                                                                                                                                                 (do
-                                                                                                                                                                                                                                                                                                                                                  if ((b__0 == (0x3CE : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                  bif (b__0 == (0x3CE : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                   then
                                                                                                                                                                                                                                                                                                                                                     (pure "pmpaddr30")
                                                                                                                                                                                                                                                                                                                                                   else
                                                                                                                                                                                                                                                                                                                                                     (do
-                                                                                                                                                                                                                                                                                                                                                      if ((b__0 == (0x3CF : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                      bif (b__0 == (0x3CF : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                       then
                                                                                                                                                                                                                                                                                                                                                         (pure "pmpaddr31")
                                                                                                                                                                                                                                                                                                                                                       else
                                                                                                                                                                                                                                                                                                                                                         (do
-                                                                                                                                                                                                                                                                                                                                                          if ((b__0 == (0x3D0 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                          bif (b__0 == (0x3D0 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                           then
                                                                                                                                                                                                                                                                                                                                                             (pure "pmpaddr32")
                                                                                                                                                                                                                                                                                                                                                           else
                                                                                                                                                                                                                                                                                                                                                             (do
-                                                                                                                                                                                                                                                                                                                                                              if ((b__0 == (0x3D1 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                              bif (b__0 == (0x3D1 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                               then
                                                                                                                                                                                                                                                                                                                                                                 (pure "pmpaddr33")
                                                                                                                                                                                                                                                                                                                                                               else
                                                                                                                                                                                                                                                                                                                                                                 (do
-                                                                                                                                                                                                                                                                                                                                                                  if ((b__0 == (0x3D2 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                  bif (b__0 == (0x3D2 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                   then
                                                                                                                                                                                                                                                                                                                                                                     (pure "pmpaddr34")
                                                                                                                                                                                                                                                                                                                                                                   else
                                                                                                                                                                                                                                                                                                                                                                     (do
-                                                                                                                                                                                                                                                                                                                                                                      if ((b__0 == (0x3D3 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                      bif (b__0 == (0x3D3 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                       then
                                                                                                                                                                                                                                                                                                                                                                         (pure "pmpaddr35")
                                                                                                                                                                                                                                                                                                                                                                       else
                                                                                                                                                                                                                                                                                                                                                                         (do
-                                                                                                                                                                                                                                                                                                                                                                          if ((b__0 == (0x3D4 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                          bif (b__0 == (0x3D4 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                           then
                                                                                                                                                                                                                                                                                                                                                                             (pure "pmpaddr36")
                                                                                                                                                                                                                                                                                                                                                                           else
                                                                                                                                                                                                                                                                                                                                                                             (do
-                                                                                                                                                                                                                                                                                                                                                                              if ((b__0 == (0x3D5 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                              bif (b__0 == (0x3D5 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                               then
                                                                                                                                                                                                                                                                                                                                                                                 (pure "pmpaddr37")
                                                                                                                                                                                                                                                                                                                                                                               else
                                                                                                                                                                                                                                                                                                                                                                                 (do
-                                                                                                                                                                                                                                                                                                                                                                                  if ((b__0 == (0x3D6 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                  bif (b__0 == (0x3D6 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                   then
                                                                                                                                                                                                                                                                                                                                                                                     (pure "pmpaddr38")
                                                                                                                                                                                                                                                                                                                                                                                   else
                                                                                                                                                                                                                                                                                                                                                                                     (do
-                                                                                                                                                                                                                                                                                                                                                                                      if ((b__0 == (0x3D7 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                      bif (b__0 == (0x3D7 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                       then
                                                                                                                                                                                                                                                                                                                                                                                         (pure "pmpaddr39")
                                                                                                                                                                                                                                                                                                                                                                                       else
                                                                                                                                                                                                                                                                                                                                                                                         (do
-                                                                                                                                                                                                                                                                                                                                                                                          if ((b__0 == (0x3D8 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                          bif (b__0 == (0x3D8 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                           then
                                                                                                                                                                                                                                                                                                                                                                                             (pure "pmpaddr40")
                                                                                                                                                                                                                                                                                                                                                                                           else
                                                                                                                                                                                                                                                                                                                                                                                             (do
-                                                                                                                                                                                                                                                                                                                                                                                              if ((b__0 == (0x3D9 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                              bif (b__0 == (0x3D9 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                               then
                                                                                                                                                                                                                                                                                                                                                                                                 (pure "pmpaddr41")
                                                                                                                                                                                                                                                                                                                                                                                               else
                                                                                                                                                                                                                                                                                                                                                                                                 (do
-                                                                                                                                                                                                                                                                                                                                                                                                  if ((b__0 == (0x3DA : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                  bif (b__0 == (0x3DA : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                   then
                                                                                                                                                                                                                                                                                                                                                                                                     (pure "pmpaddr42")
                                                                                                                                                                                                                                                                                                                                                                                                   else
                                                                                                                                                                                                                                                                                                                                                                                                     (do
-                                                                                                                                                                                                                                                                                                                                                                                                      if ((b__0 == (0x3DB : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                      bif (b__0 == (0x3DB : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                       then
                                                                                                                                                                                                                                                                                                                                                                                                         (pure "pmpaddr43")
                                                                                                                                                                                                                                                                                                                                                                                                       else
                                                                                                                                                                                                                                                                                                                                                                                                         (do
-                                                                                                                                                                                                                                                                                                                                                                                                          if ((b__0 == (0x3DC : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                          bif (b__0 == (0x3DC : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                           then
                                                                                                                                                                                                                                                                                                                                                                                                             (pure "pmpaddr44")
                                                                                                                                                                                                                                                                                                                                                                                                           else
                                                                                                                                                                                                                                                                                                                                                                                                             (do
-                                                                                                                                                                                                                                                                                                                                                                                                              if ((b__0 == (0x3DD : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                              bif (b__0 == (0x3DD : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                               then
                                                                                                                                                                                                                                                                                                                                                                                                                 (pure "pmpaddr45")
                                                                                                                                                                                                                                                                                                                                                                                                               else
                                                                                                                                                                                                                                                                                                                                                                                                                 (do
-                                                                                                                                                                                                                                                                                                                                                                                                                  if ((b__0 == (0x3DE : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                  bif (b__0 == (0x3DE : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                   then
                                                                                                                                                                                                                                                                                                                                                                                                                     (pure "pmpaddr46")
                                                                                                                                                                                                                                                                                                                                                                                                                   else
                                                                                                                                                                                                                                                                                                                                                                                                                     (do
-                                                                                                                                                                                                                                                                                                                                                                                                                      if ((b__0 == (0x3DF : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                      bif (b__0 == (0x3DF : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                       then
                                                                                                                                                                                                                                                                                                                                                                                                                         (pure "pmpaddr47")
                                                                                                                                                                                                                                                                                                                                                                                                                       else
                                                                                                                                                                                                                                                                                                                                                                                                                         (do
-                                                                                                                                                                                                                                                                                                                                                                                                                          if ((b__0 == (0x3E0 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                          bif (b__0 == (0x3E0 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                           then
                                                                                                                                                                                                                                                                                                                                                                                                                             (pure "pmpaddr48")
                                                                                                                                                                                                                                                                                                                                                                                                                           else
                                                                                                                                                                                                                                                                                                                                                                                                                             (do
-                                                                                                                                                                                                                                                                                                                                                                                                                              if ((b__0 == (0x3E1 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                              bif (b__0 == (0x3E1 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                               then
                                                                                                                                                                                                                                                                                                                                                                                                                                 (pure "pmpaddr49")
                                                                                                                                                                                                                                                                                                                                                                                                                               else
                                                                                                                                                                                                                                                                                                                                                                                                                                 (do
-                                                                                                                                                                                                                                                                                                                                                                                                                                  if ((b__0 == (0x3E2 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                                  bif (b__0 == (0x3E2 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                                   then
                                                                                                                                                                                                                                                                                                                                                                                                                                     (pure "pmpaddr50")
                                                                                                                                                                                                                                                                                                                                                                                                                                   else
                                                                                                                                                                                                                                                                                                                                                                                                                                     (do
-                                                                                                                                                                                                                                                                                                                                                                                                                                      if ((b__0 == (0x3E3 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                                      bif (b__0 == (0x3E3 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                                       then
                                                                                                                                                                                                                                                                                                                                                                                                                                         (pure "pmpaddr51")
                                                                                                                                                                                                                                                                                                                                                                                                                                       else
                                                                                                                                                                                                                                                                                                                                                                                                                                         (do
-                                                                                                                                                                                                                                                                                                                                                                                                                                          if ((b__0 == (0x3E4 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                                          bif (b__0 == (0x3E4 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                                           then
                                                                                                                                                                                                                                                                                                                                                                                                                                             (pure "pmpaddr52")
                                                                                                                                                                                                                                                                                                                                                                                                                                           else
                                                                                                                                                                                                                                                                                                                                                                                                                                             (do
-                                                                                                                                                                                                                                                                                                                                                                                                                                              if ((b__0 == (0x3E5 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                                              bif (b__0 == (0x3E5 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                                               then
                                                                                                                                                                                                                                                                                                                                                                                                                                                 (pure "pmpaddr53")
                                                                                                                                                                                                                                                                                                                                                                                                                                               else
                                                                                                                                                                                                                                                                                                                                                                                                                                                 (do
-                                                                                                                                                                                                                                                                                                                                                                                                                                                  if ((b__0 == (0x3E6 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                  bif (b__0 == (0x3E6 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                                                   then
                                                                                                                                                                                                                                                                                                                                                                                                                                                     (pure "pmpaddr54")
                                                                                                                                                                                                                                                                                                                                                                                                                                                   else
                                                                                                                                                                                                                                                                                                                                                                                                                                                     (do
-                                                                                                                                                                                                                                                                                                                                                                                                                                                      if ((b__0 == (0x3E7 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                      bif (b__0 == (0x3E7 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                                                       then
                                                                                                                                                                                                                                                                                                                                                                                                                                                         (pure "pmpaddr55")
                                                                                                                                                                                                                                                                                                                                                                                                                                                       else
                                                                                                                                                                                                                                                                                                                                                                                                                                                         (do
-                                                                                                                                                                                                                                                                                                                                                                                                                                                          if ((b__0 == (0x3E8 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                          bif (b__0 == (0x3E8 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                                                           then
                                                                                                                                                                                                                                                                                                                                                                                                                                                             (pure "pmpaddr56")
                                                                                                                                                                                                                                                                                                                                                                                                                                                           else
                                                                                                                                                                                                                                                                                                                                                                                                                                                             (do
-                                                                                                                                                                                                                                                                                                                                                                                                                                                              if ((b__0 == (0x3E9 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                              bif (b__0 == (0x3E9 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                                                               then
                                                                                                                                                                                                                                                                                                                                                                                                                                                                 (pure "pmpaddr57")
                                                                                                                                                                                                                                                                                                                                                                                                                                                               else
                                                                                                                                                                                                                                                                                                                                                                                                                                                                 (do
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                  if ((b__0 == (0x3EA : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                  bif (b__0 == (0x3EA : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                                                                   then
                                                                                                                                                                                                                                                                                                                                                                                                                                                                     (pure "pmpaddr58")
                                                                                                                                                                                                                                                                                                                                                                                                                                                                   else
                                                                                                                                                                                                                                                                                                                                                                                                                                                                     (do
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                      if ((b__0 == (0x3EB : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                      bif (b__0 == (0x3EB : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                                                                       then
                                                                                                                                                                                                                                                                                                                                                                                                                                                                         (pure "pmpaddr59")
                                                                                                                                                                                                                                                                                                                                                                                                                                                                       else
                                                                                                                                                                                                                                                                                                                                                                                                                                                                         (do
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                          if ((b__0 == (0x3EC : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                          bif (b__0 == (0x3EC : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                                                                           then
                                                                                                                                                                                                                                                                                                                                                                                                                                                                             (pure "pmpaddr60")
                                                                                                                                                                                                                                                                                                                                                                                                                                                                           else
                                                                                                                                                                                                                                                                                                                                                                                                                                                                             (do
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                              if ((b__0 == (0x3ED : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                              bif (b__0 == (0x3ED : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                                                                               then
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 (pure "pmpaddr61")
                                                                                                                                                                                                                                                                                                                                                                                                                                                                               else
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 (do
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  if ((b__0 == (0x3EE : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  bif (b__0 == (0x3EE : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   then
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     (pure "pmpaddr62")
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   else
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     (do
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      if ((b__0 == (0x3EF : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      bif (b__0 == (0x3EF : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       then
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         (pure "pmpaddr63")
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       else
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         (do
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          if ((b__0 == (0x001 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          bif (b__0 == (0x001 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           then
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             (pure "fflags")
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           else
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             (do
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              if ((b__0 == (0x002 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              bif (b__0 == (0x002 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               then
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 (pure "frm")
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               else
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 (do
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  if ((b__0 == (0x003 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  bif (b__0 == (0x003 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   then
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     (pure "fcsr")
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   else
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     (do
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      if ((b__0 == (0x008 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      bif (b__0 == (0x008 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       then
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         (pure "vstart")
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       else
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         (do
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          if ((b__0 == (0x009 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          bif (b__0 == (0x009 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           then
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             (pure "vxsat")
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           else
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             (do
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              if ((b__0 == (0x00A : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              bif (b__0 == (0x00A : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               then
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 (pure "vxrm")
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               else
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 (do
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  if ((b__0 == (0x00F : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  bif (b__0 == (0x00F : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   then
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     (pure "vcsr")
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   else
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     (do
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      if ((b__0 == (0xC20 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      bif (b__0 == (0xC20 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       then
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         (pure "vl")
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       else
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         (do
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          if ((b__0 == (0xC21 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          bif (b__0 == (0xC21 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           then
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             (pure "vtype")
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           else
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             (do
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              if ((b__0 == (0xC22 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              bif (b__0 == (0xC22 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               then
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 (pure "vlenb")
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               else
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 (do
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  if ((b__0 == (0x321 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  bif (b__0 == (0x321 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   then
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     (pure "mcyclecfg")
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   else
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     (do
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      if ((b__0 == (0x721 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      bif (b__0 == (0x721 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       then
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         (pure "mcyclecfgh")
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       else
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         (do
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          if ((b__0 == (0x322 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          bif (b__0 == (0x322 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           then
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             (pure "minstretcfg")
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           else
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             (do
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              if ((b__0 == (0x722 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              bif (b__0 == (0x722 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               then
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 (pure "minstretcfgh")
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               else
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 (do
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  if ((b__0 == (0x180 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  bif (b__0 == (0x180 : (BitVec 12)))
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   then
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     (pure "satp")
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   else
@@ -1448,38 +1447,38 @@ def reservability_str_forwards (arg_ : Reservability) : String :=
 
 def pma_attributes_to_str (attr : PMA) : String :=
   (HAppend.hAppend
-    (if (attr.cacheable : Bool)
+    (bif attr.cacheable
     then " cacheable"
     else "")
     (HAppend.hAppend
-      (if (attr.coherent : Bool)
+      (bif attr.coherent
       then " coherent"
       else "")
       (HAppend.hAppend
-        (if (attr.executable : Bool)
+        (bif attr.executable
         then " executable"
         else "")
         (HAppend.hAppend
-          (if (attr.readable : Bool)
+          (bif attr.readable
           then " readable"
           else "")
           (HAppend.hAppend
-            (if (attr.writable : Bool)
+            (bif attr.writable
             then " writable"
             else "")
             (HAppend.hAppend
-              (if (attr.read_idempotent : Bool)
+              (bif attr.read_idempotent
               then " read-idempotent"
               else "")
               (HAppend.hAppend
-                (if (attr.write_idempotent : Bool)
+                (bif attr.write_idempotent
                 then " write-idempotent"
                 else "")
                 (HAppend.hAppend " misaligned_fault:"
                   (HAppend.hAppend (misaligned_fault_str_forwards attr.misaligned_fault)
                     (HAppend.hAppend " "
                       (HAppend.hAppend (reservability_str_forwards attr.reservability)
-                        (if (attr.supports_cbo_zero : Bool)
+                        (bif attr.supports_cbo_zero
                         then " supports_cbo_zero"
                         else ""))))))))))))
 
@@ -1489,11 +1488,248 @@ def pma_region_to_str (region : PMA_Region) : String :=
       (HAppend.hAppend " size: "
         (HAppend.hAppend (BitVec.toFormatted region.size) (pma_attributes_to_str region.attributes)))))
 
+def encdec_reg_forwards (arg_ : regidx) : (BitVec 5) :=
+  match arg_ with
+  | .Regidx r => (zero_extend (m := 5) r)
+
+def encdec_reg_forwards_matches (arg_ : regidx) : Bool :=
+  match arg_ with
+  | .Regidx r => true
+
+def reg_abi_name_raw_forwards (arg_ : (BitVec 5)) : String :=
+  let b__0 := arg_
+  bif (b__0 == (0b00000 : (BitVec 5)))
+  then "zero"
+  else
+    (bif (b__0 == (0b00001 : (BitVec 5)))
+    then "ra"
+    else
+      (bif (b__0 == (0b00010 : (BitVec 5)))
+      then "sp"
+      else
+        (bif (b__0 == (0b00011 : (BitVec 5)))
+        then "gp"
+        else
+          (bif (b__0 == (0b00100 : (BitVec 5)))
+          then "tp"
+          else
+            (bif (b__0 == (0b00101 : (BitVec 5)))
+            then "t0"
+            else
+              (bif (b__0 == (0b00110 : (BitVec 5)))
+              then "t1"
+              else
+                (bif (b__0 == (0b00111 : (BitVec 5)))
+                then "t2"
+                else
+                  (bif (b__0 == (0b01000 : (BitVec 5)))
+                  then "s0"
+                  else
+                    (bif (b__0 == (0b01000 : (BitVec 5)))
+                    then "fp"
+                    else
+                      (bif (b__0 == (0b01001 : (BitVec 5)))
+                      then "s1"
+                      else
+                        (bif (b__0 == (0b01010 : (BitVec 5)))
+                        then "a0"
+                        else
+                          (bif (b__0 == (0b01011 : (BitVec 5)))
+                          then "a1"
+                          else
+                            (bif (b__0 == (0b01100 : (BitVec 5)))
+                            then "a2"
+                            else
+                              (bif (b__0 == (0b01101 : (BitVec 5)))
+                              then "a3"
+                              else
+                                (bif (b__0 == (0b01110 : (BitVec 5)))
+                                then "a4"
+                                else
+                                  (bif (b__0 == (0b01111 : (BitVec 5)))
+                                  then "a5"
+                                  else
+                                    (bif (b__0 == (0b10000 : (BitVec 5)))
+                                    then "a6"
+                                    else
+                                      (bif (b__0 == (0b10001 : (BitVec 5)))
+                                      then "a7"
+                                      else
+                                        (bif (b__0 == (0b10010 : (BitVec 5)))
+                                        then "s2"
+                                        else
+                                          (bif (b__0 == (0b10011 : (BitVec 5)))
+                                          then "s3"
+                                          else
+                                            (bif (b__0 == (0b10100 : (BitVec 5)))
+                                            then "s4"
+                                            else
+                                              (bif (b__0 == (0b10101 : (BitVec 5)))
+                                              then "s5"
+                                              else
+                                                (bif (b__0 == (0b10110 : (BitVec 5)))
+                                                then "s6"
+                                                else
+                                                  (bif (b__0 == (0b10111 : (BitVec 5)))
+                                                  then "s7"
+                                                  else
+                                                    (bif (b__0 == (0b11000 : (BitVec 5)))
+                                                    then "s8"
+                                                    else
+                                                      (bif (b__0 == (0b11001 : (BitVec 5)))
+                                                      then "s9"
+                                                      else
+                                                        (bif (b__0 == (0b11010 : (BitVec 5)))
+                                                        then "s10"
+                                                        else
+                                                          (bif (b__0 == (0b11011 : (BitVec 5)))
+                                                          then "s11"
+                                                          else
+                                                            (bif (b__0 == (0b11100 : (BitVec 5)))
+                                                            then "t3"
+                                                            else
+                                                              (bif (b__0 == (0b11101 : (BitVec 5)))
+                                                              then "t4"
+                                                              else
+                                                                (bif (b__0 == (0b11110 : (BitVec 5)))
+                                                                then "t5"
+                                                                else "t6")))))))))))))))))))))))))))))))
+
+def reg_arch_name_raw_forwards (arg_ : (BitVec 5)) : String :=
+  let b__0 := arg_
+  bif (b__0 == (0b00000 : (BitVec 5)))
+  then "x0"
+  else
+    (bif (b__0 == (0b00001 : (BitVec 5)))
+    then "x1"
+    else
+      (bif (b__0 == (0b00010 : (BitVec 5)))
+      then "x2"
+      else
+        (bif (b__0 == (0b00011 : (BitVec 5)))
+        then "x3"
+        else
+          (bif (b__0 == (0b00100 : (BitVec 5)))
+          then "x4"
+          else
+            (bif (b__0 == (0b00101 : (BitVec 5)))
+            then "x5"
+            else
+              (bif (b__0 == (0b00110 : (BitVec 5)))
+              then "x6"
+              else
+                (bif (b__0 == (0b00111 : (BitVec 5)))
+                then "x7"
+                else
+                  (bif (b__0 == (0b01000 : (BitVec 5)))
+                  then "x8"
+                  else
+                    (bif (b__0 == (0b01001 : (BitVec 5)))
+                    then "x9"
+                    else
+                      (bif (b__0 == (0b01010 : (BitVec 5)))
+                      then "x10"
+                      else
+                        (bif (b__0 == (0b01011 : (BitVec 5)))
+                        then "x11"
+                        else
+                          (bif (b__0 == (0b01100 : (BitVec 5)))
+                          then "x12"
+                          else
+                            (bif (b__0 == (0b01101 : (BitVec 5)))
+                            then "x13"
+                            else
+                              (bif (b__0 == (0b01110 : (BitVec 5)))
+                              then "x14"
+                              else
+                                (bif (b__0 == (0b01111 : (BitVec 5)))
+                                then "x15"
+                                else
+                                  (bif (b__0 == (0b10000 : (BitVec 5)))
+                                  then "x16"
+                                  else
+                                    (bif (b__0 == (0b10001 : (BitVec 5)))
+                                    then "x17"
+                                    else
+                                      (bif (b__0 == (0b10010 : (BitVec 5)))
+                                      then "x18"
+                                      else
+                                        (bif (b__0 == (0b10011 : (BitVec 5)))
+                                        then "x19"
+                                        else
+                                          (bif (b__0 == (0b10100 : (BitVec 5)))
+                                          then "x20"
+                                          else
+                                            (bif (b__0 == (0b10101 : (BitVec 5)))
+                                            then "x21"
+                                            else
+                                              (bif (b__0 == (0b10110 : (BitVec 5)))
+                                              then "x22"
+                                              else
+                                                (bif (b__0 == (0b10111 : (BitVec 5)))
+                                                then "x23"
+                                                else
+                                                  (bif (b__0 == (0b11000 : (BitVec 5)))
+                                                  then "x24"
+                                                  else
+                                                    (bif (b__0 == (0b11001 : (BitVec 5)))
+                                                    then "x25"
+                                                    else
+                                                      (bif (b__0 == (0b11010 : (BitVec 5)))
+                                                      then "x26"
+                                                      else
+                                                        (bif (b__0 == (0b11011 : (BitVec 5)))
+                                                        then "x27"
+                                                        else
+                                                          (bif (b__0 == (0b11100 : (BitVec 5)))
+                                                          then "x28"
+                                                          else
+                                                            (bif (b__0 == (0b11101 : (BitVec 5)))
+                                                            then "x29"
+                                                            else
+                                                              (bif (b__0 == (0b11110 : (BitVec 5)))
+                                                              then "x30"
+                                                              else "x31"))))))))))))))))))))))))))))))
+
+def reg_name_forwards (arg_ : regidx) : SailM String := do
+  let head_exp_ := arg_
+  match (let mapping0_ := head_exp_
+  bif (encdec_reg_forwards_matches mapping0_)
+  then
+    (let i := (encdec_reg_forwards mapping0_)
+    bif (get_config_use_abi_names ())
+    then (some (reg_abi_name_raw_forwards i))
+    else none)
+  else none) with
+  | .some result => (pure result)
+  | none =>
+    (do
+      match (let mapping1_ := head_exp_
+      bif (encdec_reg_forwards_matches mapping1_)
+      then
+        (let i := (encdec_reg_forwards mapping1_)
+        bif (not (get_config_use_abi_names ()))
+        then (some (reg_arch_name_raw_forwards i))
+        else none)
+      else none) with
+      | .some result => (pure result)
+      | _ =>
+        (do
+          assert false "Pattern match failure at unknown location"
+          throw Error.Exit))
+
 def assembly_forwards (arg_ : instruction) : SailM String := do
   match arg_ with
   | .LPAD lpl =>
     (pure (String.append "lpad"
         (String.append (spc_forwards ()) (String.append (← (hex_bits_20_forwards lpl)) ""))))
+  | .ZICBOZ rs1 =>
+    (pure (String.append "cbo.zero"
+        (String.append (spc_forwards ())
+          (String.append "("
+            (String.append (opt_spc_forwards ())
+              (String.append (← (reg_name_forwards rs1))
+                (String.append (opt_spc_forwards ()) (String.append ")" ""))))))))
   | .ILLEGAL s =>
     (pure (String.append "illegal"
         (String.append (spc_forwards ()) (String.append (← (hex_bits_32_forwards s)) ""))))
@@ -1591,39 +1827,39 @@ def interruptType_bits_forwards (arg_ : InterruptType) : (BitVec 6) :=
 
 def interruptType_bits_backwards (arg_ : (BitVec 6)) : SailM InterruptType := do
   let b__0 := arg_
-  if ((b__0 == (0b000000 : (BitVec 6))) : Bool)
+  bif (b__0 == (0b000000 : (BitVec 6)))
   then (pure I_U_Software)
   else
     (do
-      if ((b__0 == (0b000001 : (BitVec 6))) : Bool)
+      bif (b__0 == (0b000001 : (BitVec 6)))
       then (pure I_S_Software)
       else
         (do
-          if ((b__0 == (0b000011 : (BitVec 6))) : Bool)
+          bif (b__0 == (0b000011 : (BitVec 6)))
           then (pure I_M_Software)
           else
             (do
-              if ((b__0 == (0b000100 : (BitVec 6))) : Bool)
+              bif (b__0 == (0b000100 : (BitVec 6)))
               then (pure I_U_Timer)
               else
                 (do
-                  if ((b__0 == (0b000101 : (BitVec 6))) : Bool)
+                  bif (b__0 == (0b000101 : (BitVec 6)))
                   then (pure I_S_Timer)
                   else
                     (do
-                      if ((b__0 == (0b000111 : (BitVec 6))) : Bool)
+                      bif (b__0 == (0b000111 : (BitVec 6)))
                       then (pure I_M_Timer)
                       else
                         (do
-                          if ((b__0 == (0b001000 : (BitVec 6))) : Bool)
+                          bif (b__0 == (0b001000 : (BitVec 6)))
                           then (pure I_U_External)
                           else
                             (do
-                              if ((b__0 == (0b001001 : (BitVec 6))) : Bool)
+                              bif (b__0 == (0b001001 : (BitVec 6)))
                               then (pure I_S_External)
                               else
                                 (do
-                                  if ((b__0 == (0b001011 : (BitVec 6))) : Bool)
+                                  bif (b__0 == (0b001011 : (BitVec 6)))
                                   then (pure I_M_External)
                                   else
                                     (do
@@ -1644,31 +1880,31 @@ def interruptType_bits_forwards_matches (arg_ : InterruptType) : Bool :=
 
 def interruptType_bits_backwards_matches (arg_ : (BitVec 6)) : Bool :=
   let b__0 := arg_
-  if ((b__0 == (0b000000 : (BitVec 6))) : Bool)
+  bif (b__0 == (0b000000 : (BitVec 6)))
   then true
   else
-    (if ((b__0 == (0b000001 : (BitVec 6))) : Bool)
+    (bif (b__0 == (0b000001 : (BitVec 6)))
     then true
     else
-      (if ((b__0 == (0b000011 : (BitVec 6))) : Bool)
+      (bif (b__0 == (0b000011 : (BitVec 6)))
       then true
       else
-        (if ((b__0 == (0b000100 : (BitVec 6))) : Bool)
+        (bif (b__0 == (0b000100 : (BitVec 6)))
         then true
         else
-          (if ((b__0 == (0b000101 : (BitVec 6))) : Bool)
+          (bif (b__0 == (0b000101 : (BitVec 6)))
           then true
           else
-            (if ((b__0 == (0b000111 : (BitVec 6))) : Bool)
+            (bif (b__0 == (0b000111 : (BitVec 6)))
             then true
             else
-              (if ((b__0 == (0b001000 : (BitVec 6))) : Bool)
+              (bif (b__0 == (0b001000 : (BitVec 6)))
               then true
               else
-                (if ((b__0 == (0b001001 : (BitVec 6))) : Bool)
+                (bif (b__0 == (0b001001 : (BitVec 6)))
                 then true
                 else
-                  (if ((b__0 == (0b001011 : (BitVec 6))) : Bool)
+                  (bif (b__0 == (0b001011 : (BitVec 6)))
                   then true
                   else false))))))))
 
@@ -1699,91 +1935,91 @@ def exceptionType_bits_backwards (arg_ : (BitVec 6)) : SailM ExceptionType := do
   let head_exp_ := arg_
   match (← do
     let b__0 := head_exp_
-    if ((b__0 == (0b000000 : (BitVec 6))) : Bool)
+    bif (b__0 == (0b000000 : (BitVec 6)))
     then (pure (some (E_Fetch_Addr_Align ())))
     else
       (do
-        if ((b__0 == (0b000001 : (BitVec 6))) : Bool)
+        bif (b__0 == (0b000001 : (BitVec 6)))
         then (pure (some (E_Fetch_Access_Fault ())))
         else
           (do
-            if ((b__0 == (0b000010 : (BitVec 6))) : Bool)
+            bif (b__0 == (0b000010 : (BitVec 6)))
             then (pure (some (E_Illegal_Instr ())))
             else
               (do
-                if ((b__0 == (0b000011 : (BitVec 6))) : Bool)
+                bif (b__0 == (0b000011 : (BitVec 6)))
                 then (pure (some (E_Breakpoint ())))
                 else
                   (do
-                    if ((b__0 == (0b000100 : (BitVec 6))) : Bool)
+                    bif (b__0 == (0b000100 : (BitVec 6)))
                     then (pure (some (E_Load_Addr_Align ())))
                     else
                       (do
-                        if ((b__0 == (0b000101 : (BitVec 6))) : Bool)
+                        bif (b__0 == (0b000101 : (BitVec 6)))
                         then (pure (some (E_Load_Access_Fault ())))
                         else
                           (do
-                            if ((b__0 == (0b000110 : (BitVec 6))) : Bool)
+                            bif (b__0 == (0b000110 : (BitVec 6)))
                             then (pure (some (E_SAMO_Addr_Align ())))
                             else
                               (do
-                                if ((b__0 == (0b000111 : (BitVec 6))) : Bool)
+                                bif (b__0 == (0b000111 : (BitVec 6)))
                                 then (pure (some (E_SAMO_Access_Fault ())))
                                 else
                                   (do
-                                    if ((b__0 == (0b001000 : (BitVec 6))) : Bool)
+                                    bif (b__0 == (0b001000 : (BitVec 6)))
                                     then (pure (some (E_U_EnvCall ())))
                                     else
                                       (do
-                                        if ((b__0 == (0b001001 : (BitVec 6))) : Bool)
+                                        bif (b__0 == (0b001001 : (BitVec 6)))
                                         then (pure (some (E_S_EnvCall ())))
                                         else
                                           (do
-                                            if ((b__0 == (0b001010 : (BitVec 6))) : Bool)
+                                            bif (b__0 == (0b001010 : (BitVec 6)))
                                             then (pure (some (E_Reserved_10 ())))
                                             else
                                               (do
-                                                if ((b__0 == (0b001011 : (BitVec 6))) : Bool)
+                                                bif (b__0 == (0b001011 : (BitVec 6)))
                                                 then (pure (some (E_M_EnvCall ())))
                                                 else
                                                   (do
-                                                    if ((b__0 == (0b001100 : (BitVec 6))) : Bool)
+                                                    bif (b__0 == (0b001100 : (BitVec 6)))
                                                     then (pure (some (E_Fetch_Page_Fault ())))
                                                     else
                                                       (do
-                                                        if ((b__0 == (0b001101 : (BitVec 6))) : Bool)
+                                                        bif (b__0 == (0b001101 : (BitVec 6)))
                                                         then (pure (some (E_Load_Page_Fault ())))
                                                         else
                                                           (do
-                                                            if ((b__0 == (0b001110 : (BitVec 6))) : Bool)
+                                                            bif (b__0 == (0b001110 : (BitVec 6)))
                                                             then (pure (some (E_Reserved_14 ())))
                                                             else
                                                               (do
-                                                                if ((b__0 == (0b001111 : (BitVec 6))) : Bool)
+                                                                bif (b__0 == (0b001111 : (BitVec 6)))
                                                                 then
                                                                   (pure (some (E_SAMO_Page_Fault ())))
                                                                 else
                                                                   (do
-                                                                    if ((b__0 == (0b010000 : (BitVec 6))) : Bool)
+                                                                    bif (b__0 == (0b010000 : (BitVec 6)))
                                                                     then
                                                                       (pure (some (E_Reserved_16 ())))
                                                                     else
                                                                       (do
-                                                                        if ((b__0 == (0b010001 : (BitVec 6))) : Bool)
+                                                                        bif (b__0 == (0b010001 : (BitVec 6)))
                                                                         then
                                                                           (pure (some
                                                                               (E_Reserved_17 ())))
                                                                         else
                                                                           (do
-                                                                            if ((b__0 == (0b010010 : (BitVec 6))) : Bool)
+                                                                            bif (b__0 == (0b010010 : (BitVec 6)))
                                                                             then
                                                                               (pure (some
                                                                                   (E_Software_Check
                                                                                     ())))
                                                                             else
                                                                               (do
-                                                                                if ((ext_exc_type_bits_backwards_matches
-                                                                                     b__0) : Bool)
+                                                                                bif (ext_exc_type_bits_backwards_matches
+                                                                                     b__0)
                                                                                 then
                                                                                   (do
                                                                                     match (← (ext_exc_type_bits_backwards
@@ -1826,84 +2062,84 @@ def exceptionType_bits_backwards_matches (arg_ : (BitVec 6)) : SailM Bool := do
   let head_exp_ := arg_
   match (← do
     let b__0 := head_exp_
-    if ((b__0 == (0b000000 : (BitVec 6))) : Bool)
+    bif (b__0 == (0b000000 : (BitVec 6)))
     then (pure (some true))
     else
       (do
-        if ((b__0 == (0b000001 : (BitVec 6))) : Bool)
+        bif (b__0 == (0b000001 : (BitVec 6)))
         then (pure (some true))
         else
           (do
-            if ((b__0 == (0b000010 : (BitVec 6))) : Bool)
+            bif (b__0 == (0b000010 : (BitVec 6)))
             then (pure (some true))
             else
               (do
-                if ((b__0 == (0b000011 : (BitVec 6))) : Bool)
+                bif (b__0 == (0b000011 : (BitVec 6)))
                 then (pure (some true))
                 else
                   (do
-                    if ((b__0 == (0b000100 : (BitVec 6))) : Bool)
+                    bif (b__0 == (0b000100 : (BitVec 6)))
                     then (pure (some true))
                     else
                       (do
-                        if ((b__0 == (0b000101 : (BitVec 6))) : Bool)
+                        bif (b__0 == (0b000101 : (BitVec 6)))
                         then (pure (some true))
                         else
                           (do
-                            if ((b__0 == (0b000110 : (BitVec 6))) : Bool)
+                            bif (b__0 == (0b000110 : (BitVec 6)))
                             then (pure (some true))
                             else
                               (do
-                                if ((b__0 == (0b000111 : (BitVec 6))) : Bool)
+                                bif (b__0 == (0b000111 : (BitVec 6)))
                                 then (pure (some true))
                                 else
                                   (do
-                                    if ((b__0 == (0b001000 : (BitVec 6))) : Bool)
+                                    bif (b__0 == (0b001000 : (BitVec 6)))
                                     then (pure (some true))
                                     else
                                       (do
-                                        if ((b__0 == (0b001001 : (BitVec 6))) : Bool)
+                                        bif (b__0 == (0b001001 : (BitVec 6)))
                                         then (pure (some true))
                                         else
                                           (do
-                                            if ((b__0 == (0b001010 : (BitVec 6))) : Bool)
+                                            bif (b__0 == (0b001010 : (BitVec 6)))
                                             then (pure (some true))
                                             else
                                               (do
-                                                if ((b__0 == (0b001011 : (BitVec 6))) : Bool)
+                                                bif (b__0 == (0b001011 : (BitVec 6)))
                                                 then (pure (some true))
                                                 else
                                                   (do
-                                                    if ((b__0 == (0b001100 : (BitVec 6))) : Bool)
+                                                    bif (b__0 == (0b001100 : (BitVec 6)))
                                                     then (pure (some true))
                                                     else
                                                       (do
-                                                        if ((b__0 == (0b001101 : (BitVec 6))) : Bool)
+                                                        bif (b__0 == (0b001101 : (BitVec 6)))
                                                         then (pure (some true))
                                                         else
                                                           (do
-                                                            if ((b__0 == (0b001110 : (BitVec 6))) : Bool)
+                                                            bif (b__0 == (0b001110 : (BitVec 6)))
                                                             then (pure (some true))
                                                             else
                                                               (do
-                                                                if ((b__0 == (0b001111 : (BitVec 6))) : Bool)
+                                                                bif (b__0 == (0b001111 : (BitVec 6)))
                                                                 then (pure (some true))
                                                                 else
                                                                   (do
-                                                                    if ((b__0 == (0b010000 : (BitVec 6))) : Bool)
+                                                                    bif (b__0 == (0b010000 : (BitVec 6)))
                                                                     then (pure (some true))
                                                                     else
                                                                       (do
-                                                                        if ((b__0 == (0b010001 : (BitVec 6))) : Bool)
+                                                                        bif (b__0 == (0b010001 : (BitVec 6)))
                                                                         then (pure (some true))
                                                                         else
                                                                           (do
-                                                                            if ((b__0 == (0b010010 : (BitVec 6))) : Bool)
+                                                                            bif (b__0 == (0b010010 : (BitVec 6)))
                                                                             then (pure (some true))
                                                                             else
                                                                               (do
-                                                                                if ((ext_exc_type_bits_backwards_matches
-                                                                                     b__0) : Bool)
+                                                                                bif (ext_exc_type_bits_backwards_matches
+                                                                                     b__0)
                                                                                 then
                                                                                   (do
                                                                                     match (← (ext_exc_type_bits_backwards
@@ -1951,10 +2187,10 @@ def num_of_TrapVectorMode (arg_ : TrapVectorMode) : Int :=
 
 def trapVectorMode_of_bits (m : (BitVec 2)) : TrapVectorMode :=
   let b__0 := m
-  if ((b__0 == (0b00 : (BitVec 2))) : Bool)
+  bif (b__0 == (0b00 : (BitVec 2)))
   then TV_Direct
   else
-    (if ((b__0 == (0b01 : (BitVec 2))) : Bool)
+    (bif (b__0 == (0b01 : (BitVec 2)))
     then TV_Vector
     else TV_Reserved)
 
@@ -1999,13 +2235,13 @@ def extStatus_bits_forwards (arg_ : ExtStatus) : (BitVec 2) :=
 
 def extStatus_bits_backwards (arg_ : (BitVec 2)) : ExtStatus :=
   let b__0 := arg_
-  if ((b__0 == (0b00 : (BitVec 2))) : Bool)
+  bif (b__0 == (0b00 : (BitVec 2)))
   then Off
   else
-    (if ((b__0 == (0b01 : (BitVec 2))) : Bool)
+    (bif (b__0 == (0b01 : (BitVec 2)))
     then Initial
     else
-      (if ((b__0 == (0b10 : (BitVec 2))) : Bool)
+      (bif (b__0 == (0b10 : (BitVec 2)))
       then Clean
       else Dirty))
 
@@ -2018,16 +2254,16 @@ def extStatus_bits_forwards_matches (arg_ : ExtStatus) : Bool :=
 
 def extStatus_bits_backwards_matches (arg_ : (BitVec 2)) : Bool :=
   let b__0 := arg_
-  if ((b__0 == (0b00 : (BitVec 2))) : Bool)
+  bif (b__0 == (0b00 : (BitVec 2)))
   then true
   else
-    (if ((b__0 == (0b01 : (BitVec 2))) : Bool)
+    (bif (b__0 == (0b01 : (BitVec 2)))
     then true
     else
-      (if ((b__0 == (0b10 : (BitVec 2))) : Bool)
+      (bif (b__0 == (0b10 : (BitVec 2)))
       then true
       else
-        (if ((b__0 == (0b11 : (BitVec 2))) : Bool)
+        (bif (b__0 == (0b11 : (BitVec 2)))
         then true
         else false)))
 
@@ -2060,24 +2296,24 @@ def num_of_SATPMode (arg_ : SATPMode) : Int :=
 def satpMode_of_bits (a : Architecture) (m : (BitVec 4)) : (Option SATPMode) :=
   match (a, m) with
   | (g__4, b__0) =>
-    (if ((b__0 == (0x0 : (BitVec 4))) : Bool)
+    (bif (b__0 == (0x0 : (BitVec 4)))
     then (some Bare)
     else
       (match (g__4, b__0) with
       | (RV32, b__0) =>
-        (if ((b__0 == (0x1 : (BitVec 4))) : Bool)
+        (bif (b__0 == (0x1 : (BitVec 4)))
         then (some Sv32)
         else
           (match (RV32, b__0) with
           | (_, _) => none))
       | (RV64, b__0) =>
-        (if ((b__0 == (0x8 : (BitVec 4))) : Bool)
+        (bif (b__0 == (0x8 : (BitVec 4)))
         then (some Sv39)
         else
-          (if ((b__0 == (0x9 : (BitVec 4))) : Bool)
+          (bif (b__0 == (0x9 : (BitVec 4)))
           then (some Sv48)
           else
-            (if ((b__0 == (0xA : (BitVec 4))) : Bool)
+            (bif (b__0 == (0xA : (BitVec 4)))
             then (some Sv57)
             else
               (match (RV64, b__0) with
@@ -2123,13 +2359,13 @@ def width_enc_forwards (arg_ : Nat) : (BitVec 2) :=
 
 def width_enc_backwards (arg_ : (BitVec 2)) : Int :=
   let b__0 := arg_
-  if ((b__0 == (0b00 : (BitVec 2))) : Bool)
+  bif (b__0 == (0b00 : (BitVec 2)))
   then 1
   else
-    (if ((b__0 == (0b01 : (BitVec 2))) : Bool)
+    (bif (b__0 == (0b01 : (BitVec 2)))
     then 2
     else
-      (if ((b__0 == (0b10 : (BitVec 2))) : Bool)
+      (bif (b__0 == (0b10 : (BitVec 2)))
       then 4
       else 8))
 
@@ -2144,16 +2380,16 @@ def width_enc_forwards_matches (arg_ : Nat) : Bool :=
 
 def width_enc_backwards_matches (arg_ : (BitVec 2)) : Bool :=
   let b__0 := arg_
-  if ((b__0 == (0b00 : (BitVec 2))) : Bool)
+  bif (b__0 == (0b00 : (BitVec 2)))
   then true
   else
-    (if ((b__0 == (0b01 : (BitVec 2))) : Bool)
+    (bif (b__0 == (0b01 : (BitVec 2)))
     then true
     else
-      (if ((b__0 == (0b10 : (BitVec 2))) : Bool)
+      (bif (b__0 == (0b10 : (BitVec 2)))
       then true
       else
-        (if ((b__0 == (0b11 : (BitVec 2))) : Bool)
+        (bif (b__0 == (0b11 : (BitVec 2)))
         then true
         else false)))
 
@@ -2204,23 +2440,23 @@ def width_enc_wide_forwards (arg_ : Nat) : (BitVec 3) :=
 
 def width_enc_wide_backwards (arg_ : (BitVec 3)) : SailM Int := do
   let b__0 := arg_
-  if ((b__0 == (0b000 : (BitVec 3))) : Bool)
+  bif (b__0 == (0b000 : (BitVec 3)))
   then (pure 1)
   else
     (do
-      if ((b__0 == (0b001 : (BitVec 3))) : Bool)
+      bif (b__0 == (0b001 : (BitVec 3)))
       then (pure 2)
       else
         (do
-          if ((b__0 == (0b010 : (BitVec 3))) : Bool)
+          bif (b__0 == (0b010 : (BitVec 3)))
           then (pure 4)
           else
             (do
-              if ((b__0 == (0b011 : (BitVec 3))) : Bool)
+              bif (b__0 == (0b011 : (BitVec 3)))
               then (pure 8)
               else
                 (do
-                  if ((b__0 == (0b100 : (BitVec 3))) : Bool)
+                  bif (b__0 == (0b100 : (BitVec 3)))
                   then (pure 16)
                   else
                     (do
@@ -2239,19 +2475,19 @@ def width_enc_wide_forwards_matches (arg_ : Nat) : Bool :=
 
 def width_enc_wide_backwards_matches (arg_ : (BitVec 3)) : Bool :=
   let b__0 := arg_
-  if ((b__0 == (0b000 : (BitVec 3))) : Bool)
+  bif (b__0 == (0b000 : (BitVec 3)))
   then true
   else
-    (if ((b__0 == (0b001 : (BitVec 3))) : Bool)
+    (bif (b__0 == (0b001 : (BitVec 3)))
     then true
     else
-      (if ((b__0 == (0b010 : (BitVec 3))) : Bool)
+      (bif (b__0 == (0b010 : (BitVec 3)))
       then true
       else
-        (if ((b__0 == (0b011 : (BitVec 3))) : Bool)
+        (bif (b__0 == (0b011 : (BitVec 3)))
         then true
         else
-          (if ((b__0 == (0b100 : (BitVec 3))) : Bool)
+          (bif (b__0 == (0b100 : (BitVec 3)))
           then true
           else false))))
 

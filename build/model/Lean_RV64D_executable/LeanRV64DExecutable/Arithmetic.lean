@@ -166,7 +166,7 @@ def carryless_mul (a : (BitVec k_n)) (b : (BitVec k_n)) : (BitVec (2 * k_n)) := 
   for i in [loop_i_lower:loop_i_upper:1]i do
     let result := loop_vars
     loop_vars :=
-      if (((BitVec.access a i) == 1#1) : Bool)
+      bif ((BitVec.access a i) == 1#1)
       then (result ^^^ (shiftl (zero_extend (m := (2 *i (Sail.BitVec.length b))) b) i))
       else result
   (pure loop_vars)
@@ -180,7 +180,7 @@ def carryless_mulr (a : (BitVec k_n)) (b : (BitVec k_n)) : (BitVec k_n) := Id.ru
   for i in [loop_i_lower:loop_i_upper:1]i do
     let result := loop_vars
     loop_vars :=
-      if (((BitVec.access a i) == 1#1) : Bool)
+      bif ((BitVec.access a i) == 1#1)
       then (result ^^^ (shiftr b (((Sail.BitVec.length result) -i i) -i 1)))
       else result
   (pure loop_vars)
@@ -216,11 +216,11 @@ def count_ones (x : (BitVec k_n)) : SailM Nat := do
   for i in [loop_i_lower:loop_i_upper:1]i do
     let count := loop_vars
     loop_vars ← do
-      if (((BitVec.access x i) == 1#1) : Bool)
+      bif ((BitVec.access x i) == 1#1)
       then
         (do
           let new_count := (count +i 1)
-          assert (new_count ≤b (Sail.BitVec.length x)) "core/arithmetic.sail:67.28-67.29"
+          assert (new_count ≤b (Sail.BitVec.length x)) "./core/arithmetic.sail:67.28-67.29"
           (pure new_count))
       else (pure count)
   (pure loop_vars)

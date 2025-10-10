@@ -1,5 +1,5 @@
 import Std.Data.ExtDHashMap
-import Std.Data.ExtHashMap
+import Std.Data.HashMap
 
 namespace Sail
 
@@ -77,7 +77,7 @@ def update (x : BitVec m) (n : Nat) (b : BitVec 1) := updateSubrange' x n _ b
 def updateBE (x : BitVec m) (n : Nat) (b : BitVec 1) := updateSubrange' x (m - n - 1) _ b
 
 def toBin {w : Nat} (x : BitVec w) : String :=
-  List.asString (List.map (fun c => if c then '1' else '0') (List.ofFn (BitVec.getMsb x)))
+  List.asString (List.map (fun c => if c then '1' else '0') (List.ofFn (BitVec.getMsb' x)))
 
 def toFormatted {w : Nat} (x : BitVec w) : String :=
   if (length x % 4) == 0 then
@@ -88,7 +88,7 @@ def toFormatted {w : Nat} (x : BitVec w) : String :=
 def join1 (xs : List (BitVec 1)) : BitVec xs.length :=
   (BitVec.ofBoolListBE (xs.map fun x => x[0])).cast (by simp)
 
-instance (priority := low) : Coe (BitVec (1 * n)) (BitVec n) where
+instance : Coe (BitVec (1 * n)) (BitVec n) where
   coe x := x.cast (by simp)
 
 end BitVec
@@ -262,7 +262,6 @@ def trivialChoiceSource : ChoiceSource where
 class Arch where
   va_size : Nat
   pa : Type
-  pa_OfNat {n : Nat} : OfNat pa n
   arch_ak : Type
   translation : Type
   trans_start : Type
@@ -380,7 +379,7 @@ variable {Register : Type} {RegisterType : Register → Type} [DecidableEq Regis
 structure SequentialState (RegisterType : Register → Type) (c : ChoiceSource) where
   regs : Std.ExtDHashMap Register RegisterType
   choiceState : c.α
-  mem : Std.ExtHashMap Nat (BitVec 8)
+  mem : Std.HashMap Nat (BitVec 8)
   tags : Unit
   cycleCount : Nat -- Part of the concurrency interface. See `{get_}cycle_count`
   sailOutput : Array String -- TODO: be able to use the IO monad to run
@@ -488,10 +487,6 @@ def readByte (addr : Nat) : PreSailM RegisterType c ue (BitVec 8) := do
 def readBytes (size : Nat) (addr : Nat) : PreSailM RegisterType c ue ((BitVec (8 * size)) × Option Bool) :=
   match size with
   | 0 => pure (default, none)
-  | 1 => do
-    let b ← readByte addr
-    have h : 8 * 1 = 8 := rfl
-    return (h ▸ b, none)
   | n + 1 => do
     let b ← readByte addr
     let (bytes, bool) ← readBytes n (addr+1)
@@ -543,7 +538,6 @@ def sailTryCatchE (e : ExceptT β (PreSailM RegisterType c ue) α) (h : ue → E
 
 end Regs
 
-
 end PreSail
 
 namespace Sail
@@ -567,24 +561,6 @@ def main_of_sail_main (initialState : SequentialState RegisterType c) (main : Un
 
 end Sail
 
-def whileFuelM {α} [Monad m] (fuel : Nat) (cond : α → m Bool) (init : α) (f : α → m α)  :=
-  let rec go x n := do
-    match n with
-    | 0 => pure x
-    | n+1 =>
-      if ←cond x then go (←f x) n else pure x
-  go init fuel
-
-def untilFuelM {α} [Monad m] (fuel : Nat) (cond : α → m Bool) (init : α) (f : α → m α)  :=
-  let rec go x n := do
-    match n with
-    | 0 => pure x
-    | n+1 =>
-      let x ← f x
-      if ←cond x then pure x else go x n
-  go init fuel
-
-
 instance : CoeT Int x Nat where
   coe := x.toNat
 
@@ -606,19 +582,19 @@ instance {α α' β β' : Type u} (x : α × β) [CoeT α x.1 α'] [CoeT β x.2 
 instance {α α' : Type u} [∀ x, CoeT α x α'] (xs : List α) : CoeT (List α) xs (List α') where
   coe := List.map (α := α) (β := α') (fun x => x) xs
 
-instance (priority := low) : HAdd (BitVec n) (BitVec m) (BitVec n) where
+instance : HAdd (BitVec n) (BitVec m) (BitVec n) where
   hAdd x y := x + y
 
-instance (priority := low) : HSub (BitVec n) (BitVec m) (BitVec n) where
+instance : HSub (BitVec n) (BitVec m) (BitVec n) where
   hSub x y := x - y
 
-instance (priority := low) : HAnd (BitVec n) (BitVec m) (BitVec n) where
+instance : HAnd (BitVec n) (BitVec m) (BitVec n) where
   hAnd x y := x &&& y
 
-instance (priority := low) : HOr (BitVec n) (BitVec m) (BitVec n) where
+instance : HOr (BitVec n) (BitVec m) (BitVec n) where
   hOr x y := x ||| y
 
-instance (priority := low) : HXor (BitVec n) (BitVec m) (BitVec n) where
+instance : HXor (BitVec n) (BitVec m) (BitVec n) where
   hXor x y := x ^^^ y
 
 instance [GetElem? coll Nat elem valid] : GetElem? coll Int elem (λ c i ↦ valid c i.toNat) where
@@ -627,6 +603,9 @@ instance [GetElem? coll Nat elem valid] : GetElem? coll Int elem (λ c i ↦ val
 
 instance : HPow Int Int Int where
   hPow x n := x ^ n.toNat
+
+instance [BEq α] [Hashable α] : Inhabited (Std.ExtDHashMap α β) where
+  default := ∅
 
 infixl:65 " +i "   => fun (x y : Int) => x + y
 infixl:65 " -i "   => fun (x y : Int) => x - y
@@ -651,4 +630,3 @@ macro_rules | `(tactic| decreasing_trivial) => `(tactic|
 -- termination.
 @[wf_preprocess]
 theorem cond_eq_ite (b : Bool) (x y : α) : cond b x y = ite b x y := by cases b <;> rfl
-

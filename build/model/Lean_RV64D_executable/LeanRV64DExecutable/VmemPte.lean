@@ -179,13 +179,13 @@ def default_sv32_ext_pte : pte_ext_bits := (zeros (n := 10))
 /-- Type quantifiers: k_pte_size : Nat, k_pte_size ≥ 0, k_pte_size ∈ {32, 64} -/
 def ext_bits_of_PTE (pte : (BitVec k_pte_size)) : (BitVec 10) :=
   (Mk_PTE_Ext
-    (if (((Sail.BitVec.length pte) == 64) : Bool)
+    (bif ((Sail.BitVec.length pte) == 64)
     then (Sail.BitVec.extractLsb pte 63 54)
     else default_sv32_ext_pte))
 
 /-- Type quantifiers: k_pte_size : Nat, k_pte_size ≥ 0, k_pte_size ∈ {32, 64} -/
-def PPN_of_PTE (pte : (BitVec k_pte_size)) : (BitVec (if ( k_pte_size = 32  : Bool) then 22 else 44)) :=
-  if (((Sail.BitVec.length pte) == 32) : Bool)
+def PPN_of_PTE (pte : (BitVec k_pte_size)) : (BitVec (bif k_pte_size = 32 then 22 else 44)) :=
+  bif ((Sail.BitVec.length pte) == 32)
   then (Sail.BitVec.extractLsb pte 31 10)
   else (Sail.BitVec.extractLsb pte 53 10)
 
@@ -207,7 +207,7 @@ def pte_is_invalid (pte_flags : (BitVec 8)) (pte_ext : (BitVec 10)) : SailM Bool
                     pte_ext) != (zeros (n := 2))) && (not (← (currentlyEnabled Ext_Svrsw60t59b)))) || ((_get_PTE_Ext_reserved
                   pte_ext) != (zeros (n := 5)))))))))
 
-/-- Type quantifiers: k_ex87953# : Bool, k_ex87952# : Bool -/
+/-- Type quantifiers: k_ex87943# : Bool, k_ex87942# : Bool -/
 def check_PTE_permission (ac : (AccessType Unit)) (priv : Privilege) (mxr : Bool) (do_sum : Bool) (pte_flags : (BitVec 8)) (ext : (BitVec 10)) (ext_ptw : Unit) : SailM PTE_Check := do
   let pte_U := (bits_to_bool (_get_PTE_Flags_U pte_flags))
   let pte_R := (bits_to_bool (_get_PTE_Flags_R pte_flags))
@@ -223,11 +223,12 @@ def check_PTE_permission (ac : (AccessType Unit)) (priv : Privilege) (mxr : Bool
     match priv with
     | User => (pure pte_U)
     | Supervisor => (pure ((not pte_U) || (do_sum && (is_load_store ac))))
-    | Machine => (internal_error "sys/vmem_pte.sail" 133 "m-mode mem perm check")
-    | VirtualUser => (internal_error "sys/vmem_pte.sail" 134 "Hypervisor extension not supported")
+    | Machine => (internal_error "./sys/vmem_pte.sail" 133 "m-mode mem perm check")
+    | VirtualUser => (internal_error "./sys/vmem_pte.sail" 134 "Hypervisor extension not supported")
     | VirtualSupervisor =>
-      (internal_error "sys/vmem_pte.sail" 135 "Hypervisor extension not supported") ) : SailM Bool )
-  if ((access_ok && priv_ok) : Bool)
+      (internal_error "./sys/vmem_pte.sail" 135 "Hypervisor extension not supported") ) : SailM Bool
+    )
+  bif (access_ok && priv_ok)
   then (pure (PTE_Check_Success ()))
   else (pure (PTE_Check_Failure ((), ())))
 
@@ -241,11 +242,11 @@ def update_PTE_Bits (pte : (BitVec k_pte_size)) (a : (AccessType Unit)) : (Optio
       | .Write _ => true
       | .ReadWrite (_, _) => true : Bool))
   let update_a := ((_get_PTE_Flags_A pte_flags) == (0b0 : (BitVec 1)))
-  if ((update_d || update_a) : Bool)
+  bif (update_d || update_a)
   then
     (let pte_flags :=
       (_update_PTE_Flags_D (_update_PTE_Flags_A pte_flags (0b1 : (BitVec 1)))
-        (if (update_d : Bool)
+        (bif update_d
         then (0b1 : (BitVec 1))
         else (_get_PTE_Flags_D pte_flags)))
     (some (Sail.BitVec.updateSubrange pte 7 0 pte_flags)))

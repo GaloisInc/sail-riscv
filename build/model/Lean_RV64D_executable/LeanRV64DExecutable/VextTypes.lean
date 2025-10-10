@@ -151,25 +151,25 @@ open AccessType
 
 def encdec_nfields_forwards (arg_ : (BitVec 3)) : Int :=
   let b__0 := arg_
-  if ((b__0 == (0b000 : (BitVec 3))) : Bool)
+  bif (b__0 == (0b000 : (BitVec 3)))
   then 1
   else
-    (if ((b__0 == (0b001 : (BitVec 3))) : Bool)
+    (bif (b__0 == (0b001 : (BitVec 3)))
     then 2
     else
-      (if ((b__0 == (0b010 : (BitVec 3))) : Bool)
+      (bif (b__0 == (0b010 : (BitVec 3)))
       then 3
       else
-        (if ((b__0 == (0b011 : (BitVec 3))) : Bool)
+        (bif (b__0 == (0b011 : (BitVec 3)))
         then 4
         else
-          (if ((b__0 == (0b100 : (BitVec 3))) : Bool)
+          (bif (b__0 == (0b100 : (BitVec 3)))
           then 5
           else
-            (if ((b__0 == (0b101 : (BitVec 3))) : Bool)
+            (bif (b__0 == (0b101 : (BitVec 3)))
             then 6
             else
-              (if ((b__0 == (0b110 : (BitVec 3))) : Bool)
+              (bif (b__0 == (0b110 : (BitVec 3)))
               then 7
               else 8))))))
 
@@ -187,28 +187,28 @@ def encdec_nfields_backwards (arg_ : Nat) : (BitVec 3) :=
 
 def encdec_nfields_forwards_matches (arg_ : (BitVec 3)) : Bool :=
   let b__0 := arg_
-  if ((b__0 == (0b000 : (BitVec 3))) : Bool)
+  bif (b__0 == (0b000 : (BitVec 3)))
   then true
   else
-    (if ((b__0 == (0b001 : (BitVec 3))) : Bool)
+    (bif (b__0 == (0b001 : (BitVec 3)))
     then true
     else
-      (if ((b__0 == (0b010 : (BitVec 3))) : Bool)
+      (bif (b__0 == (0b010 : (BitVec 3)))
       then true
       else
-        (if ((b__0 == (0b011 : (BitVec 3))) : Bool)
+        (bif (b__0 == (0b011 : (BitVec 3)))
         then true
         else
-          (if ((b__0 == (0b100 : (BitVec 3))) : Bool)
+          (bif (b__0 == (0b100 : (BitVec 3)))
           then true
           else
-            (if ((b__0 == (0b101 : (BitVec 3))) : Bool)
+            (bif (b__0 == (0b101 : (BitVec 3)))
             then true
             else
-              (if ((b__0 == (0b110 : (BitVec 3))) : Bool)
+              (bif (b__0 == (0b110 : (BitVec 3)))
               then true
               else
-                (if ((b__0 == (0b111 : (BitVec 3))) : Bool)
+                (bif (b__0 == (0b111 : (BitVec 3)))
                 then true
                 else false)))))))
 
@@ -279,19 +279,19 @@ def nfields_string_backwards_matches (arg_ : String) : Bool :=
 
 def encdec_nfields_pow2_forwards (arg_ : (BitVec 3)) : SailM Int := do
   let b__0 := arg_
-  if ((b__0 == (0b000 : (BitVec 3))) : Bool)
+  bif (b__0 == (0b000 : (BitVec 3)))
   then (pure 1)
   else
     (do
-      if ((b__0 == (0b001 : (BitVec 3))) : Bool)
+      bif (b__0 == (0b001 : (BitVec 3)))
       then (pure 2)
       else
         (do
-          if ((b__0 == (0b011 : (BitVec 3))) : Bool)
+          bif (b__0 == (0b011 : (BitVec 3)))
           then (pure 4)
           else
             (do
-              if ((b__0 == (0b111 : (BitVec 3))) : Bool)
+              bif (b__0 == (0b111 : (BitVec 3)))
               then (pure 8)
               else
                 (do
@@ -308,16 +308,16 @@ def encdec_nfields_pow2_backwards (arg_ : Nat) : (BitVec 3) :=
 
 def encdec_nfields_pow2_forwards_matches (arg_ : (BitVec 3)) : Bool :=
   let b__0 := arg_
-  if ((b__0 == (0b000 : (BitVec 3))) : Bool)
+  bif (b__0 == (0b000 : (BitVec 3)))
   then true
   else
-    (if ((b__0 == (0b001 : (BitVec 3))) : Bool)
+    (bif (b__0 == (0b001 : (BitVec 3)))
     then true
     else
-      (if ((b__0 == (0b011 : (BitVec 3))) : Bool)
+      (bif (b__0 == (0b011 : (BitVec 3)))
       then true
       else
-        (if ((b__0 == (0b111 : (BitVec 3))) : Bool)
+        (bif (b__0 == (0b111 : (BitVec 3)))
         then true
         else false)))
 

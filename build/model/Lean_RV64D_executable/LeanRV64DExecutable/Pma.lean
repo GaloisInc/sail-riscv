@@ -271,8 +271,8 @@ def matching_pma (pmas : (List PMA_Region)) (addr : physaddr) (width : Nat) : (O
   match pmas with
   | [] => none
   | (pma :: rest) =>
-    (if ((range_subset (zero_extend (m := 64) (bits_of_physaddr addr)) (to_bits (l := 64) width)
-         pma.base pma.size) : Bool)
+    (bif (range_subset (zero_extend (m := 64) (bits_of_physaddr addr)) (to_bits (l := 64) width)
+         pma.base pma.size)
     then (some pma)
     else (matching_pma rest addr width))
 

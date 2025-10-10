@@ -1,7 +1,6 @@
 name = "Lean_RV64D_executable"
 defaultTargets = ["LeanRV64DExecutable"]
 moreLeanArgs = ["--tstack=400000"]
-moreLeancArgs = ["-fbracket-depth=512"]
 
 [[lean_lib]]
 name = "LeanRV64DExecutable"

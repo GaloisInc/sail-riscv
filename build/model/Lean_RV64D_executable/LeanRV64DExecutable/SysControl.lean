@@ -5,13 +5,11 @@ import LeanRV64DExecutable.Xlen
 import LeanRV64DExecutable.Extensions
 import LeanRV64DExecutable.Types
 import LeanRV64DExecutable.Callbacks
-import LeanRV64DExecutable.Regs
 import LeanRV64DExecutable.PcAccess
 import LeanRV64DExecutable.SysRegs
 import LeanRV64DExecutable.SysExceptions
 import LeanRV64DExecutable.PmpRegs
 import LeanRV64DExecutable.PmpControl
-import LeanRV64DExecutable.VextRegs
 import LeanRV64DExecutable.ZicfilpRegs
 
 set_option maxHeartbeats 1_000_000_000
@@ -158,7 +156,7 @@ open Architecture
 open AccessType
 
 def effectivePrivilege (t : (AccessType Unit)) (m : (BitVec 64)) (priv : Privilege) : SailM Privilege := do
-  if (((bne t (InstructionFetch ())) && ((_get_Mstatus_MPRV m) == (0b1 : (BitVec 1)))) : Bool)
+  bif ((bne t (InstructionFetch ())) && ((_get_Mstatus_MPRV m) == (0b1 : (BitVec 1))))
   then (privLevel_bits_forwards ((_get_Mstatus_MPP m), 0#1))
   else (pure priv)
 
@@ -171,180 +169,180 @@ def csrPriv (csr : (BitVec 12)) : (BitVec 2) :=
 def check_CSR_priv (csr : (BitVec 12)) (p : Privilege) : Bool :=
   (zopz0zKzJ_u (privLevel_to_bits p) (csrPriv csr))
 
-/-- Type quantifiers: k_ex86278# : Bool -/
+/-- Type quantifiers: k_ex86268# : Bool -/
 def check_CSR_access (csr : (BitVec 12)) (isWrite : Bool) : Bool :=
   (not (isWrite && ((csrAccess csr) == (0b11 : (BitVec 2)))))
 
-/-- Type quantifiers: k_ex86288# : Bool -/
+/-- Type quantifiers: k_ex86278# : Bool -/
 def is_CSR_accessible (b__0 : (BitVec 12)) (g__2 : Privilege) (g__3 : Bool) : SailM Bool := do
-  if ((b__0 == (0x301 : (BitVec 12))) : Bool)
+  bif (b__0 == (0x301 : (BitVec 12)))
   then (pure true)
   else
     (do
-      if ((b__0 == (0x300 : (BitVec 12))) : Bool)
+      bif (b__0 == (0x300 : (BitVec 12)))
       then (pure true)
       else
         (do
-          if ((b__0 == (0x310 : (BitVec 12))) : Bool)
+          bif (b__0 == (0x310 : (BitVec 12)))
           then (pure (xlen == 32))
           else
             (do
-              if ((b__0 == (0x747 : (BitVec 12))) : Bool)
+              bif (b__0 == (0x747 : (BitVec 12)))
               then (pure ((← (currentlyEnabled Ext_Zkr)) || (hartSupports Ext_Zicfilp)))
               else
                 (do
-                  if ((b__0 == (0x757 : (BitVec 12))) : Bool)
+                  bif (b__0 == (0x757 : (BitVec 12)))
                   then
                     (pure (((← (currentlyEnabled Ext_Zkr)) || (hartSupports Ext_Zicfilp)) && (xlen == 32)))
                   else
                     (do
-                      if ((b__0 == (0x30A : (BitVec 12))) : Bool)
+                      bif (b__0 == (0x30A : (BitVec 12)))
                       then (currentlyEnabled Ext_U)
                       else
                         (do
-                          if ((b__0 == (0x31A : (BitVec 12))) : Bool)
+                          bif (b__0 == (0x31A : (BitVec 12)))
                           then (pure ((← (currentlyEnabled Ext_U)) && (xlen == 32)))
                           else
                             (do
-                              if ((b__0 == (0x10A : (BitVec 12))) : Bool)
+                              bif (b__0 == (0x10A : (BitVec 12)))
                               then (currentlyEnabled Ext_S)
                               else
                                 (do
-                                  if ((b__0 == (0x304 : (BitVec 12))) : Bool)
+                                  bif (b__0 == (0x304 : (BitVec 12)))
                                   then (pure true)
                                   else
                                     (do
-                                      if ((b__0 == (0x344 : (BitVec 12))) : Bool)
+                                      bif (b__0 == (0x344 : (BitVec 12)))
                                       then (pure true)
                                       else
                                         (do
-                                          if ((b__0 == (0x302 : (BitVec 12))) : Bool)
+                                          bif (b__0 == (0x302 : (BitVec 12)))
                                           then (currentlyEnabled Ext_S)
                                           else
                                             (do
-                                              if ((b__0 == (0x312 : (BitVec 12))) : Bool)
+                                              bif (b__0 == (0x312 : (BitVec 12)))
                                               then
                                                 (pure ((← (currentlyEnabled Ext_S)) && (xlen == 32)))
                                               else
                                                 (do
-                                                  if ((b__0 == (0x303 : (BitVec 12))) : Bool)
+                                                  bif (b__0 == (0x303 : (BitVec 12)))
                                                   then (currentlyEnabled Ext_S)
                                                   else
                                                     (do
-                                                      if ((b__0 == (0x342 : (BitVec 12))) : Bool)
+                                                      bif (b__0 == (0x342 : (BitVec 12)))
                                                       then (pure true)
                                                       else
                                                         (do
-                                                          if ((b__0 == (0x343 : (BitVec 12))) : Bool)
+                                                          bif (b__0 == (0x343 : (BitVec 12)))
                                                           then (pure true)
                                                           else
                                                             (do
-                                                              if ((b__0 == (0x340 : (BitVec 12))) : Bool)
+                                                              bif (b__0 == (0x340 : (BitVec 12)))
                                                               then (pure true)
                                                               else
                                                                 (do
-                                                                  if ((b__0 == (0x106 : (BitVec 12))) : Bool)
+                                                                  bif (b__0 == (0x106 : (BitVec 12)))
                                                                   then (currentlyEnabled Ext_S)
                                                                   else
                                                                     (do
-                                                                      if ((b__0 == (0x306 : (BitVec 12))) : Bool)
+                                                                      bif (b__0 == (0x306 : (BitVec 12)))
                                                                       then (currentlyEnabled Ext_U)
                                                                       else
                                                                         (do
-                                                                          if ((b__0 == (0x320 : (BitVec 12))) : Bool)
+                                                                          bif (b__0 == (0x320 : (BitVec 12)))
                                                                           then (pure true)
                                                                           else
                                                                             (do
-                                                                              if ((b__0 == (0xF11 : (BitVec 12))) : Bool)
+                                                                              bif (b__0 == (0xF11 : (BitVec 12)))
                                                                               then (pure true)
                                                                               else
                                                                                 (do
-                                                                                  if ((b__0 == (0xF12 : (BitVec 12))) : Bool)
+                                                                                  bif (b__0 == (0xF12 : (BitVec 12)))
                                                                                   then (pure true)
                                                                                   else
                                                                                     (do
-                                                                                      if ((b__0 == (0xF13 : (BitVec 12))) : Bool)
+                                                                                      bif (b__0 == (0xF13 : (BitVec 12)))
                                                                                       then
                                                                                         (pure true)
                                                                                       else
                                                                                         (do
-                                                                                          if ((b__0 == (0xF14 : (BitVec 12))) : Bool)
+                                                                                          bif (b__0 == (0xF14 : (BitVec 12)))
                                                                                           then
                                                                                             (pure true)
                                                                                           else
                                                                                             (do
-                                                                                              if ((b__0 == (0xF15 : (BitVec 12))) : Bool)
+                                                                                              bif (b__0 == (0xF15 : (BitVec 12)))
                                                                                               then
                                                                                                 (pure true)
                                                                                               else
                                                                                                 (do
-                                                                                                  if ((b__0 == (0x100 : (BitVec 12))) : Bool)
+                                                                                                  bif (b__0 == (0x100 : (BitVec 12)))
                                                                                                   then
                                                                                                     (currentlyEnabled
                                                                                                       Ext_S)
                                                                                                   else
                                                                                                     (do
-                                                                                                      if ((b__0 == (0x144 : (BitVec 12))) : Bool)
+                                                                                                      bif (b__0 == (0x144 : (BitVec 12)))
                                                                                                       then
                                                                                                         (currentlyEnabled
                                                                                                           Ext_S)
                                                                                                       else
                                                                                                         (do
-                                                                                                          if ((b__0 == (0x104 : (BitVec 12))) : Bool)
+                                                                                                          bif (b__0 == (0x104 : (BitVec 12)))
                                                                                                           then
                                                                                                             (currentlyEnabled
                                                                                                               Ext_S)
                                                                                                           else
                                                                                                             (do
-                                                                                                              if ((b__0 == (0x140 : (BitVec 12))) : Bool)
+                                                                                                              bif (b__0 == (0x140 : (BitVec 12)))
                                                                                                               then
                                                                                                                 (currentlyEnabled
                                                                                                                   Ext_S)
                                                                                                               else
                                                                                                                 (do
-                                                                                                                  if ((b__0 == (0x142 : (BitVec 12))) : Bool)
+                                                                                                                  bif (b__0 == (0x142 : (BitVec 12)))
                                                                                                                   then
                                                                                                                     (currentlyEnabled
                                                                                                                       Ext_S)
                                                                                                                   else
                                                                                                                     (do
-                                                                                                                      if ((b__0 == (0x143 : (BitVec 12))) : Bool)
+                                                                                                                      bif (b__0 == (0x143 : (BitVec 12)))
                                                                                                                       then
                                                                                                                         (currentlyEnabled
                                                                                                                           Ext_S)
                                                                                                                       else
                                                                                                                         (do
-                                                                                                                          if ((b__0 == (0x7A0 : (BitVec 12))) : Bool)
+                                                                                                                          bif (b__0 == (0x7A0 : (BitVec 12)))
                                                                                                                           then
                                                                                                                             (pure true)
                                                                                                                           else
                                                                                                                             (do
-                                                                                                                              if ((b__0 == (0x105 : (BitVec 12))) : Bool)
+                                                                                                                              bif (b__0 == (0x105 : (BitVec 12)))
                                                                                                                               then
                                                                                                                                 (currentlyEnabled
                                                                                                                                   Ext_S)
                                                                                                                               else
                                                                                                                                 (do
-                                                                                                                                  if ((b__0 == (0x141 : (BitVec 12))) : Bool)
+                                                                                                                                  bif (b__0 == (0x141 : (BitVec 12)))
                                                                                                                                   then
                                                                                                                                     (currentlyEnabled
                                                                                                                                       Ext_S)
                                                                                                                                   else
                                                                                                                                     (do
-                                                                                                                                      if ((b__0 == (0x305 : (BitVec 12))) : Bool)
+                                                                                                                                      bif (b__0 == (0x305 : (BitVec 12)))
                                                                                                                                       then
                                                                                                                                         (pure true)
                                                                                                                                       else
                                                                                                                                         (do
-                                                                                                                                          if ((b__0 == (0x341 : (BitVec 12))) : Bool)
+                                                                                                                                          bif (b__0 == (0x341 : (BitVec 12)))
                                                                                                                                           then
                                                                                                                                             (pure true)
                                                                                                                                           else
                                                                                                                                             (do
-                                                                                                                                              if (((Sail.BitVec.extractLsb
+                                                                                                                                              bif ((Sail.BitVec.extractLsb
                                                                                                                                                      b__0
                                                                                                                                                      11
-                                                                                                                                                     4) == (0x3A : (BitVec 8))) : Bool)
+                                                                                                                                                     4) == (0x3A : (BitVec 8)))
                                                                                                                                               then
                                                                                                                                                 (let idx : (BitVec 4) :=
                                                                                                                                                   (Sail.BitVec.extractLsb
@@ -357,10 +355,10 @@ def is_CSR_accessible (b__0 : (BitVec 12)) (g__2 : Privilege) (g__3 : Bool) : Sa
                                                                                                                                                           0) == 0#1) || (xlen == 32)))))
                                                                                                                                               else
                                                                                                                                                 (do
-                                                                                                                                                  if (((Sail.BitVec.extractLsb
+                                                                                                                                                  bif ((Sail.BitVec.extractLsb
                                                                                                                                                          b__0
                                                                                                                                                          11
-                                                                                                                                                         4) == (0x3B : (BitVec 8))) : Bool)
+                                                                                                                                                         4) == (0x3B : (BitVec 8)))
                                                                                                                                                   then
                                                                                                                                                     (let idx : (BitVec 4) :=
                                                                                                                                                       (Sail.BitVec.extractLsb
@@ -371,10 +369,10 @@ def is_CSR_accessible (b__0 : (BitVec 12)) (g__2 : Privilege) (g__3 : Bool) : Sa
                                                                                                                                                           ((0b00 : (BitVec 2)) ++ idx)))))
                                                                                                                                                   else
                                                                                                                                                     (do
-                                                                                                                                                      if (((Sail.BitVec.extractLsb
+                                                                                                                                                      bif ((Sail.BitVec.extractLsb
                                                                                                                                                              b__0
                                                                                                                                                              11
-                                                                                                                                                             4) == (0x3C : (BitVec 8))) : Bool)
+                                                                                                                                                             4) == (0x3C : (BitVec 8)))
                                                                                                                                                       then
                                                                                                                                                         (let idx : (BitVec 4) :=
                                                                                                                                                           (Sail.BitVec.extractLsb
@@ -385,10 +383,10 @@ def is_CSR_accessible (b__0 : (BitVec 12)) (g__2 : Privilege) (g__3 : Bool) : Sa
                                                                                                                                                               ((0b01 : (BitVec 2)) ++ idx)))))
                                                                                                                                                       else
                                                                                                                                                         (do
-                                                                                                                                                          if (((Sail.BitVec.extractLsb
+                                                                                                                                                          bif ((Sail.BitVec.extractLsb
                                                                                                                                                                  b__0
                                                                                                                                                                  11
-                                                                                                                                                                 4) == (0x3D : (BitVec 8))) : Bool)
+                                                                                                                                                                 4) == (0x3D : (BitVec 8)))
                                                                                                                                                           then
                                                                                                                                                             (let idx : (BitVec 4) :=
                                                                                                                                                               (Sail.BitVec.extractLsb
@@ -399,10 +397,10 @@ def is_CSR_accessible (b__0 : (BitVec 12)) (g__2 : Privilege) (g__3 : Bool) : Sa
                                                                                                                                                                   ((0b10 : (BitVec 2)) ++ idx)))))
                                                                                                                                                           else
                                                                                                                                                             (do
-                                                                                                                                                              if (((Sail.BitVec.extractLsb
+                                                                                                                                                              bif ((Sail.BitVec.extractLsb
                                                                                                                                                                      b__0
                                                                                                                                                                      11
-                                                                                                                                                                     4) == (0x3E : (BitVec 8))) : Bool)
+                                                                                                                                                                     4) == (0x3E : (BitVec 8)))
                                                                                                                                                               then
                                                                                                                                                                 (let idx : (BitVec 4) :=
                                                                                                                                                                   (Sail.BitVec.extractLsb
@@ -413,94 +411,94 @@ def is_CSR_accessible (b__0 : (BitVec 12)) (g__2 : Privilege) (g__3 : Bool) : Sa
                                                                                                                                                                       ((0b11 : (BitVec 2)) ++ idx)))))
                                                                                                                                                               else
                                                                                                                                                                 (do
-                                                                                                                                                                  if ((b__0 == (0x001 : (BitVec 12))) : Bool)
+                                                                                                                                                                  bif (b__0 == (0x001 : (BitVec 12)))
                                                                                                                                                                   then
                                                                                                                                                                     (pure ((← (currentlyEnabled
                                                                                                                                                                             Ext_F)) || (← (currentlyEnabled
                                                                                                                                                                             Ext_Zfinx))))
                                                                                                                                                                   else
                                                                                                                                                                     (do
-                                                                                                                                                                      if ((b__0 == (0x002 : (BitVec 12))) : Bool)
+                                                                                                                                                                      bif (b__0 == (0x002 : (BitVec 12)))
                                                                                                                                                                       then
                                                                                                                                                                         (pure ((← (currentlyEnabled
                                                                                                                                                                                 Ext_F)) || (← (currentlyEnabled
                                                                                                                                                                                 Ext_Zfinx))))
                                                                                                                                                                       else
                                                                                                                                                                         (do
-                                                                                                                                                                          if ((b__0 == (0x003 : (BitVec 12))) : Bool)
+                                                                                                                                                                          bif (b__0 == (0x003 : (BitVec 12)))
                                                                                                                                                                           then
                                                                                                                                                                             (pure ((← (currentlyEnabled
                                                                                                                                                                                     Ext_F)) || (← (currentlyEnabled
                                                                                                                                                                                     Ext_Zfinx))))
                                                                                                                                                                           else
                                                                                                                                                                             (do
-                                                                                                                                                                              if ((b__0 == (0x008 : (BitVec 12))) : Bool)
+                                                                                                                                                                              bif (b__0 == (0x008 : (BitVec 12)))
                                                                                                                                                                               then
                                                                                                                                                                                 (currentlyEnabled
                                                                                                                                                                                   Ext_Zve32x)
                                                                                                                                                                               else
                                                                                                                                                                                 (do
-                                                                                                                                                                                  if ((b__0 == (0x009 : (BitVec 12))) : Bool)
+                                                                                                                                                                                  bif (b__0 == (0x009 : (BitVec 12)))
                                                                                                                                                                                   then
                                                                                                                                                                                     (currentlyEnabled
                                                                                                                                                                                       Ext_Zve32x)
                                                                                                                                                                                   else
                                                                                                                                                                                     (do
-                                                                                                                                                                                      if ((b__0 == (0x00A : (BitVec 12))) : Bool)
+                                                                                                                                                                                      bif (b__0 == (0x00A : (BitVec 12)))
                                                                                                                                                                                       then
                                                                                                                                                                                         (currentlyEnabled
                                                                                                                                                                                           Ext_Zve32x)
                                                                                                                                                                                       else
                                                                                                                                                                                         (do
-                                                                                                                                                                                          if ((b__0 == (0x00F : (BitVec 12))) : Bool)
+                                                                                                                                                                                          bif (b__0 == (0x00F : (BitVec 12)))
                                                                                                                                                                                           then
                                                                                                                                                                                             (currentlyEnabled
                                                                                                                                                                                               Ext_Zve32x)
                                                                                                                                                                                           else
                                                                                                                                                                                             (do
-                                                                                                                                                                                              if ((b__0 == (0xC20 : (BitVec 12))) : Bool)
+                                                                                                                                                                                              bif (b__0 == (0xC20 : (BitVec 12)))
                                                                                                                                                                                               then
                                                                                                                                                                                                 (currentlyEnabled
                                                                                                                                                                                                   Ext_Zve32x)
                                                                                                                                                                                               else
                                                                                                                                                                                                 (do
-                                                                                                                                                                                                  if ((b__0 == (0xC21 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                  bif (b__0 == (0xC21 : (BitVec 12)))
                                                                                                                                                                                                   then
                                                                                                                                                                                                     (currentlyEnabled
                                                                                                                                                                                                       Ext_Zve32x)
                                                                                                                                                                                                   else
                                                                                                                                                                                                     (do
-                                                                                                                                                                                                      if ((b__0 == (0xC22 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                      bif (b__0 == (0xC22 : (BitVec 12)))
                                                                                                                                                                                                       then
                                                                                                                                                                                                         (currentlyEnabled
                                                                                                                                                                                                           Ext_Zve32x)
                                                                                                                                                                                                       else
                                                                                                                                                                                                         (do
-                                                                                                                                                                                                          if ((b__0 == (0x321 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                          bif (b__0 == (0x321 : (BitVec 12)))
                                                                                                                                                                                                           then
                                                                                                                                                                                                             (currentlyEnabled
                                                                                                                                                                                                               Ext_Smcntrpmf)
                                                                                                                                                                                                           else
                                                                                                                                                                                                             (do
-                                                                                                                                                                                                              if ((b__0 == (0x721 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                              bif (b__0 == (0x721 : (BitVec 12)))
                                                                                                                                                                                                               then
                                                                                                                                                                                                                 (pure ((← (currentlyEnabled
                                                                                                                                                                                                                         Ext_Smcntrpmf)) && (xlen == 32)))
                                                                                                                                                                                                               else
                                                                                                                                                                                                                 (do
-                                                                                                                                                                                                                  if ((b__0 == (0x322 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                  bif (b__0 == (0x322 : (BitVec 12)))
                                                                                                                                                                                                                   then
                                                                                                                                                                                                                     (currentlyEnabled
                                                                                                                                                                                                                       Ext_Smcntrpmf)
                                                                                                                                                                                                                   else
                                                                                                                                                                                                                     (do
-                                                                                                                                                                                                                      if ((b__0 == (0x722 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                      bif (b__0 == (0x722 : (BitVec 12)))
                                                                                                                                                                                                                       then
                                                                                                                                                                                                                         (pure ((← (currentlyEnabled
                                                                                                                                                                                                                                 Ext_Smcntrpmf)) && (xlen == 32)))
                                                                                                                                                                                                                       else
                                                                                                                                                                                                                         (do
-                                                                                                                                                                                                                          if ((b__0 == (0x180 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                          bif (b__0 == (0x180 : (BitVec 12)))
                                                                                                                                                                                                                           then
                                                                                                                                                                                                                             (pure ((← (currentlyEnabled
                                                                                                                                                                                                                                     Ext_S)) && (not
@@ -509,7 +507,7 @@ def is_CSR_accessible (b__0 : (BitVec 12)) (g__2 : Privilege) (g__3 : Bool) : Sa
                                                                                                                                                                                                                           else
                                                                                                                                                                                                                             (pure false)))))))))))))))))))))))))))))))))))))))))))))))))))))))
 
-/-- Type quantifiers: k_ex86499# : Bool -/
+/-- Type quantifiers: k_ex86489# : Bool -/
 def check_CSR (csr : (BitVec 12)) (p : Privilege) (isWrite : Bool) : SailM Bool := do
   (pure ((check_CSR_priv csr p) && ((check_CSR_access csr isWrite) && (← (is_CSR_accessible csr p
             isWrite)))))
@@ -518,36 +516,36 @@ def exception_delegatee (e : ExceptionType) (p : Privilege) : SailM Privilege :=
   let idx := (BitVec.toNat (exceptionType_bits_forwards e))
   let super ← do (bit_to_bool (BitVec.access (← readReg medeleg) idx))
   let deleg ← do
-    if (((← (currentlyEnabled Ext_S)) && super) : Bool)
+    bif ((← (currentlyEnabled Ext_S)) && super)
     then (pure Supervisor)
     else (pure Machine)
-  if ((zopz0zI_u (privLevel_to_bits deleg) (privLevel_to_bits p)) : Bool)
+  bif (zopz0zI_u (privLevel_to_bits deleg) (privLevel_to_bits p))
   then (pure p)
   else (pure deleg)
 
 def findPendingInterrupt (ip : (BitVec 64)) : (Option InterruptType) :=
   let ip := (Mk_Minterrupts ip)
-  if (((_get_Minterrupts_MEI ip) == (0b1 : (BitVec 1))) : Bool)
+  bif ((_get_Minterrupts_MEI ip) == (0b1 : (BitVec 1)))
   then (some I_M_External)
   else
-    (if (((_get_Minterrupts_MSI ip) == (0b1 : (BitVec 1))) : Bool)
+    (bif ((_get_Minterrupts_MSI ip) == (0b1 : (BitVec 1)))
     then (some I_M_Software)
     else
-      (if (((_get_Minterrupts_MTI ip) == (0b1 : (BitVec 1))) : Bool)
+      (bif ((_get_Minterrupts_MTI ip) == (0b1 : (BitVec 1)))
       then (some I_M_Timer)
       else
-        (if (((_get_Minterrupts_SEI ip) == (0b1 : (BitVec 1))) : Bool)
+        (bif ((_get_Minterrupts_SEI ip) == (0b1 : (BitVec 1)))
         then (some I_S_External)
         else
-          (if (((_get_Minterrupts_SSI ip) == (0b1 : (BitVec 1))) : Bool)
+          (bif ((_get_Minterrupts_SSI ip) == (0b1 : (BitVec 1)))
           then (some I_S_Software)
           else
-            (if (((_get_Minterrupts_STI ip) == (0b1 : (BitVec 1))) : Bool)
+            (bif ((_get_Minterrupts_STI ip) == (0b1 : (BitVec 1)))
             then (some I_S_Timer)
             else none)))))
 
 def getPendingSet (priv : Privilege) : SailM (Option ((BitVec 64) × Privilege)) := do
-  assert ((← (currentlyEnabled Ext_S)) || ((← readReg mideleg) == (zeros (n := 64)))) "sys/sys_control.sail:70.58-70.59"
+  assert ((← (currentlyEnabled Ext_S)) || ((← readReg mideleg) == (zeros (n := 64)))) "./sys/sys_control.sail:70.58-70.59"
   let pending_m ← do
     (pure ((← readReg mip) &&& ((← readReg mie) &&& (Complement.complement (← readReg mideleg)))))
   let pending_s ← do (pure ((← readReg mip) &&& ((← readReg mie) &&& (← readReg mideleg))))
@@ -555,10 +553,10 @@ def getPendingSet (priv : Privilege) : SailM (Option ((BitVec 64) × Privilege))
     (pure (((priv == Machine) && ((_get_Mstatus_MIE (← readReg mstatus)) == (0b1 : (BitVec 1)))) || ((priv == Supervisor) || (priv == User))))
   let sIE ← do
     (pure (((priv == Supervisor) && ((_get_Mstatus_SIE (← readReg mstatus)) == (0b1 : (BitVec 1)))) || (priv == User)))
-  if ((mIE && (pending_m != (zeros (n := 64)))) : Bool)
+  bif (mIE && (pending_m != (zeros (n := 64))))
   then (pure (some (pending_m, Machine)))
   else
-    (if ((sIE && (pending_s != (zeros (n := 64)))) : Bool)
+    (bif (sIE && (pending_s != (zeros (n := 64))))
     then (pure (some (pending_s, Supervisor)))
     else (pure none))
 
@@ -591,20 +589,21 @@ def track_trap (p : Privilege) : SailM Unit := do
       (csr_name_write_callback "scause" (← readReg scause))
       (csr_name_write_callback "stval" (← readReg stval))
       (csr_name_write_callback "sepc" (← readReg sepc)))
-  | User => (internal_error "sys/sys_control.sail" 148 "Invalid privilege level")
-  | VirtualUser => (internal_error "sys/sys_control.sail" 149 "Hypervisor extension not supported")
+  | User => (internal_error "./sys/sys_control.sail" 148 "Invalid privilege level")
+  | VirtualUser =>
+    (internal_error "./sys/sys_control.sail" 149 "Hypervisor extension not supported")
   | VirtualSupervisor =>
-    (internal_error "sys/sys_control.sail" 150 "Hypervisor extension not supported")
+    (internal_error "./sys/sys_control.sail" 150 "Hypervisor extension not supported")
 
-/-- Type quantifiers: k_ex86565# : Bool -/
+/-- Type quantifiers: k_ex86555# : Bool -/
 def trap_handler (del_priv : Privilege) (intr : Bool) (c : (BitVec 6)) (pc : (BitVec 64)) (info : (Option (BitVec 64))) (ext : (Option Unit)) : SailM (BitVec 64) := do
   let _ : Unit := (trap_callback ())
-  if ((get_config_print_platform ()) : Bool)
+  bif (get_config_print_platform ())
   then
     (pure (print_endline
         (HAppend.hAppend "handling "
           (HAppend.hAppend
-            (if (intr : Bool)
+            (bif intr
             then "int#"
             else "exc#")
             (HAppend.hAppend (BitVec.toFormatted c)
@@ -612,7 +611,7 @@ def trap_handler (del_priv : Privilege) (intr : Bool) (c : (BitVec 6)) (pc : (Bi
                 (HAppend.hAppend (← (privLevel_to_str del_priv))
                   (HAppend.hAppend " with tval " (BitVec.toFormatted (tval info))))))))))
   else (pure ())
-  if ((hartSupports Ext_Zicfilp) : Bool)
+  bif (hartSupports Ext_Zicfilp)
   then (zicfilp_preserve_elp_on_trap del_priv)
   else (pure ())
   match del_priv with
@@ -649,28 +648,29 @@ def trap_handler (del_priv : Privilege) (intr : Bool) (c : (BitVec 6)) (pc : (Bi
           | User => (pure (0b0 : (BitVec 1)))
           | Supervisor => (pure (0b1 : (BitVec 1)))
           | Machine =>
-            (internal_error "sys/sys_control.sail" 195 "invalid privilege for s-mode trap")
+            (internal_error "./sys/sys_control.sail" 195 "invalid privilege for s-mode trap")
           | VirtualUser =>
-            (internal_error "sys/sys_control.sail" 196 "Hypervisor extension not supported")
+            (internal_error "./sys/sys_control.sail" 196 "Hypervisor extension not supported")
           | VirtualSupervisor =>
-            (internal_error "sys/sys_control.sail" 197 "Hypervisor extension not supported")))
+            (internal_error "./sys/sys_control.sail" 197 "Hypervisor extension not supported")))
       writeReg stval (tval info)
       writeReg sepc pc
       writeReg cur_privilege del_priv
       let _ : Unit := (handle_trap_extension del_priv pc ext)
       (track_trap del_priv)
       (prepare_trap_vector del_priv (← readReg scause)))
-  | User => (internal_error "sys/sys_control.sail" 210 "Invalid privilege level")
-  | VirtualUser => (internal_error "sys/sys_control.sail" 211 "Hypervisor extension not supported")
+  | User => (internal_error "./sys/sys_control.sail" 210 "Invalid privilege level")
+  | VirtualUser =>
+    (internal_error "./sys/sys_control.sail" 211 "Hypervisor extension not supported")
   | VirtualSupervisor =>
-    (internal_error "sys/sys_control.sail" 212 "Hypervisor extension not supported")
+    (internal_error "./sys/sys_control.sail" 212 "Hypervisor extension not supported")
 
 def exception_handler (cur_priv : Privilege) (ctl : ctl_result) (pc : (BitVec 64)) : SailM (BitVec 64) := do
   match ctl with
   | .CTL_TRAP e =>
     (do
       let del_priv ← do (exception_delegatee e.trap cur_priv)
-      if ((get_config_print_platform ()) : Bool)
+      bif (get_config_print_platform ())
       then
         (pure (print_endline
             (HAppend.hAppend "trapping from "
@@ -691,18 +691,18 @@ def exception_handler (cur_priv : Privilege) (ctl : ctl_result) (pc : (BitVec 64
       writeReg mstatus (Sail.BitVec.updateSubrange (← readReg mstatus) 12 11
         (privLevel_to_bits
           (← do
-            if ((← (currentlyEnabled Ext_U)) : Bool)
+            bif (← (currentlyEnabled Ext_U))
             then (pure User)
             else (pure Machine))))
-      if ((bne (← readReg cur_privilege) Machine) : Bool)
+      bif (bne (← readReg cur_privilege) Machine)
       then
         writeReg mstatus (Sail.BitVec.updateSubrange (← readReg mstatus) 17 17 (0b0 : (BitVec 1)))
       else (pure ())
-      if ((hartSupports Ext_Zicfilp) : Bool)
+      bif (hartSupports Ext_Zicfilp)
       then (zicfilp_restore_elp_on_xret mRET (← readReg cur_privilege))
       else (pure ())
       (long_csr_write_callback "mstatus" "mstatush" (← readReg mstatus))
-      if ((get_config_print_platform ()) : Bool)
+      bif (get_config_print_platform ())
       then
         (pure (print_endline
             (HAppend.hAppend "ret-ing from "
@@ -717,19 +717,19 @@ def exception_handler (cur_priv : Privilege) (ctl : ctl_result) (pc : (BitVec 64
         (_get_Mstatus_SPIE (← readReg mstatus)))
       writeReg mstatus (Sail.BitVec.updateSubrange (← readReg mstatus) 5 5 (0b1 : (BitVec 1)))
       writeReg cur_privilege (← do
-        if (((_get_Mstatus_SPP (← readReg mstatus)) == (0b1 : (BitVec 1))) : Bool)
+        bif ((_get_Mstatus_SPP (← readReg mstatus)) == (0b1 : (BitVec 1)))
         then (pure Supervisor)
         else (pure User))
       writeReg mstatus (Sail.BitVec.updateSubrange (← readReg mstatus) 8 8 (0b0 : (BitVec 1)))
-      if ((bne (← readReg cur_privilege) Machine) : Bool)
+      bif (bne (← readReg cur_privilege) Machine)
       then
         writeReg mstatus (Sail.BitVec.updateSubrange (← readReg mstatus) 17 17 (0b0 : (BitVec 1)))
       else (pure ())
-      if ((hartSupports Ext_Zicfilp) : Bool)
+      bif (hartSupports Ext_Zicfilp)
       then (zicfilp_restore_elp_on_xret sRET (← readReg cur_privilege))
       else (pure ())
       (long_csr_write_callback "mstatus" "mstatush" (← readReg mstatus))
-      if ((get_config_print_platform ()) : Bool)
+      bif (get_config_print_platform ())
       then
         (pure (print_endline
             (HAppend.hAppend "ret-ing from "
@@ -739,7 +739,7 @@ def exception_handler (cur_priv : Privilege) (ctl : ctl_result) (pc : (BitVec 64
       (prepare_xret_target Supervisor))
 
 def xtval_exception_value (e : ExceptionType) (excinfo : (BitVec 64)) : (Option (BitVec 64)) :=
-  if ((match e with
+  bif (match e with
      | .E_Breakpoint () => true
      | .E_Load_Addr_Align () => true
      | .E_Load_Access_Fault () => true
@@ -748,7 +748,7 @@ def xtval_exception_value (e : ExceptionType) (excinfo : (BitVec 64)) : (Option 
      | .E_Fetch_Addr_Align () => true
      | .E_Fetch_Access_Fault () => true
      | .E_Illegal_Instr () => true
-     | _ => true) : Bool)
+     | _ => true)
   then (some excinfo)
   else none
 
@@ -781,8 +781,8 @@ def reset_misa (_ : Unit) : SailM Unit := do
   writeReg misa (Sail.BitVec.updateSubrange (← readReg misa) 4 4 (bool_to_bits base_E_enabled))
   writeReg misa (Sail.BitVec.updateSubrange (← readReg misa) 8 8
     (Complement.complement (_get_Misa_E (← readReg misa))))
-  if (((hartSupports Ext_F) && (hartSupports Ext_Zfinx)) : Bool)
-  then (internal_error "sys/sys_control.sail" 308 "F and Zfinx cannot both be enabled!")
+  bif ((hartSupports Ext_F) && (hartSupports Ext_Zfinx))
+  then (internal_error "./sys/sys_control.sail" 308 "F and Zfinx cannot both be enabled!")
   else (pure ())
   writeReg misa (Sail.BitVec.updateSubrange (← readReg misa) 5 5
     (bool_to_bits (hartSupports Ext_F)))
@@ -809,7 +809,7 @@ def reset_sys (_ : Unit) : SailM Unit := do
     (bool_to_bits (false : Bool)))
   writeReg mseccfg (Sail.BitVec.updateSubrange (← readReg mseccfg) 8 8
     (bool_to_bits (false : Bool)))
-  if ((hartSupports Ext_Zicfilp) : Bool)
+  bif (hartSupports Ext_Zicfilp)
   then writeReg mseccfg (Sail.BitVec.updateSubrange (← readReg mseccfg) 10 10 (0b0 : (BitVec 1)))
   else (pure ())
   writeReg vstart (zeros (n := 64))

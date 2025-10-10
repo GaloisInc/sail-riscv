@@ -160,7 +160,7 @@ def ext_exc_type_bits_forwards (arg_ : Unit) : (BitVec 6) :=
 
 def ext_exc_type_bits_backwards (arg_ : (BitVec 6)) : SailM Unit := do
   let b__0 := arg_
-  if ((b__0 == (0b011000 : (BitVec 6))) : Bool)
+  bif (b__0 == (0b011000 : (BitVec 6)))
   then (pure ())
   else
     (do
@@ -173,7 +173,7 @@ def ext_exc_type_bits_forwards_matches (arg_ : Unit) : Bool :=
 
 def ext_exc_type_bits_backwards_matches (arg_ : (BitVec 6)) : Bool :=
   let b__0 := arg_
-  if ((b__0 == (0b011000 : (BitVec 6))) : Bool)
+  bif (b__0 == (0b011000 : (BitVec 6)))
   then true
   else false
 

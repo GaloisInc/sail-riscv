@@ -1,14 +1,3 @@
-import LeanRV64DExecutable.Flow
-import LeanRV64DExecutable.Prelude
-import LeanRV64DExecutable.Xlen
-import LeanRV64DExecutable.Extensions
-import LeanRV64DExecutable.Types
-import LeanRV64DExecutable.SysRegs
-import LeanRV64DExecutable.SysControl
-import LeanRV64DExecutable.Platform
-import LeanRV64DExecutable.Pma
-import LeanRV64DExecutable.VmemTlb
-import LeanRV64DExecutable.Step
 import LeanRV64DExecutable.Model
 
 set_option maxHeartbeats 1_000_000_000
@@ -162,10 +151,10 @@ def sail_model_init (x_0 : Unit) : SailM Unit := do
   writeReg mstatus (let mxl := (architecture_bits_forwards RV64)
   (_update_Mstatus_UXL
     (_update_Mstatus_SXL (Mk_Mstatus (zeros (n := 64)))
-      (if (((xlen != 32) && (hartSupports Ext_S)) : Bool)
+      (bif ((xlen != 32) && (hartSupports Ext_S))
       then mxl
       else (zeros (n := 2))))
-    (if (((xlen != 32) && (hartSupports Ext_U)) : Bool)
+    (bif ((xlen != 32) && (hartSupports Ext_U))
     then mxl
     else (zeros (n := 2)))))
   writeReg senvcfg (← (legalize_senvcfg (Mk_SEnvcfg (zeros (n := 64))) (zeros (n := 64))))

@@ -1019,28 +1019,28 @@ def rvfi_write (paddr : (BitVec 64)) (width : Nat) (value : (BitVec (8 * width))
   writeReg rvfi_mem_data (Sail.BitVec.updateSubrange (← readReg rvfi_mem_data) 703 640
     (zero_extend (m := 64) paddr))
   writeReg rvfi_mem_data_present true
-  if ((width ≤b 16) : Bool)
+  bif (width ≤b 16)
   then
     (do
       writeReg rvfi_mem_data (Sail.BitVec.updateSubrange (← readReg rvfi_mem_data) 575 320
         (Sail.BitVec.zeroExtend value 256))
       writeReg rvfi_mem_data (Sail.BitVec.updateSubrange (← readReg rvfi_mem_data) 639 608
         (rvfi_encode_width_mask width)))
-  else (internal_error "core/rvfi_dii.sail" 232 "Expected at most 16 bytes here!")
+  else (internal_error "./core/rvfi_dii.sail" 232 "Expected at most 16 bytes here!")
 
 /-- Type quantifiers: width : Nat, width ≥ 0, width > 0 -/
 def rvfi_read (paddr : (BitVec 64)) (width : Nat) (value : (BitVec (8 * width))) : SailM Unit := do
   writeReg rvfi_mem_data (Sail.BitVec.updateSubrange (← readReg rvfi_mem_data) 703 640
     (zero_extend (m := 64) paddr))
   writeReg rvfi_mem_data_present true
-  if ((width ≤b 16) : Bool)
+  bif (width ≤b 16)
   then
     (do
       writeReg rvfi_mem_data (Sail.BitVec.updateSubrange (← readReg rvfi_mem_data) 319 64
         (Sail.BitVec.zeroExtend value 256))
       writeReg rvfi_mem_data (Sail.BitVec.updateSubrange (← readReg rvfi_mem_data) 607 576
         (rvfi_encode_width_mask width)))
-  else (internal_error "core/rvfi_dii.sail" 245 "Expected at most 16 bytes here!")
+  else (internal_error "./core/rvfi_dii.sail" 245 "Expected at most 16 bytes here!")
 
 def rvfi_mem_exception (paddr : (BitVec 64)) : SailM Unit := do
   writeReg rvfi_mem_data (Sail.BitVec.updateSubrange (← readReg rvfi_mem_data) 703 640

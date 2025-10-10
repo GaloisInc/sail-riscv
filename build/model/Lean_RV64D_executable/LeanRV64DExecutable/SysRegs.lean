@@ -2,7 +2,6 @@ import LeanRV64DExecutable.Prelude
 import LeanRV64DExecutable.Errors
 import LeanRV64DExecutable.Extensions
 import LeanRV64DExecutable.Types
-import LeanRV64DExecutable.Regs
 
 set_option maxHeartbeats 1_000_000_000
 set_option maxRecDepth 1_000_000
@@ -551,8 +550,8 @@ def ext_veto_disable_C (_ : Unit) : Bool :=
 
 def legalize_misa (m : (BitVec 64)) (v : (BitVec 64)) : SailM (BitVec 64) := do
   let v := (Mk_Misa v)
-  if (((not sys_enable_writable_misa) || (((_get_Misa_C v) == (0b0 : (BitVec 1))) && (((BitVec.access
-               (← readReg nextPC) 1) == 1#1) || (ext_veto_disable_C ())))) : Bool)
+  bif ((not sys_enable_writable_misa) || (((_get_Misa_C v) == (0b0 : (BitVec 1))) && (((BitVec.access
+               (← readReg nextPC) 1) == 1#1) || (ext_veto_disable_C ()))))
   then (pure m)
   else
     (pure (_update_Misa_V
@@ -567,35 +566,35 @@ def legalize_misa (m : (BitVec 64)) (v : (BitVec 64)) : SailM (BitVec 64) := do
                         (_update_Misa_C
                           (_update_Misa_B
                             (_update_Misa_A m
-                              (if ((hartSupports Ext_A) : Bool)
+                              (bif (hartSupports Ext_A)
                               then (_get_Misa_A v)
                               else (0b0 : (BitVec 1))))
-                            (if ((hartSupports Ext_B) : Bool)
+                            (bif (hartSupports Ext_B)
                             then (_get_Misa_B v)
                             else (0b0 : (BitVec 1))))
-                          (if ((hartSupports Ext_C) : Bool)
+                          (bif (hartSupports Ext_C)
                           then (_get_Misa_C v)
                           else (0b0 : (BitVec 1))))
-                        (if (((hartSupports Ext_D) && ((_get_Misa_F v) == (0b1 : (BitVec 1)))) : Bool)
+                        (bif ((hartSupports Ext_D) && ((_get_Misa_F v) == (0b1 : (BitVec 1))))
                         then (_get_Misa_D v)
                         else (0b0 : (BitVec 1))))
-                      (if ((hartSupports Ext_F) : Bool)
+                      (bif (hartSupports Ext_F)
                       then (_get_Misa_F v)
                       else (0b0 : (BitVec 1))))
-                    (if ((hartSupports Ext_H) : Bool)
+                    (bif (hartSupports Ext_H)
                     then (_get_Misa_H v)
                     else (0b0 : (BitVec 1)))) (bool_to_bits (not base_E_enabled)))
                 (bool_to_bits base_E_enabled))
-              (if ((hartSupports Ext_M) : Bool)
+              (bif (hartSupports Ext_M)
               then (_get_Misa_M v)
               else (0b0 : (BitVec 1))))
-            (if (((hartSupports Ext_S) && ((_get_Misa_U v) == (0b1 : (BitVec 1)))) : Bool)
+            (bif ((hartSupports Ext_S) && ((_get_Misa_U v) == (0b1 : (BitVec 1))))
             then (_get_Misa_S v)
             else (0b0 : (BitVec 1))))
-          (if ((hartSupports Ext_U) : Bool)
+          (bif (hartSupports Ext_U)
           then (_get_Misa_U v)
           else (0b0 : (BitVec 1))))
-        (if (((hartSupports Ext_V) && (((_get_Misa_F v) == (0b1 : (BitVec 1))) && ((_get_Misa_D v) == (0b1 : (BitVec 1))))) : Bool)
+        (bif ((hartSupports Ext_V) && (((_get_Misa_F v) == (0b1 : (BitVec 1))) && ((_get_Misa_D v) == (0b1 : (BitVec 1)))))
         then (_get_Misa_V v)
         else (0b0 : (BitVec 1)))))
 
@@ -604,20 +603,20 @@ def virtual_memory_supported (_ : Unit) : SailM Bool := do
               Ext_Sv48)) || (← (currentlyEnabled Ext_Sv57))))))
 
 def lowest_supported_privLevel (_ : Unit) : SailM Privilege := do
-  if ((← (currentlyEnabled Ext_U)) : Bool)
+  bif (← (currentlyEnabled Ext_U))
   then (pure User)
   else (pure Machine)
 
 def have_nominal_privLevel (priv : (BitVec 2)) : SailM Bool := do
   let b__0 := priv
-  if ((b__0 == (0b00 : (BitVec 2))) : Bool)
+  bif (b__0 == (0b00 : (BitVec 2)))
   then (currentlyEnabled Ext_U)
   else
     (do
-      if ((b__0 == (0b01 : (BitVec 2))) : Bool)
+      bif (b__0 == (0b01 : (BitVec 2)))
       then (currentlyEnabled Ext_S)
       else
-        (if ((b__0 == (0b10 : (BitVec 2))) : Bool)
+        (bif (b__0 == (0b10 : (BitVec 2)))
         then (pure false)
         else (pure true)))
 
@@ -962,56 +961,56 @@ def legalize_mstatus (o : (BitVec 64)) (v : (BitVec 64)) : SailM (BitVec 64) := 
                                   (_update_Mstatus_TSR
                                     (_update_Mstatus_SPELP
                                       (_update_Mstatus_MPELP o
-                                        (if ((hartSupports Ext_Zicfilp) : Bool)
+                                        (bif (hartSupports Ext_Zicfilp)
                                         then (_get_Mstatus_MPELP v)
                                         else (0b0 : (BitVec 1))))
-                                      (if ((hartSupports Ext_Zicfilp) : Bool)
+                                      (bif (hartSupports Ext_Zicfilp)
                                       then (_get_Mstatus_SPELP v)
                                       else (0b0 : (BitVec 1))))
                                     (← do
-                                      if ((← (currentlyEnabled Ext_S)) : Bool)
+                                      bif (← (currentlyEnabled Ext_S))
                                       then (pure (_get_Mstatus_TSR v))
                                       else (pure (0b0 : (BitVec 1)))))
                                   (← do
-                                    if ((← (currentlyEnabled Ext_U)) : Bool)
+                                    bif (← (currentlyEnabled Ext_U))
                                     then (pure (_get_Mstatus_TW v))
                                     else (pure (0b0 : (BitVec 1)))))
                                 (← do
-                                  if ((← (currentlyEnabled Ext_S)) : Bool)
+                                  bif (← (currentlyEnabled Ext_S))
                                   then (pure (_get_Mstatus_TVM v))
                                   else (pure (0b0 : (BitVec 1)))))
                               (← do
-                                if ((← (currentlyEnabled Ext_S)) : Bool)
+                                bif (← (currentlyEnabled Ext_S))
                                 then (pure (_get_Mstatus_MXR v))
                                 else (pure (0b0 : (BitVec 1)))))
                             (← do
-                              if ((← (virtual_memory_supported ())) : Bool)
+                              bif (← (virtual_memory_supported ()))
                               then (pure (_get_Mstatus_SUM v))
                               else (pure (0b0 : (BitVec 1)))))
                           (← do
-                            if ((← (currentlyEnabled Ext_U)) : Bool)
+                            bif (← (currentlyEnabled Ext_U))
                             then (pure (_get_Mstatus_MPRV v))
                             else (pure (0b0 : (BitVec 1))))) (extStatus_to_bits Off))
-                      (if ((hartSupports Ext_Zfinx) : Bool)
+                      (bif (hartSupports Ext_Zfinx)
                       then (extStatus_to_bits Off)
                       else (_get_Mstatus_FS v)))
                     (← do
-                      if ((← (have_nominal_privLevel (_get_Mstatus_MPP v))) : Bool)
+                      bif (← (have_nominal_privLevel (_get_Mstatus_MPP v)))
                       then (pure (_get_Mstatus_MPP v))
                       else (pure (privLevel_to_bits (← (lowest_supported_privLevel ()))))))
                   (← do
-                    if ((← (currentlyEnabled Ext_S)) : Bool)
+                    bif (← (currentlyEnabled Ext_S))
                     then (pure (_get_Mstatus_SPP v))
                     else (pure (0b0 : (BitVec 1)))))
-                (if ((hartSupports Ext_Zve32x) : Bool)
+                (bif (hartSupports Ext_Zve32x)
                 then (_get_Mstatus_VS v)
                 else (0b00 : (BitVec 2)))) (_get_Mstatus_MPIE v))
             (← do
-              if ((← (currentlyEnabled Ext_S)) : Bool)
+              bif (← (currentlyEnabled Ext_S))
               then (pure (_get_Mstatus_SPIE v))
               else (pure (0b0 : (BitVec 1))))) (_get_Mstatus_MIE v))
         (← do
-          if ((← (currentlyEnabled Ext_S)) : Bool)
+          bif (← (currentlyEnabled Ext_S))
           then (pure (_get_Mstatus_SIE v))
           else (pure (0b0 : (BitVec 1))))))
   let dirty :=
@@ -1027,9 +1026,9 @@ def architecture (priv : Privilege) : SailM Architecture := do
       | Supervisor => (pure (_get_Mstatus_SXL (← readReg mstatus)))
       | User => (pure (_get_Mstatus_UXL (← readReg mstatus)))
       | VirtualUser =>
-        (internal_error "core/sys_regs.sail" 286 "Hypervisor extension not supported")
+        (internal_error "./core/sys_regs.sail" 286 "Hypervisor extension not supported")
       | VirtualSupervisor =>
-        (internal_error "core/sys_regs.sail" 287 "Hypervisor extension not supported")))
+        (internal_error "./core/sys_regs.sail" 287 "Hypervisor extension not supported")))
 
 def in32BitMode (_ : Unit) : SailM Bool := do
   (pure ((← (architecture (← readReg cur_privilege))) == RV32))
@@ -1115,9 +1114,9 @@ def is_fiom_active (_ : Unit) : SailM Bool := do
   | Supervisor => (pure ((_get_MEnvcfg_FIOM (← readReg menvcfg)) == (0b1 : (BitVec 1))))
   | User =>
     (pure (((_get_MEnvcfg_FIOM (← readReg menvcfg)) ||| (_get_SEnvcfg_FIOM (← readReg senvcfg))) == (0b1 : (BitVec 1))))
-  | VirtualUser => (internal_error "core/sys_regs.sail" 433 "Hypervisor extension not supported")
+  | VirtualUser => (internal_error "./core/sys_regs.sail" 433 "Hypervisor extension not supported")
   | VirtualSupervisor =>
-    (internal_error "core/sys_regs.sail" 434 "Hypervisor extension not supported")
+    (internal_error "./core/sys_regs.sail" 434 "Hypervisor extension not supported")
 
 def undefined_Minterrupts (_ : Unit) : SailM (BitVec 64) := do
   (undefined_bitvector 64)
@@ -1221,18 +1220,18 @@ def legalize_mip (o : (BitVec 64)) (v : (BitVec 64)) : SailM (BitVec 64) := do
       (_update_Minterrupts_SSI
         (_update_Minterrupts_SEI o
           (← do
-            if ((← (currentlyEnabled Ext_S)) : Bool)
+            bif (← (currentlyEnabled Ext_S))
             then (pure (_get_Minterrupts_SEI v))
             else (pure (0b0 : (BitVec 1)))))
         (← do
-          if ((← (currentlyEnabled Ext_S)) : Bool)
+          bif (← (currentlyEnabled Ext_S))
           then (pure (_get_Minterrupts_SSI v))
           else (pure (0b0 : (BitVec 1)))))
       (← do
-        if ((← (currentlyEnabled Ext_S)) : Bool)
+        bif (← (currentlyEnabled Ext_S))
         then
           (do
-            if (((← (currentlyEnabled Ext_Sstc)) && ((_get_MEnvcfg_STCE (← readReg menvcfg)) == (0b1 : (BitVec 1)))) : Bool)
+            bif ((← (currentlyEnabled Ext_Sstc)) && ((_get_MEnvcfg_STCE (← readReg menvcfg)) == (0b1 : (BitVec 1))))
             then (pure (_get_Minterrupts_STI o))
             else (pure (_get_Minterrupts_STI v)))
         else (pure (0b0 : (BitVec 1))))))
@@ -1246,15 +1245,15 @@ def legalize_mie (o : (BitVec 64)) (v : (BitVec 64)) : SailM (BitVec 64) := do
             (_update_Minterrupts_MTI (_update_Minterrupts_MEI o (_get_Minterrupts_MEI v))
               (_get_Minterrupts_MTI v)) (_get_Minterrupts_MSI v))
           (← do
-            if ((← (currentlyEnabled Ext_S)) : Bool)
+            bif (← (currentlyEnabled Ext_S))
             then (pure (_get_Minterrupts_SEI v))
             else (pure (0b0 : (BitVec 1)))))
         (← do
-          if ((← (currentlyEnabled Ext_S)) : Bool)
+          bif (← (currentlyEnabled Ext_S))
           then (pure (_get_Minterrupts_STI v))
           else (pure (0b0 : (BitVec 1)))))
       (← do
-        if ((← (currentlyEnabled Ext_S)) : Bool)
+        bif (← (currentlyEnabled Ext_S))
         then (pure (_get_Minterrupts_SSI v))
         else (pure (0b0 : (BitVec 1))))))
 
@@ -1496,18 +1495,18 @@ def tvec_addr (m : (BitVec 64)) (c : (BitVec 64)) : (Option (BitVec 64)) :=
   match (trapVectorMode_of_bits (_get_Mtvec_Mode m)) with
   | TV_Direct => (some base)
   | TV_Vector =>
-    (if (((_get_Mcause_IsInterrupt c) == (0b1 : (BitVec 1))) : Bool)
+    (bif ((_get_Mcause_IsInterrupt c) == (0b1 : (BitVec 1)))
     then (some (base + (shiftl (zero_extend (m := 64) (_get_Mcause_Cause c)) 2)))
     else (some base))
   | TV_Reserved => none
 
 def legalize_xepc (v : (BitVec 64)) : (BitVec 64) :=
-  if ((hartSupports Ext_Zca) : Bool)
+  bif (hartSupports Ext_Zca)
   then (BitVec.update v 0 0#1)
   else (Sail.BitVec.updateSubrange v 1 0 (zeros (n := (1 -i (0 -i 1)))))
 
 def align_pc (addr : (BitVec 64)) : SailM (BitVec 64) := do
-  if ((← (currentlyEnabled Ext_Zca)) : Bool)
+  bif (← (currentlyEnabled Ext_Zca))
   then (pure (BitVec.update addr 0 0#1))
   else (pure (Sail.BitVec.updateSubrange addr 1 0 (zeros (n := (1 -i (0 -i 1))))))
 
@@ -1675,7 +1674,7 @@ def lower_mie (m : (BitVec 64)) (d : (BitVec 64)) : (BitVec 64) :=
 
 def lift_sip (o : (BitVec 64)) (d : (BitVec 64)) (s : (BitVec 64)) : (BitVec 64) :=
   let m : Minterrupts := o
-  if (((_get_Minterrupts_SSI d) == (0b1 : (BitVec 1))) : Bool)
+  bif ((_get_Minterrupts_SSI d) == (0b1 : (BitVec 1)))
   then (_update_Minterrupts_SSI m (_get_Sinterrupts_SSI s))
   else m
 
@@ -1687,13 +1686,13 @@ def lift_sie (o : (BitVec 64)) (d : (BitVec 64)) (s : (BitVec 64)) : (BitVec 64)
   (_update_Minterrupts_SSI
     (_update_Minterrupts_STI
       (_update_Minterrupts_SEI m
-        (if (((_get_Minterrupts_SEI d) == (0b1 : (BitVec 1))) : Bool)
+        (bif ((_get_Minterrupts_SEI d) == (0b1 : (BitVec 1)))
         then (_get_Sinterrupts_SEI s)
         else (_get_Minterrupts_SEI m)))
-      (if (((_get_Minterrupts_STI d) == (0b1 : (BitVec 1))) : Bool)
+      (bif ((_get_Minterrupts_STI d) == (0b1 : (BitVec 1)))
       then (_get_Sinterrupts_STI s)
       else (_get_Minterrupts_STI m)))
-    (if (((_get_Minterrupts_SSI d) == (0b1 : (BitVec 1))) : Bool)
+    (bif ((_get_Minterrupts_SSI d) == (0b1 : (BitVec 1)))
     then (_get_Sinterrupts_SSI s)
     else (_get_Minterrupts_SSI m)))
 
@@ -1761,22 +1760,22 @@ def legalize_satp (arch : Architecture) (prev_value : (BitVec 64)) (written_valu
       match Sv_mode with
       | Bare =>
         (do
-          if ((← (currentlyEnabled Ext_Svbare)) : Bool)
+          bif (← (currentlyEnabled Ext_Svbare))
           then (pure s)
           else (pure prev_value))
       | Sv39 =>
         (do
-          if ((← (currentlyEnabled Ext_Sv39)) : Bool)
+          bif (← (currentlyEnabled Ext_Sv39))
           then (pure s)
           else (pure prev_value))
       | Sv48 =>
         (do
-          if ((← (currentlyEnabled Ext_Sv48)) : Bool)
+          bif (← (currentlyEnabled Ext_Sv48))
           then (pure s)
           else (pure prev_value))
       | Sv57 =>
         (do
-          if ((← (currentlyEnabled Ext_Sv57)) : Bool)
+          bif (← (currentlyEnabled Ext_Sv57))
           then (pure s)
           else (pure prev_value))
       | _ => (pure prev_value))
@@ -1788,8 +1787,8 @@ def feature_enabled_for_priv (p : Privilege) (machine_enable_bit : (BitVec 1)) (
   | User =>
     (pure ((machine_enable_bit == 1#1) && ((not (← (currentlyEnabled Ext_S))) || (supervisor_enable_bit == 1#1))))
   | VirtualSupervisor =>
-    (internal_error "core/sys_regs.sail" 952 "Hypervisor extension not supported")
-  | VirtualUser => (internal_error "core/sys_regs.sail" 953 "Hypervisor extension not supported")
+    (internal_error "./core/sys_regs.sail" 952 "Hypervisor extension not supported")
+  | VirtualUser => (internal_error "./core/sys_regs.sail" 953 "Hypervisor extension not supported")
 
 /-- Type quantifiers: index : Nat, 0 ≤ index ∧ index ≤ 31 -/
 def counter_enabled (index : Nat) (priv : Privilege) : SailM Bool := do
