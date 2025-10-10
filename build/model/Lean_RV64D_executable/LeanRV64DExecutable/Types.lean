@@ -1,4 +1,6 @@
 import LeanRV64DExecutable.Flow
+import LeanRV64DExecutable.Mapping
+import LeanRV64DExecutable.HexBits
 import LeanRV64DExecutable.Prelude
 import LeanRV64DExecutable.Errors
 import LeanRV64DExecutable.Xlen
@@ -127,6 +129,8 @@ open amoop
 open agtype
 open WaitReason
 open TrapVectorMode
+open Step
+open Software_Check_Code
 open SWCheckCodes
 open SATPMode
 open Reservability
@@ -136,6 +140,9 @@ open PmpAddrMatchType
 open PTW_Error
 open PTE_Check
 open InterruptType
+open ISA_Format
+open HartState
+open FetchResult
 open Ext_DataAddr_Check
 open ExtStatus
 open ExecutionResult
@@ -334,16 +341,16 @@ def privLevel_bits_forwards_matches (arg_ : ((BitVec 2) × (BitVec 1))) : Bool :
             (if ((b__4 == (0b11 : (BitVec 2))) : Bool)
             then true
             else
-              (let g__3 := (b__4, 0#1)
+              (let g__5 := (b__4, 0#1)
               true))
-          | g__3 => true))
+          | g__5 => true))
       | (b__4, 0#1) =>
         (if ((b__4 == (0b11 : (BitVec 2))) : Bool)
         then true
         else
-          (let g__3 := (b__4, 0#1)
+          (let g__5 := (b__4, 0#1)
           true))
-      | g__3 => true))
+      | g__5 => true))
   | (b__1, 1#1) =>
     (if ((b__1 == (0b00 : (BitVec 2))) : Bool)
     then true
@@ -353,9 +360,9 @@ def privLevel_bits_forwards_matches (arg_ : ((BitVec 2) × (BitVec 1))) : Bool :
         (if ((b__3 == (0b01 : (BitVec 2))) : Bool)
         then true
         else
-          (let g__3 := (b__3, 1#1)
+          (let g__5 := (b__3, 1#1)
           true))
-      | g__3 => true))
+      | g__5 => true))
   | (b__2, 0#1) =>
     (if ((b__2 == (0b01 : (BitVec 2))) : Bool)
     then true
@@ -365,22 +372,22 @@ def privLevel_bits_forwards_matches (arg_ : ((BitVec 2) × (BitVec 1))) : Bool :
         (if ((b__4 == (0b11 : (BitVec 2))) : Bool)
         then true
         else
-          (let g__3 := (b__4, 0#1)
+          (let g__5 := (b__4, 0#1)
           true))
-      | g__3 => true))
+      | g__5 => true))
   | (b__3, 1#1) =>
     (if ((b__3 == (0b01 : (BitVec 2))) : Bool)
     then true
     else
-      (let g__3 := (b__3, 1#1)
+      (let g__5 := (b__3, 1#1)
       true))
   | (b__4, 0#1) =>
     (if ((b__4 == (0b11 : (BitVec 2))) : Bool)
     then true
     else
-      (let g__3 := (b__4, 0#1)
+      (let g__5 := (b__4, 0#1)
       true))
-  | g__3 => true
+  | g__5 => true
 
 def privLevel_bits_backwards_matches (arg_ : Privilege) : Bool :=
   match arg_ with
@@ -594,10 +601,9 @@ def currentlyEnabled (merge_var : extension) : SailM Bool := do
   | Ext_Svnapot => (pure false)
   | Ext_Svpbmt => (pure false)
   | Ext_Svrsw60t59b => (pure ((hartSupports Ext_Svrsw60t59b) && (← (currentlyEnabled Ext_Sv39))))
-  | Ext_Zifencei => (pure (hartSupports Ext_Zifencei))
   | _ =>
     (do
-      assert false "Pattern match failure at extensions/Zifenci/zifencei_insts.sail:14.0-14.75"
+      assert false "Pattern match failure at sys/vmem_pte.sail:78.0-78.110"
       throw Error.Exit)
 termination_by let ext := merge_var; ((currentlyEnabled_measure ext)).toNat
 def get_xLPE (p : Privilege) : SailM Bool := do
@@ -1388,9 +1394,8 @@ def csr_name_map_forwards (arg_ : (BitVec 12)) : SailM String := do
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   then
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     (pure "satp")
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   else
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    (do
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      assert false "Pattern match failure at unknown location"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      throw Error.Exit)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    (hex_bits_12_forwards
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      b__0)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
 
 def csr_name (csr : (BitVec 12)) : SailM String := do
   (csr_name_map_forwards csr)
@@ -1482,6 +1487,21 @@ def pma_region_to_str (region : PMA_Region) : String :=
     (HAppend.hAppend (BitVec.toFormatted region.base)
       (HAppend.hAppend " size: "
         (HAppend.hAppend (BitVec.toFormatted region.size) (pma_attributes_to_str region.attributes)))))
+
+def assembly_forwards (arg_ : instruction) : SailM String := do
+  match arg_ with
+  | .LPAD lpl =>
+    (pure (String.append "lpad"
+        (String.append (spc_forwards ()) (String.append (← (hex_bits_20_forwards lpl)) ""))))
+  | .ILLEGAL s =>
+    (pure (String.append "illegal"
+        (String.append (spc_forwards ()) (String.append (← (hex_bits_32_forwards s)) ""))))
+  | .C_ILLEGAL s =>
+    (pure (String.append "c.illegal"
+        (String.append (spc_forwards ()) (String.append (← (hex_bits_16_forwards s)) ""))))
+
+def print_insn (insn : instruction) : SailM String := do
+  (assembly_forwards insn)
 
 def ptw_error_to_str (e : PTW_Error) : String :=
   match e with
@@ -2038,11 +2058,11 @@ def num_of_SATPMode (arg_ : SATPMode) : Int :=
 
 def satpMode_of_bits (a : Architecture) (m : (BitVec 4)) : (Option SATPMode) :=
   match (a, m) with
-  | (g__2, b__0) =>
+  | (g__4, b__0) =>
     (if ((b__0 == (0x0 : (BitVec 4))) : Bool)
     then (some Bare)
     else
-      (match (g__2, b__0) with
+      (match (g__4, b__0) with
       | (RV32, b__0) =>
         (if ((b__0 == (0x1 : (BitVec 4))) : Bool)
         then (some Sv32)

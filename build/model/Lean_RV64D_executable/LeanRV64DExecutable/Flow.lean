@@ -127,6 +127,8 @@ open amoop
 open agtype
 open WaitReason
 open TrapVectorMode
+open Step
+open Software_Check_Code
 open SWCheckCodes
 open SATPMode
 open Reservability
@@ -136,6 +138,9 @@ open PmpAddrMatchType
 open PTW_Error
 open PTE_Check
 open InterruptType
+open ISA_Format
+open HartState
+open FetchResult
 open Ext_DataAddr_Check
 open ExtStatus
 open ExecutionResult
@@ -144,7 +149,7 @@ open AtomicSupport
 open Architecture
 open AccessType
 
-/-- Type quantifiers: k_ex77661# : Bool, k_ex77660# : Bool -/
+/-- Type quantifiers: k_ex82611# : Bool, k_ex82610# : Bool -/
 def neq_bool (x : Bool) (y : Bool) : Bool :=
   (! (x == y))
 

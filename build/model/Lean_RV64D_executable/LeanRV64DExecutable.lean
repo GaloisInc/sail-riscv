@@ -8,7 +8,8 @@ import LeanRV64DExecutable.SysControl
 import LeanRV64DExecutable.Platform
 import LeanRV64DExecutable.Pma
 import LeanRV64DExecutable.VmemTlb
-import LeanRV64DExecutable.ZifenceiInsts
+import LeanRV64DExecutable.Step
+import LeanRV64DExecutable.Model
 
 set_option maxHeartbeats 1_000_000_000
 set_option maxRecDepth 1_000_000
@@ -131,6 +132,8 @@ open amoop
 open agtype
 open WaitReason
 open TrapVectorMode
+open Step
+open Software_Check_Code
 open SWCheckCodes
 open SATPMode
 open Reservability
@@ -140,6 +143,9 @@ open PmpAddrMatchType
 open PTW_Error
 open PTE_Check
 open InterruptType
+open ISA_Format
+open HartState
+open FetchResult
 open Ext_DataAddr_Check
 open ExtStatus
 open ExecutionResult
@@ -212,6 +218,7 @@ def sail_model_init (x_0 : Unit) : SailM Unit := do
                                                                                                                     supports_cbo_zero := true }
                                                                                                     include_in_device_tree := true }]
   writeReg tlb (vectorInit none)
+  writeReg hart_state (HART_ACTIVE ())
   (pure (initialize_registers ()))
 
 end LeanRV64DExecutable.Functions

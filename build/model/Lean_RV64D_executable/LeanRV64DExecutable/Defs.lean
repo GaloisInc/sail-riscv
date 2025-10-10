@@ -226,6 +226,14 @@ structure PMA_Region where
   include_in_device_tree : Bool
   deriving BEq, Inhabited, Repr
 
+abbrev landing_pad_label := (BitVec 20)
+
+inductive instruction where
+  | ILLEGAL (_ : word)
+  | C_ILLEGAL (_ : half)
+  | LPAD (_ : landing_pad_label)
+  deriving Inhabited, Repr
+
 inductive PTW_Error where
   | PTW_Invalid_Addr (_ : Unit)
   | PTW_Access (_ : Unit)
@@ -658,6 +666,9 @@ abbrev Vcsr := (BitVec 3)
 
 abbrev CountSmcntrpmf := (BitVec 64)
 
+inductive Software_Check_Code where | SWC_NO_INFO | SWC_LANDING_PAD_FAULT
+  deriving BEq, Inhabited, Repr
+
 inductive landing_pad_expectation where | NO_LP_EXPECTED | LP_EXPECTED
   deriving BEq, Inhabited, Repr
 
@@ -729,13 +740,31 @@ abbrev TR_Result k_paddr k_failure := (Result (k_paddr × ext_ptw) (k_failure ×
 
 
 
-inductive instruction where
-  | ILLEGAL (_ : word)
-  | C_ILLEGAL (_ : half)
-  | FENCEI (_ : Unit)
-  deriving Inhabited, Repr
+inductive HartState where
+  | HART_ACTIVE (_ : Unit)
+  | HART_WAITING (_ : (WaitReason × instbits))
+  deriving Inhabited, BEq, Repr
+
+inductive FetchResult where
+  | F_Ext_Error (_ : ext_fetch_addr_error)
+  | F_Base (_ : word)
+  | F_RVC (_ : half)
+  | F_Error (_ : (ExceptionType × xlenbits))
+  deriving Inhabited, BEq, Repr
+
+inductive Step where
+  | Step_Pending_Interrupt (_ : (InterruptType × Privilege))
+  | Step_Ext_Fetch_Failure (_ : ext_fetch_addr_error)
+  | Step_Fetch_Failure (_ : (virtaddr × ExceptionType))
+  | Step_Execute (_ : (ExecutionResult × instbits))
+  | Step_Waiting (_ : WaitReason)
+  deriving Inhabited, BEq, Repr
+
+inductive ISA_Format where | Canonical_Lowercase | DeviceTree_ISA_Extensions
+  deriving BEq, Inhabited, Repr
 
 inductive Register : Type where
+  | hart_state
   | satp
   | tlb
   | pma_regions
@@ -902,6 +931,7 @@ inductive Register : Type where
 open Register
 
 abbrev RegisterType : Register → Type
+  | .hart_state => HartState
   | .satp => (BitVec 64)
   | .tlb => (Vector (Option TLB_Entry) 64)
   | .pma_regions => (List PMA_Region)
@@ -1065,6 +1095,8 @@ abbrev RegisterType : Register → Type
   | .rvfi_inst_data => (BitVec 192)
   | .rvfi_instruction => (BitVec 64)
 
+instance : Inhabited (RegisterRef RegisterType HartState) where
+  default := .Reg hart_state
 instance : Inhabited (RegisterRef RegisterType Privilege) where
   default := .Reg cur_privilege
 instance : Inhabited (RegisterRef RegisterType (BitVec 1)) where

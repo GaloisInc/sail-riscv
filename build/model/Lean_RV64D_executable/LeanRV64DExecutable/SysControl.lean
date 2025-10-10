@@ -135,6 +135,8 @@ open amoop
 open agtype
 open WaitReason
 open TrapVectorMode
+open Step
+open Software_Check_Code
 open SWCheckCodes
 open SATPMode
 open Reservability
@@ -144,6 +146,9 @@ open PmpAddrMatchType
 open PTW_Error
 open PTE_Check
 open InterruptType
+open ISA_Format
+open HartState
+open FetchResult
 open Ext_DataAddr_Check
 open ExtStatus
 open ExecutionResult
@@ -166,12 +171,12 @@ def csrPriv (csr : (BitVec 12)) : (BitVec 2) :=
 def check_CSR_priv (csr : (BitVec 12)) (p : Privilege) : Bool :=
   (zopz0zKzJ_u (privLevel_to_bits p) (csrPriv csr))
 
-/-- Type quantifiers: k_ex81320# : Bool -/
+/-- Type quantifiers: k_ex86278# : Bool -/
 def check_CSR_access (csr : (BitVec 12)) (isWrite : Bool) : Bool :=
   (not (isWrite && ((csrAccess csr) == (0b11 : (BitVec 2)))))
 
-/-- Type quantifiers: k_ex81330# : Bool -/
-def is_CSR_accessible (b__0 : (BitVec 12)) (g__0 : Privilege) (g__1 : Bool) : SailM Bool := do
+/-- Type quantifiers: k_ex86288# : Bool -/
+def is_CSR_accessible (b__0 : (BitVec 12)) (g__2 : Privilege) (g__3 : Bool) : SailM Bool := do
   if ((b__0 == (0x301 : (BitVec 12))) : Bool)
   then (pure true)
   else
@@ -499,14 +504,12 @@ def is_CSR_accessible (b__0 : (BitVec 12)) (g__0 : Privilege) (g__1 : Bool) : Sa
                                                                                                                                                                                                                           then
                                                                                                                                                                                                                             (pure ((← (currentlyEnabled
                                                                                                                                                                                                                                     Ext_S)) && (not
-                                                                                                                                                                                                                                  ((g__0 == Supervisor) && ((_get_Mstatus_TVM
+                                                                                                                                                                                                                                  ((g__2 == Supervisor) && ((_get_Mstatus_TVM
                                                                                                                                                                                                                                         (← readReg mstatus)) == (0b1 : (BitVec 1)))))))
                                                                                                                                                                                                                           else
-                                                                                                                                                                                                                            (do
-                                                                                                                                                                                                                              assert false "Pattern match failure at sys/vmem.sail:167.0-167.123"
-                                                                                                                                                                                                                              throw Error.Exit)))))))))))))))))))))))))))))))))))))))))))))))))))))))
+                                                                                                                                                                                                                            (pure false)))))))))))))))))))))))))))))))))))))))))))))))))))))))
 
-/-- Type quantifiers: k_ex81541# : Bool -/
+/-- Type quantifiers: k_ex86499# : Bool -/
 def check_CSR (csr : (BitVec 12)) (p : Privilege) (isWrite : Bool) : SailM Bool := do
   (pure ((check_CSR_priv csr p) && ((check_CSR_access csr isWrite) && (← (is_CSR_accessible csr p
             isWrite)))))
@@ -593,7 +596,7 @@ def track_trap (p : Privilege) : SailM Unit := do
   | VirtualSupervisor =>
     (internal_error "sys/sys_control.sail" 150 "Hypervisor extension not supported")
 
-/-- Type quantifiers: k_ex81607# : Bool -/
+/-- Type quantifiers: k_ex86565# : Bool -/
 def trap_handler (del_priv : Privilege) (intr : Bool) (c : (BitVec 6)) (pc : (BitVec 64)) (info : (Option (BitVec 64))) (ext : (Option Unit)) : SailM (BitVec 64) := do
   let _ : Unit := (trap_callback ())
   if ((get_config_print_platform ()) : Bool)
