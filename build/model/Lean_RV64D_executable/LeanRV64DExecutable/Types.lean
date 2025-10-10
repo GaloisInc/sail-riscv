@@ -603,7 +603,7 @@ def currentlyEnabled (merge_var : extension) : SailM Bool := do
   | Ext_Svrsw60t59b => (pure ((hartSupports Ext_Svrsw60t59b) && (← (currentlyEnabled Ext_Sv39))))
   | _ =>
     (do
-      assert false "Pattern match failure at sys/vmem_pte.sail:78.0-78.110"
+      assert false s!"Pattern match failure at sys/vmem_pte.sail:78.0-78.110 {merge_var}"
       throw Error.Exit)
 termination_by let ext := merge_var; ((currentlyEnabled_measure ext)).toNat
 def get_xLPE (p : Privilege) : SailM Bool := do
@@ -2293,4 +2293,3 @@ def width_mnemonic_wide_backwards_matches (arg_ : String) : Bool :=
   | "d" => true
   | "q" => true
   | _ => false
-
