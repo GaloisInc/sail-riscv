@@ -129,7 +129,10 @@ open extension
 open exception
 open ctl_result
 open cregidx
+open checked_cbop
 open cfregidx
+open cbop_zicbom
+open cbie
 open barrier_kind
 open amoop
 open agtype
@@ -165,7 +168,7 @@ def write_pte (paddr : physaddr) (pte_size : Nat) (pte : (BitVec (pte_size * 8))
 def read_pte (paddr : physaddr) (pte_size : Nat) : SailM (Result (BitVec (8 * pte_size)) ExceptionType) := do
   (mem_read_priv (Read Data) Supervisor paddr pte_size false false false)
 
-/-- Type quantifiers: k_ex88156# : Bool, level : Nat, k_ex88154# : Bool, k_ex88153# : Bool, sv_width
+/-- Type quantifiers: k_ex88359# : Bool, level : Nat, k_ex88357# : Bool, k_ex88356# : Bool, sv_width
   : Nat, is_sv_mode(sv_width), 0 ≤ level ∧
   level ≤
   (bif sv_width = 32 then 1 else (bif sv_width = 39 then 2 else (bif sv_width = 48 then 3 else 4))) -/
@@ -272,7 +275,7 @@ def translationMode (priv : Privilege) : SailM SATPMode := do
       | .some m => (pure m)
       | none => (internal_error "./sys/vmem.sail" 203 "invalid translation mode in satp"))
 
-/-- Type quantifiers: tlb_index : Nat, k_ex88201# : Bool, k_ex88200# : Bool, sv_width : Nat, is_sv_mode(sv_width), 0
+/-- Type quantifiers: tlb_index : Nat, k_ex88404# : Bool, k_ex88403# : Bool, sv_width : Nat, is_sv_mode(sv_width), 0
   ≤ tlb_index ∧ tlb_index ≤ (64 - 1) -/
 def translate_TLB_hit (sv_width : Nat) (asid : (BitVec (bif 64 = 32 then 9 else 16))) (vpn : (BitVec (sv_width - 12))) (ac : (AccessType Unit)) (priv : Privilege) (mxr : Bool) (do_sum : Bool) (ext_ptw : Unit) (tlb_index : Nat) (ent : TLB_Entry) : SailM (Result ((BitVec (bif sv_width
   = 32 then 22 else 44)) × Unit) (PTW_Error × Unit)) := do
@@ -303,7 +306,7 @@ def translate_TLB_hit (sv_width : Nat) (asid : (BitVec (bif 64 = 32 then 9 else 
               | .Err e => (internal_error "./sys/vmem.sail" 255 "invalid physical address in TLB")
               (pure (Ok ((tlb_get_ppn sv_width ent vpn), ext_ptw))))))
 
-/-- Type quantifiers: k_ex88222# : Bool, k_ex88221# : Bool, sv_width : Nat, is_sv_mode(sv_width) -/
+/-- Type quantifiers: k_ex88425# : Bool, k_ex88424# : Bool, sv_width : Nat, is_sv_mode(sv_width) -/
 def translate_TLB_miss (sv_width : Nat) (asid : (BitVec (bif 64 = 32 then 9 else 16))) (base_ppn : (BitVec (bif sv_width
   = 32 then 22 else 44))) (vpn : (BitVec (sv_width - 12))) (ac : (AccessType Unit)) (priv : Privilege) (mxr : Bool) (do_sum : Bool) (ext_ptw : Unit) : SailM (Result ((BitVec (bif sv_width
   = 32 then 22 else 44)) × Unit) (PTW_Error × Unit)) := do
@@ -382,7 +385,7 @@ def satp_mode_width_backwards_matches (arg_ : Nat) : Bool :=
   | 57 => true
   | _ => false
 
-/-- Type quantifiers: k_ex88258# : Bool, k_ex88257# : Bool, sv_width : Nat, is_sv_mode(sv_width) -/
+/-- Type quantifiers: k_ex88461# : Bool, k_ex88460# : Bool, sv_width : Nat, is_sv_mode(sv_width) -/
 def translate (sv_width : Nat) (asid : (BitVec (bif 64 = 32 then 9 else 16))) (base_ppn : (BitVec (bif sv_width
   = 32 then 22 else 44))) (vpn : (BitVec (sv_width - 12))) (ac : (AccessType Unit)) (priv : Privilege) (mxr : Bool) (do_sum : Bool) (ext_ptw : Unit) : SailM (Result ((BitVec (bif sv_width
   = 32 then 22 else 44)) × Unit) (PTW_Error × Unit)) := do

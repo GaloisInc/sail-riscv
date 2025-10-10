@@ -122,7 +122,10 @@ open extension
 open exception
 open ctl_result
 open cregidx
+open checked_cbop
 open cfregidx
+open cbop_zicbom
+open cbie
 open barrier_kind
 open amoop
 open agtype
@@ -600,6 +603,7 @@ def currentlyEnabled (merge_var : extension) : SailM Bool := do
   | Ext_Svnapot => (pure false)
   | Ext_Svpbmt => (pure false)
   | Ext_Svrsw60t59b => (pure ((hartSupports Ext_Svrsw60t59b) && (← (currentlyEnabled Ext_Sv39))))
+  | Ext_Zicbom => (pure (hartSupports Ext_Zicbom))
   | Ext_Zicboz => (pure (hartSupports Ext_Zicboz))
   | _ =>
     (do
@@ -1488,6 +1492,12 @@ def pma_region_to_str (region : PMA_Region) : String :=
       (HAppend.hAppend " size: "
         (HAppend.hAppend (BitVec.toFormatted region.size) (pma_attributes_to_str region.attributes)))))
 
+def cbop_mnemonic_forwards (arg_ : cbop_zicbom) : String :=
+  match arg_ with
+  | CBO_CLEAN => "cbo.clean"
+  | CBO_FLUSH => "cbo.flush"
+  | CBO_INVAL => "cbo.inval"
+
 def encdec_reg_forwards (arg_ : regidx) : (BitVec 5) :=
   match arg_ with
   | .Regidx r => (zero_extend (m := 5) r)
@@ -1723,6 +1733,13 @@ def assembly_forwards (arg_ : instruction) : SailM String := do
   | .LPAD lpl =>
     (pure (String.append "lpad"
         (String.append (spc_forwards ()) (String.append (← (hex_bits_20_forwards lpl)) ""))))
+  | .ZICBOM (cbop, rs1) =>
+    (pure (String.append (cbop_mnemonic_forwards cbop)
+        (String.append (spc_forwards ())
+          (String.append "("
+            (String.append (opt_spc_forwards ())
+              (String.append (← (reg_name_forwards rs1))
+                (String.append (opt_spc_forwards ()) (String.append ")" ""))))))))
   | .ZICBOZ rs1 =>
     (pure (String.append "cbo.zero"
         (String.append (spc_forwards ())
@@ -2530,3 +2547,4 @@ def width_mnemonic_wide_backwards_matches (arg_ : String) : Bool :=
   | "d" => true
   | "q" => true
   | _ => false
+

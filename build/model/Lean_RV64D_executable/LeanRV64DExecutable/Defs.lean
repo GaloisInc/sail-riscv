@@ -226,12 +226,16 @@ structure PMA_Region where
   include_in_device_tree : Bool
   deriving BEq, Inhabited, Repr
 
+inductive cbop_zicbom where | CBO_CLEAN | CBO_FLUSH | CBO_INVAL
+  deriving BEq, Inhabited, Repr
+
 abbrev landing_pad_label := (BitVec 20)
 
 inductive instruction where
   | ILLEGAL (_ : word)
   | C_ILLEGAL (_ : half)
   | LPAD (_ : landing_pad_label)
+  | ZICBOM (_ : (cbop_zicbom × regidx))
   | ZICBOZ (_ : regidx)
   deriving Inhabited, Repr
 
@@ -740,6 +744,12 @@ abbrev PTW_Result k_v := (Result ((PTW_Output k_v) × ext_ptw) (PTW_Error × ext
 abbrev TR_Result k_paddr k_failure := (Result (k_paddr × ext_ptw) (k_failure × ext_ptw))
 
 
+
+inductive cbie where | CBIE_ILLEGAL | CBIE_EXEC_FLUSH | CBIE_EXEC_INVAL
+  deriving BEq, Inhabited, Repr
+
+inductive checked_cbop where | CBOP_ILLEGAL | CBOP_ILLEGAL_VIRTUAL | CBOP_INVAL_FLUSH | CBOP_INVAL_INVAL
+  deriving BEq, Inhabited, Repr
 
 inductive HartState where
   | HART_ACTIVE (_ : Unit)

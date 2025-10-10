@@ -152,13 +152,19 @@ open AtomicSupport
 open Architecture
 open AccessType
 
-def physaddrbits_len := 64
+def undefined_cbop_zicbom (_ : Unit) : SailM cbop_zicbom := do
+  (internal_pick [CBO_CLEAN, CBO_FLUSH, CBO_INVAL])
 
-def bits_of_physaddr (app_0 : physaddr) : (BitVec (bif 64 = 32 then 34 else 64)) :=
-  let .Physaddr paddr := app_0
-  paddr
+/-- Type quantifiers: arg_ : Nat, 0 ≤ arg_ ∧ arg_ ≤ 2 -/
+def cbop_zicbom_of_num (arg_ : Nat) : cbop_zicbom :=
+  match arg_ with
+  | 0 => CBO_CLEAN
+  | 1 => CBO_FLUSH
+  | _ => CBO_INVAL
 
-def bits_of_virtaddr (app_0 : virtaddr) : (BitVec 64) :=
-  let .Virtaddr vaddr := app_0
-  vaddr
+def num_of_cbop_zicbom (arg_ : cbop_zicbom) : Int :=
+  match arg_ with
+  | CBO_CLEAN => 0
+  | CBO_FLUSH => 1
+  | CBO_INVAL => 2
 
