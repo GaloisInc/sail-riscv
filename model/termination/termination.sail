@@ -9,7 +9,7 @@
 termination_measure virtual_memory_supported(_) = 3
 
 // get_xLPE() and currentlyEnabled() are mutually recursive
-termination_measure get_xLPE(_) = 2
+// termination_measure get_xLPE(_) = 2
 
 function hartSupports_measure(ext : extension) -> int =
   match ext {
