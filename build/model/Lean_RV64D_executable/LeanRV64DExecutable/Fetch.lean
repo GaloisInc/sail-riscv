@@ -1,7 +1,6 @@
 import LeanRV64DExecutable.Flow
 import LeanRV64DExecutable.Prelude
 import LeanRV64DExecutable.Types
-import LeanRV64DExecutable.Regs
 import LeanRV64DExecutable.AddrChecks
 import LeanRV64DExecutable.Mem
 import LeanRV64DExecutable.Vmem
@@ -154,15 +153,15 @@ def isRVC (h : (BitVec 16)) : Bool :=
   (not ((Sail.BitVec.extractLsb h 1 0) == (0b11 : (BitVec 2))))
 
 def fetch (_ : Unit) : SailM FetchResult := SailME.run do
-  if ((get_config_rvfi ()) : Bool)
+  bif (get_config_rvfi ())
   then (rvfi_fetch ())
   else
     (do
       match (ext_fetch_check_pc (← readReg PC) (← readReg PC)) with
       | .some e => SailME.throw ((F_Ext_Error e) : FetchResult)
       | none => (pure ())
-      if (((bne (BitVec.access (← readReg PC) 0) 0#1) || ((bne (BitVec.access (← readReg PC) 1)
-               0#1) && (not (← (currentlyEnabled Ext_Zca))))) : Bool)
+      bif ((bne (BitVec.access (← readReg PC) 0) 0#1) || ((bne (BitVec.access (← readReg PC) 1)
+               0#1) && (not (← (currentlyEnabled Ext_Zca)))))
       then (pure (F_Error ((E_Fetch_Addr_Align ()), (← readReg PC))))
       else
         (do
@@ -174,7 +173,7 @@ def fetch (_ : Unit) : SailM FetchResult := SailME.run do
               | .Err e => (pure (F_Error (e, (← readReg PC))))
               | .Ok ilo =>
                 (do
-                  if ((isRVC ilo) : Bool)
+                  bif (isRVC ilo)
                   then (pure (F_RVC ilo))
                   else
                     (do

@@ -1,9 +1,7 @@
 import LeanRV64DExecutable.Prelude
 import LeanRV64DExecutable.PreludeMemAddrtype
 import LeanRV64DExecutable.Common
-import LeanRV64DExecutable.RvfiDii
 import LeanRV64DExecutable.Types
-import LeanRV64DExecutable.Regs
 import LeanRV64DExecutable.PcAccess
 import LeanRV64DExecutable.SysRegs
 import LeanRV64DExecutable.ExtRegs
@@ -162,12 +160,12 @@ open AtomicSupport
 open Architecture
 open AccessType
 
-/-- Type quantifiers: k_ex89065# : Bool, step_no : Int -/
+/-- Type quantifiers: k_ex89083# : Bool, step_no : Int -/
 def run_hart_waiting (step_no : Int) (wr : WaitReason) (instbits : (BitVec 32)) (exit_wait : Bool) : SailM Step := do
-  if ((← (shouldWakeForInterrupt ())) : Bool)
+  bif (← (shouldWakeForInterrupt ()))
   then
     (do
-      if ((get_config_print_instr ()) : Bool)
+      bif (get_config_print_instr ())
       then
         (pure (print_endline
             (HAppend.hAppend "interrupt exit from "
@@ -181,7 +179,7 @@ def run_hart_waiting (step_no : Int) (wr : WaitReason) (instbits : (BitVec 32)) 
       match (wr, (valid_reservation ()), exit_wait) with
       | (WAIT_WRS_STO, false, _) =>
         (do
-          if ((get_config_print_instr ()) : Bool)
+          bif (get_config_print_instr ())
           then
             (pure (print_endline
                 (HAppend.hAppend "reservation invalid exit from "
@@ -192,7 +190,7 @@ def run_hart_waiting (step_no : Int) (wr : WaitReason) (instbits : (BitVec 32)) 
           (pure (Step_Execute ((Retire_Success ()), instbits))))
       | (WAIT_WRS_NTO, false, _) =>
         (do
-          if ((get_config_print_instr ()) : Bool)
+          bif (get_config_print_instr ())
           then
             (pure (print_endline
                 (HAppend.hAppend "reservation invalid exit from "
@@ -203,7 +201,7 @@ def run_hart_waiting (step_no : Int) (wr : WaitReason) (instbits : (BitVec 32)) 
           (pure (Step_Execute ((Retire_Success ()), instbits))))
       | (WAIT_WFI, _, true) =>
         (do
-          if ((get_config_print_instr ()) : Bool)
+          bif (get_config_print_instr ())
           then
             (pure (print_endline
                 (HAppend.hAppend "forced exit from "
@@ -211,12 +209,12 @@ def run_hart_waiting (step_no : Int) (wr : WaitReason) (instbits : (BitVec 32)) 
                     (HAppend.hAppend " state at PC " (BitVec.toFormatted (← readReg PC)))))))
           else (pure ())
           writeReg hart_state (HART_ACTIVE ())
-          if ((((← readReg cur_privilege) == Machine) || ((_get_Mstatus_TW (← readReg mstatus)) == (0b0 : (BitVec 1)))) : Bool)
+          bif (((← readReg cur_privilege) == Machine) || ((_get_Mstatus_TW (← readReg mstatus)) == (0b0 : (BitVec 1))))
           then (pure (Step_Execute ((Retire_Success ()), instbits)))
           else (pure (Step_Execute ((Illegal_Instruction ()), instbits))))
       | (WAIT_WRS_STO, _, true) =>
         (do
-          if ((get_config_print_instr ()) : Bool)
+          bif (get_config_print_instr ())
           then
             (pure (print_endline
                 (HAppend.hAppend "timed-out exit from "
@@ -227,7 +225,7 @@ def run_hart_waiting (step_no : Int) (wr : WaitReason) (instbits : (BitVec 32)) 
           (pure (Step_Execute ((Retire_Success ()), instbits))))
       | (WAIT_WRS_NTO, _, true) =>
         (do
-          if ((get_config_print_instr ()) : Bool)
+          bif (get_config_print_instr ())
           then
             (pure (print_endline
                 (HAppend.hAppend "timed-out exit from "
@@ -235,12 +233,12 @@ def run_hart_waiting (step_no : Int) (wr : WaitReason) (instbits : (BitVec 32)) 
                     (HAppend.hAppend " state at PC " (BitVec.toFormatted (← readReg PC)))))))
           else (pure ())
           writeReg hart_state (HART_ACTIVE ())
-          if ((((← readReg cur_privilege) == Machine) || ((_get_Mstatus_TW (← readReg mstatus)) == (0b0 : (BitVec 1)))) : Bool)
+          bif (((← readReg cur_privilege) == Machine) || ((_get_Mstatus_TW (← readReg mstatus)) == (0b0 : (BitVec 1))))
           then (pure (Step_Execute ((Retire_Success ()), instbits)))
           else (pure (Step_Execute ((Illegal_Instruction ()), instbits))))
       | (_, _, false) =>
         (do
-          if ((get_config_print_instr ()) : Bool)
+          bif (get_config_print_instr ())
           then
             (pure (print_endline
                 (HAppend.hAppend "remaining in "
@@ -263,7 +261,7 @@ def run_hart_active (step_no : Nat) : SailM Step := do
           let _ : Unit := (sail_instr_announce h)
           let instbits : instbits := (zero_extend (m := 32) h)
           let instruction := (ext_decode_compressed h)
-          if ((get_config_print_instr ()) : Bool)
+          bif (get_config_print_instr ())
           then
             (pure (print_log_instr
                 (HAppend.hAppend "["
@@ -277,7 +275,7 @@ def run_hart_active (step_no : Nat) : SailM Step := do
                                 (HAppend.hAppend ") " (← (print_insn instruction)))))))))))
                 (zero_extend (m := 64) (← readReg PC))))
           else (pure ())
-          if ((← (is_landing_pad_expected ())) : Bool)
+          bif (← (is_landing_pad_expected ()))
           then
             (do
               let r ← do
@@ -286,7 +284,7 @@ def run_hart_active (step_no : Nat) : SailM Step := do
               (pure (Step_Execute (r, instbits))))
           else
             (do
-              if ((← (currentlyEnabled Ext_Zca)) : Bool)
+              bif (← (currentlyEnabled Ext_Zca))
               then
                 (do
                   writeReg nextPC (BitVec.addInt (← readReg PC) 2)
@@ -298,7 +296,7 @@ def run_hart_active (step_no : Nat) : SailM Step := do
           let _ : Unit := (sail_instr_announce w)
           let instbits : instbits := (zero_extend (m := 32) w)
           let instruction ← do (ext_decode w)
-          if ((get_config_print_instr ()) : Bool)
+          bif (get_config_print_instr ())
           then
             (pure (print_log_instr
                 (HAppend.hAppend "["
@@ -312,7 +310,7 @@ def run_hart_active (step_no : Nat) : SailM Step := do
                                 (HAppend.hAppend ") " (← (print_insn instruction)))))))))))
                 (zero_extend (m := 64) (← readReg PC))))
           else (pure ())
-          if (((← (is_landing_pad_expected ())) && (not (is_lpad_instruction instruction))) : Bool)
+          bif ((← (is_landing_pad_expected ())) && (not (is_lpad_instruction instruction)))
           then
             (do
               let r ← do
@@ -331,7 +329,7 @@ def wait_is_nop (wr : WaitReason) : Bool :=
   | WAIT_WRS_STO => false
   | WAIT_WRS_NTO => false
 
-/-- Type quantifiers: k_ex89115# : Bool, step_no : Nat, 0 ≤ step_no -/
+/-- Type quantifiers: k_ex89133# : Bool, step_no : Nat, 0 ≤ step_no -/
 def try_step (step_no : Nat) (exit_wait : Bool) : SailM Bool := do
   let _ : Unit := (ext_pre_step_hook ())
   writeReg minstret_increment (← (should_inc_minstret (← readReg cur_privilege)))
@@ -343,7 +341,7 @@ def try_step (step_no : Nat) (exit_wait : Bool) : SailM Bool := do
   | .Step_Pending_Interrupt (intr, priv) =>
     (do
       let _ : Unit :=
-        if ((get_config_print_instr ()) : Bool)
+        bif (get_config_print_instr ())
         then (print_bits "Handling interrupt: " (interruptType_bits_forwards intr))
         else ()
       (handle_interrupt intr priv))
@@ -352,18 +350,18 @@ def try_step (step_no : Nat) (exit_wait : Bool) : SailM Bool := do
   | .Step_Waiting _ =>
     assert (hart_is_waiting (← readReg hart_state)) "cannot be Waiting in a non-Wait state"
   | .Step_Execute (.Retire_Success (), _) =>
-    assert (hart_is_active (← readReg hart_state)) "postlude/step.sail:202.74-202.75"
+    assert (hart_is_active (← readReg hart_state)) "./postlude/step.sail:202.74-202.75"
   | .Step_Execute (.Trap (priv, ctl, pc), _) => (set_next_pc (← (exception_handler priv ctl pc)))
   | .Step_Execute (.Memory_Exception (vaddr, e), _) => (handle_exception (bits_of_virtaddr vaddr) e)
   | .Step_Execute (.Illegal_Instruction (), instbits) =>
     (handle_exception (zero_extend (m := 64) instbits) (E_Illegal_Instr ()))
   | .Step_Execute (.Enter_Wait wr, instbits) =>
     (do
-      if ((wait_is_nop wr) : Bool)
-      then assert (hart_is_active (← readReg hart_state)) "postlude/step.sail:210.41-210.42"
+      bif (wait_is_nop wr)
+      then assert (hart_is_active (← readReg hart_state)) "./postlude/step.sail:210.41-210.42"
       else
         (do
-          if ((get_config_print_instr ()) : Bool)
+          bif (get_config_print_instr ())
           then
             (pure (print_endline
                 (HAppend.hAppend "entering "
@@ -384,14 +382,14 @@ def try_step (step_no : Nat) (exit_wait : Bool) : SailM Bool := do
         match step_val with
         | .Step_Execute (.Retire_Success (), g__0) => true
         | .Step_Execute (.Enter_Wait wr, g__1) =>
-          (if ((wait_is_nop wr) : Bool)
+          (bif (wait_is_nop wr)
           then true
           else false)
         | _ => false
-      if ((retired && (← readReg minstret_increment)) : Bool)
+      bif (retired && (← readReg minstret_increment))
       then writeReg minstret (BitVec.addInt (← readReg minstret) 1)
       else (pure ())
-      if ((get_config_rvfi ()) : Bool)
+      bif (get_config_rvfi ())
       then
         writeReg rvfi_pc_data (Sail.BitVec.updateSubrange (← readReg rvfi_pc_data) 127 64
           (zero_extend (m := 64) (← (get_arch_pc ()))))
@@ -409,31 +407,31 @@ def loop (_ : Unit) : SailM Unit := do
       loop_vars ← do
         let stepped ← do (try_step step_no true)
         let step_no ← (( do
-          if (stepped : Bool)
+          bif stepped
           then
             (do
               let step_no : Nat := (step_no +i 1)
               let _ : Unit :=
-                if ((get_config_print_instr ()) : Bool)
+                bif (get_config_print_instr ())
                 then (print_step ())
                 else ()
               (cycle_count ())
               (pure step_no))
           else (pure step_no) ) : SailM Nat )
         let i ← (( do
-          if ((← readReg htif_done) : Bool)
+          bif (← readReg htif_done)
           then
             (do
               let exit_val ← do (pure (BitVec.toNat (← readReg htif_exit_code)))
               let _ : Unit :=
-                if ((exit_val == 0) : Bool)
+                bif (exit_val == 0)
                 then (print "SUCCESS")
                 else (print_int "FAILURE: " exit_val)
               (pure i))
           else
             (do
               let i : Nat := (i +i 1)
-              if ((i == plat_insns_per_tick) : Bool)
+              bif (i == plat_insns_per_tick)
               then
                 (do
                   (tick_clock ())

@@ -9,7 +9,6 @@ import LeanRV64DExecutable.PmpRegs
 import LeanRV64DExecutable.FdextRegs
 import LeanRV64DExecutable.VextRegs
 import LeanRV64DExecutable.Smcntrpmf
-import LeanRV64DExecutable.Vmem
 
 set_option maxHeartbeats 1_000_000_000
 set_option maxRecDepth 1_000_000
@@ -156,490 +155,490 @@ open AccessType
 
 def csr_name_map_forwards_matches (arg_ : (BitVec 12)) : Bool :=
   let b__0 := arg_
-  if ((b__0 == (0x301 : (BitVec 12))) : Bool)
+  bif (b__0 == (0x301 : (BitVec 12)))
   then true
   else
-    (if ((b__0 == (0x300 : (BitVec 12))) : Bool)
+    (bif (b__0 == (0x300 : (BitVec 12)))
     then true
     else
-      (if ((b__0 == (0x310 : (BitVec 12))) : Bool)
+      (bif (b__0 == (0x310 : (BitVec 12)))
       then true
       else
-        (if ((b__0 == (0x747 : (BitVec 12))) : Bool)
+        (bif (b__0 == (0x747 : (BitVec 12)))
         then true
         else
-          (if ((b__0 == (0x757 : (BitVec 12))) : Bool)
+          (bif (b__0 == (0x757 : (BitVec 12)))
           then true
           else
-            (if ((b__0 == (0x30A : (BitVec 12))) : Bool)
+            (bif (b__0 == (0x30A : (BitVec 12)))
             then true
             else
-              (if ((b__0 == (0x31A : (BitVec 12))) : Bool)
+              (bif (b__0 == (0x31A : (BitVec 12)))
               then true
               else
-                (if ((b__0 == (0x10A : (BitVec 12))) : Bool)
+                (bif (b__0 == (0x10A : (BitVec 12)))
                 then true
                 else
-                  (if ((b__0 == (0x304 : (BitVec 12))) : Bool)
+                  (bif (b__0 == (0x304 : (BitVec 12)))
                   then true
                   else
-                    (if ((b__0 == (0x344 : (BitVec 12))) : Bool)
+                    (bif (b__0 == (0x344 : (BitVec 12)))
                     then true
                     else
-                      (if ((b__0 == (0x302 : (BitVec 12))) : Bool)
+                      (bif (b__0 == (0x302 : (BitVec 12)))
                       then true
                       else
-                        (if ((b__0 == (0x312 : (BitVec 12))) : Bool)
+                        (bif (b__0 == (0x312 : (BitVec 12)))
                         then true
                         else
-                          (if ((b__0 == (0x303 : (BitVec 12))) : Bool)
+                          (bif (b__0 == (0x303 : (BitVec 12)))
                           then true
                           else
-                            (if ((b__0 == (0x342 : (BitVec 12))) : Bool)
+                            (bif (b__0 == (0x342 : (BitVec 12)))
                             then true
                             else
-                              (if ((b__0 == (0x343 : (BitVec 12))) : Bool)
+                              (bif (b__0 == (0x343 : (BitVec 12)))
                               then true
                               else
-                                (if ((b__0 == (0x340 : (BitVec 12))) : Bool)
+                                (bif (b__0 == (0x340 : (BitVec 12)))
                                 then true
                                 else
-                                  (if ((b__0 == (0x106 : (BitVec 12))) : Bool)
+                                  (bif (b__0 == (0x106 : (BitVec 12)))
                                   then true
                                   else
-                                    (if ((b__0 == (0x306 : (BitVec 12))) : Bool)
+                                    (bif (b__0 == (0x306 : (BitVec 12)))
                                     then true
                                     else
-                                      (if ((b__0 == (0x320 : (BitVec 12))) : Bool)
+                                      (bif (b__0 == (0x320 : (BitVec 12)))
                                       then true
                                       else
-                                        (if ((b__0 == (0xF11 : (BitVec 12))) : Bool)
+                                        (bif (b__0 == (0xF11 : (BitVec 12)))
                                         then true
                                         else
-                                          (if ((b__0 == (0xF12 : (BitVec 12))) : Bool)
+                                          (bif (b__0 == (0xF12 : (BitVec 12)))
                                           then true
                                           else
-                                            (if ((b__0 == (0xF13 : (BitVec 12))) : Bool)
+                                            (bif (b__0 == (0xF13 : (BitVec 12)))
                                             then true
                                             else
-                                              (if ((b__0 == (0xF14 : (BitVec 12))) : Bool)
+                                              (bif (b__0 == (0xF14 : (BitVec 12)))
                                               then true
                                               else
-                                                (if ((b__0 == (0xF15 : (BitVec 12))) : Bool)
+                                                (bif (b__0 == (0xF15 : (BitVec 12)))
                                                 then true
                                                 else
-                                                  (if ((b__0 == (0x100 : (BitVec 12))) : Bool)
+                                                  (bif (b__0 == (0x100 : (BitVec 12)))
                                                   then true
                                                   else
-                                                    (if ((b__0 == (0x144 : (BitVec 12))) : Bool)
+                                                    (bif (b__0 == (0x144 : (BitVec 12)))
                                                     then true
                                                     else
-                                                      (if ((b__0 == (0x104 : (BitVec 12))) : Bool)
+                                                      (bif (b__0 == (0x104 : (BitVec 12)))
                                                       then true
                                                       else
-                                                        (if ((b__0 == (0x140 : (BitVec 12))) : Bool)
+                                                        (bif (b__0 == (0x140 : (BitVec 12)))
                                                         then true
                                                         else
-                                                          (if ((b__0 == (0x142 : (BitVec 12))) : Bool)
+                                                          (bif (b__0 == (0x142 : (BitVec 12)))
                                                           then true
                                                           else
-                                                            (if ((b__0 == (0x143 : (BitVec 12))) : Bool)
+                                                            (bif (b__0 == (0x143 : (BitVec 12)))
                                                             then true
                                                             else
-                                                              (if ((b__0 == (0x7A0 : (BitVec 12))) : Bool)
+                                                              (bif (b__0 == (0x7A0 : (BitVec 12)))
                                                               then true
                                                               else
-                                                                (if ((b__0 == (0x7A1 : (BitVec 12))) : Bool)
+                                                                (bif (b__0 == (0x7A1 : (BitVec 12)))
                                                                 then true
                                                                 else
-                                                                  (if ((b__0 == (0x7A2 : (BitVec 12))) : Bool)
+                                                                  (bif (b__0 == (0x7A2 : (BitVec 12)))
                                                                   then true
                                                                   else
-                                                                    (if ((b__0 == (0x7A3 : (BitVec 12))) : Bool)
+                                                                    (bif (b__0 == (0x7A3 : (BitVec 12)))
                                                                     then true
                                                                     else
-                                                                      (if ((b__0 == (0x105 : (BitVec 12))) : Bool)
+                                                                      (bif (b__0 == (0x105 : (BitVec 12)))
                                                                       then true
                                                                       else
-                                                                        (if ((b__0 == (0x141 : (BitVec 12))) : Bool)
+                                                                        (bif (b__0 == (0x141 : (BitVec 12)))
                                                                         then true
                                                                         else
-                                                                          (if ((b__0 == (0x305 : (BitVec 12))) : Bool)
+                                                                          (bif (b__0 == (0x305 : (BitVec 12)))
                                                                           then true
                                                                           else
-                                                                            (if ((b__0 == (0x341 : (BitVec 12))) : Bool)
+                                                                            (bif (b__0 == (0x341 : (BitVec 12)))
                                                                             then true
                                                                             else
-                                                                              (if ((b__0 == (0x3A0 : (BitVec 12))) : Bool)
+                                                                              (bif (b__0 == (0x3A0 : (BitVec 12)))
                                                                               then true
                                                                               else
-                                                                                (if ((b__0 == (0x3A1 : (BitVec 12))) : Bool)
+                                                                                (bif (b__0 == (0x3A1 : (BitVec 12)))
                                                                                 then true
                                                                                 else
-                                                                                  (if ((b__0 == (0x3A2 : (BitVec 12))) : Bool)
+                                                                                  (bif (b__0 == (0x3A2 : (BitVec 12)))
                                                                                   then true
                                                                                   else
-                                                                                    (if ((b__0 == (0x3A3 : (BitVec 12))) : Bool)
+                                                                                    (bif (b__0 == (0x3A3 : (BitVec 12)))
                                                                                     then true
                                                                                     else
-                                                                                      (if ((b__0 == (0x3A4 : (BitVec 12))) : Bool)
+                                                                                      (bif (b__0 == (0x3A4 : (BitVec 12)))
                                                                                       then true
                                                                                       else
-                                                                                        (if ((b__0 == (0x3A5 : (BitVec 12))) : Bool)
+                                                                                        (bif (b__0 == (0x3A5 : (BitVec 12)))
                                                                                         then true
                                                                                         else
-                                                                                          (if ((b__0 == (0x3A6 : (BitVec 12))) : Bool)
+                                                                                          (bif (b__0 == (0x3A6 : (BitVec 12)))
                                                                                           then true
                                                                                           else
-                                                                                            (if ((b__0 == (0x3A7 : (BitVec 12))) : Bool)
+                                                                                            (bif (b__0 == (0x3A7 : (BitVec 12)))
                                                                                             then
                                                                                               true
                                                                                             else
-                                                                                              (if ((b__0 == (0x3A8 : (BitVec 12))) : Bool)
+                                                                                              (bif (b__0 == (0x3A8 : (BitVec 12)))
                                                                                               then
                                                                                                 true
                                                                                               else
-                                                                                                (if ((b__0 == (0x3A9 : (BitVec 12))) : Bool)
+                                                                                                (bif (b__0 == (0x3A9 : (BitVec 12)))
                                                                                                 then
                                                                                                   true
                                                                                                 else
-                                                                                                  (if ((b__0 == (0x3AA : (BitVec 12))) : Bool)
+                                                                                                  (bif (b__0 == (0x3AA : (BitVec 12)))
                                                                                                   then
                                                                                                     true
                                                                                                   else
-                                                                                                    (if ((b__0 == (0x3AB : (BitVec 12))) : Bool)
+                                                                                                    (bif (b__0 == (0x3AB : (BitVec 12)))
                                                                                                     then
                                                                                                       true
                                                                                                     else
-                                                                                                      (if ((b__0 == (0x3AC : (BitVec 12))) : Bool)
+                                                                                                      (bif (b__0 == (0x3AC : (BitVec 12)))
                                                                                                       then
                                                                                                         true
                                                                                                       else
-                                                                                                        (if ((b__0 == (0x3AD : (BitVec 12))) : Bool)
+                                                                                                        (bif (b__0 == (0x3AD : (BitVec 12)))
                                                                                                         then
                                                                                                           true
                                                                                                         else
-                                                                                                          (if ((b__0 == (0x3AE : (BitVec 12))) : Bool)
+                                                                                                          (bif (b__0 == (0x3AE : (BitVec 12)))
                                                                                                           then
                                                                                                             true
                                                                                                           else
-                                                                                                            (if ((b__0 == (0x3AF : (BitVec 12))) : Bool)
+                                                                                                            (bif (b__0 == (0x3AF : (BitVec 12)))
                                                                                                             then
                                                                                                               true
                                                                                                             else
-                                                                                                              (if ((b__0 == (0x3B0 : (BitVec 12))) : Bool)
+                                                                                                              (bif (b__0 == (0x3B0 : (BitVec 12)))
                                                                                                               then
                                                                                                                 true
                                                                                                               else
-                                                                                                                (if ((b__0 == (0x3B1 : (BitVec 12))) : Bool)
+                                                                                                                (bif (b__0 == (0x3B1 : (BitVec 12)))
                                                                                                                 then
                                                                                                                   true
                                                                                                                 else
-                                                                                                                  (if ((b__0 == (0x3B2 : (BitVec 12))) : Bool)
+                                                                                                                  (bif (b__0 == (0x3B2 : (BitVec 12)))
                                                                                                                   then
                                                                                                                     true
                                                                                                                   else
-                                                                                                                    (if ((b__0 == (0x3B3 : (BitVec 12))) : Bool)
+                                                                                                                    (bif (b__0 == (0x3B3 : (BitVec 12)))
                                                                                                                     then
                                                                                                                       true
                                                                                                                     else
-                                                                                                                      (if ((b__0 == (0x3B4 : (BitVec 12))) : Bool)
+                                                                                                                      (bif (b__0 == (0x3B4 : (BitVec 12)))
                                                                                                                       then
                                                                                                                         true
                                                                                                                       else
-                                                                                                                        (if ((b__0 == (0x3B5 : (BitVec 12))) : Bool)
+                                                                                                                        (bif (b__0 == (0x3B5 : (BitVec 12)))
                                                                                                                         then
                                                                                                                           true
                                                                                                                         else
-                                                                                                                          (if ((b__0 == (0x3B6 : (BitVec 12))) : Bool)
+                                                                                                                          (bif (b__0 == (0x3B6 : (BitVec 12)))
                                                                                                                           then
                                                                                                                             true
                                                                                                                           else
-                                                                                                                            (if ((b__0 == (0x3B7 : (BitVec 12))) : Bool)
+                                                                                                                            (bif (b__0 == (0x3B7 : (BitVec 12)))
                                                                                                                             then
                                                                                                                               true
                                                                                                                             else
-                                                                                                                              (if ((b__0 == (0x3B8 : (BitVec 12))) : Bool)
+                                                                                                                              (bif (b__0 == (0x3B8 : (BitVec 12)))
                                                                                                                               then
                                                                                                                                 true
                                                                                                                               else
-                                                                                                                                (if ((b__0 == (0x3B9 : (BitVec 12))) : Bool)
+                                                                                                                                (bif (b__0 == (0x3B9 : (BitVec 12)))
                                                                                                                                 then
                                                                                                                                   true
                                                                                                                                 else
-                                                                                                                                  (if ((b__0 == (0x3BA : (BitVec 12))) : Bool)
+                                                                                                                                  (bif (b__0 == (0x3BA : (BitVec 12)))
                                                                                                                                   then
                                                                                                                                     true
                                                                                                                                   else
-                                                                                                                                    (if ((b__0 == (0x3BB : (BitVec 12))) : Bool)
+                                                                                                                                    (bif (b__0 == (0x3BB : (BitVec 12)))
                                                                                                                                     then
                                                                                                                                       true
                                                                                                                                     else
-                                                                                                                                      (if ((b__0 == (0x3BC : (BitVec 12))) : Bool)
+                                                                                                                                      (bif (b__0 == (0x3BC : (BitVec 12)))
                                                                                                                                       then
                                                                                                                                         true
                                                                                                                                       else
-                                                                                                                                        (if ((b__0 == (0x3BD : (BitVec 12))) : Bool)
+                                                                                                                                        (bif (b__0 == (0x3BD : (BitVec 12)))
                                                                                                                                         then
                                                                                                                                           true
                                                                                                                                         else
-                                                                                                                                          (if ((b__0 == (0x3BE : (BitVec 12))) : Bool)
+                                                                                                                                          (bif (b__0 == (0x3BE : (BitVec 12)))
                                                                                                                                           then
                                                                                                                                             true
                                                                                                                                           else
-                                                                                                                                            (if ((b__0 == (0x3BF : (BitVec 12))) : Bool)
+                                                                                                                                            (bif (b__0 == (0x3BF : (BitVec 12)))
                                                                                                                                             then
                                                                                                                                               true
                                                                                                                                             else
-                                                                                                                                              (if ((b__0 == (0x3C0 : (BitVec 12))) : Bool)
+                                                                                                                                              (bif (b__0 == (0x3C0 : (BitVec 12)))
                                                                                                                                               then
                                                                                                                                                 true
                                                                                                                                               else
-                                                                                                                                                (if ((b__0 == (0x3C1 : (BitVec 12))) : Bool)
+                                                                                                                                                (bif (b__0 == (0x3C1 : (BitVec 12)))
                                                                                                                                                 then
                                                                                                                                                   true
                                                                                                                                                 else
-                                                                                                                                                  (if ((b__0 == (0x3C2 : (BitVec 12))) : Bool)
+                                                                                                                                                  (bif (b__0 == (0x3C2 : (BitVec 12)))
                                                                                                                                                   then
                                                                                                                                                     true
                                                                                                                                                   else
-                                                                                                                                                    (if ((b__0 == (0x3C3 : (BitVec 12))) : Bool)
+                                                                                                                                                    (bif (b__0 == (0x3C3 : (BitVec 12)))
                                                                                                                                                     then
                                                                                                                                                       true
                                                                                                                                                     else
-                                                                                                                                                      (if ((b__0 == (0x3C4 : (BitVec 12))) : Bool)
+                                                                                                                                                      (bif (b__0 == (0x3C4 : (BitVec 12)))
                                                                                                                                                       then
                                                                                                                                                         true
                                                                                                                                                       else
-                                                                                                                                                        (if ((b__0 == (0x3C5 : (BitVec 12))) : Bool)
+                                                                                                                                                        (bif (b__0 == (0x3C5 : (BitVec 12)))
                                                                                                                                                         then
                                                                                                                                                           true
                                                                                                                                                         else
-                                                                                                                                                          (if ((b__0 == (0x3C6 : (BitVec 12))) : Bool)
+                                                                                                                                                          (bif (b__0 == (0x3C6 : (BitVec 12)))
                                                                                                                                                           then
                                                                                                                                                             true
                                                                                                                                                           else
-                                                                                                                                                            (if ((b__0 == (0x3C7 : (BitVec 12))) : Bool)
+                                                                                                                                                            (bif (b__0 == (0x3C7 : (BitVec 12)))
                                                                                                                                                             then
                                                                                                                                                               true
                                                                                                                                                             else
-                                                                                                                                                              (if ((b__0 == (0x3C8 : (BitVec 12))) : Bool)
+                                                                                                                                                              (bif (b__0 == (0x3C8 : (BitVec 12)))
                                                                                                                                                               then
                                                                                                                                                                 true
                                                                                                                                                               else
-                                                                                                                                                                (if ((b__0 == (0x3C9 : (BitVec 12))) : Bool)
+                                                                                                                                                                (bif (b__0 == (0x3C9 : (BitVec 12)))
                                                                                                                                                                 then
                                                                                                                                                                   true
                                                                                                                                                                 else
-                                                                                                                                                                  (if ((b__0 == (0x3CA : (BitVec 12))) : Bool)
+                                                                                                                                                                  (bif (b__0 == (0x3CA : (BitVec 12)))
                                                                                                                                                                   then
                                                                                                                                                                     true
                                                                                                                                                                   else
-                                                                                                                                                                    (if ((b__0 == (0x3CB : (BitVec 12))) : Bool)
+                                                                                                                                                                    (bif (b__0 == (0x3CB : (BitVec 12)))
                                                                                                                                                                     then
                                                                                                                                                                       true
                                                                                                                                                                     else
-                                                                                                                                                                      (if ((b__0 == (0x3CC : (BitVec 12))) : Bool)
+                                                                                                                                                                      (bif (b__0 == (0x3CC : (BitVec 12)))
                                                                                                                                                                       then
                                                                                                                                                                         true
                                                                                                                                                                       else
-                                                                                                                                                                        (if ((b__0 == (0x3CD : (BitVec 12))) : Bool)
+                                                                                                                                                                        (bif (b__0 == (0x3CD : (BitVec 12)))
                                                                                                                                                                         then
                                                                                                                                                                           true
                                                                                                                                                                         else
-                                                                                                                                                                          (if ((b__0 == (0x3CE : (BitVec 12))) : Bool)
+                                                                                                                                                                          (bif (b__0 == (0x3CE : (BitVec 12)))
                                                                                                                                                                           then
                                                                                                                                                                             true
                                                                                                                                                                           else
-                                                                                                                                                                            (if ((b__0 == (0x3CF : (BitVec 12))) : Bool)
+                                                                                                                                                                            (bif (b__0 == (0x3CF : (BitVec 12)))
                                                                                                                                                                             then
                                                                                                                                                                               true
                                                                                                                                                                             else
-                                                                                                                                                                              (if ((b__0 == (0x3D0 : (BitVec 12))) : Bool)
+                                                                                                                                                                              (bif (b__0 == (0x3D0 : (BitVec 12)))
                                                                                                                                                                               then
                                                                                                                                                                                 true
                                                                                                                                                                               else
-                                                                                                                                                                                (if ((b__0 == (0x3D1 : (BitVec 12))) : Bool)
+                                                                                                                                                                                (bif (b__0 == (0x3D1 : (BitVec 12)))
                                                                                                                                                                                 then
                                                                                                                                                                                   true
                                                                                                                                                                                 else
-                                                                                                                                                                                  (if ((b__0 == (0x3D2 : (BitVec 12))) : Bool)
+                                                                                                                                                                                  (bif (b__0 == (0x3D2 : (BitVec 12)))
                                                                                                                                                                                   then
                                                                                                                                                                                     true
                                                                                                                                                                                   else
-                                                                                                                                                                                    (if ((b__0 == (0x3D3 : (BitVec 12))) : Bool)
+                                                                                                                                                                                    (bif (b__0 == (0x3D3 : (BitVec 12)))
                                                                                                                                                                                     then
                                                                                                                                                                                       true
                                                                                                                                                                                     else
-                                                                                                                                                                                      (if ((b__0 == (0x3D4 : (BitVec 12))) : Bool)
+                                                                                                                                                                                      (bif (b__0 == (0x3D4 : (BitVec 12)))
                                                                                                                                                                                       then
                                                                                                                                                                                         true
                                                                                                                                                                                       else
-                                                                                                                                                                                        (if ((b__0 == (0x3D5 : (BitVec 12))) : Bool)
+                                                                                                                                                                                        (bif (b__0 == (0x3D5 : (BitVec 12)))
                                                                                                                                                                                         then
                                                                                                                                                                                           true
                                                                                                                                                                                         else
-                                                                                                                                                                                          (if ((b__0 == (0x3D6 : (BitVec 12))) : Bool)
+                                                                                                                                                                                          (bif (b__0 == (0x3D6 : (BitVec 12)))
                                                                                                                                                                                           then
                                                                                                                                                                                             true
                                                                                                                                                                                           else
-                                                                                                                                                                                            (if ((b__0 == (0x3D7 : (BitVec 12))) : Bool)
+                                                                                                                                                                                            (bif (b__0 == (0x3D7 : (BitVec 12)))
                                                                                                                                                                                             then
                                                                                                                                                                                               true
                                                                                                                                                                                             else
-                                                                                                                                                                                              (if ((b__0 == (0x3D8 : (BitVec 12))) : Bool)
+                                                                                                                                                                                              (bif (b__0 == (0x3D8 : (BitVec 12)))
                                                                                                                                                                                               then
                                                                                                                                                                                                 true
                                                                                                                                                                                               else
-                                                                                                                                                                                                (if ((b__0 == (0x3D9 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                (bif (b__0 == (0x3D9 : (BitVec 12)))
                                                                                                                                                                                                 then
                                                                                                                                                                                                   true
                                                                                                                                                                                                 else
-                                                                                                                                                                                                  (if ((b__0 == (0x3DA : (BitVec 12))) : Bool)
+                                                                                                                                                                                                  (bif (b__0 == (0x3DA : (BitVec 12)))
                                                                                                                                                                                                   then
                                                                                                                                                                                                     true
                                                                                                                                                                                                   else
-                                                                                                                                                                                                    (if ((b__0 == (0x3DB : (BitVec 12))) : Bool)
+                                                                                                                                                                                                    (bif (b__0 == (0x3DB : (BitVec 12)))
                                                                                                                                                                                                     then
                                                                                                                                                                                                       true
                                                                                                                                                                                                     else
-                                                                                                                                                                                                      (if ((b__0 == (0x3DC : (BitVec 12))) : Bool)
+                                                                                                                                                                                                      (bif (b__0 == (0x3DC : (BitVec 12)))
                                                                                                                                                                                                       then
                                                                                                                                                                                                         true
                                                                                                                                                                                                       else
-                                                                                                                                                                                                        (if ((b__0 == (0x3DD : (BitVec 12))) : Bool)
+                                                                                                                                                                                                        (bif (b__0 == (0x3DD : (BitVec 12)))
                                                                                                                                                                                                         then
                                                                                                                                                                                                           true
                                                                                                                                                                                                         else
-                                                                                                                                                                                                          (if ((b__0 == (0x3DE : (BitVec 12))) : Bool)
+                                                                                                                                                                                                          (bif (b__0 == (0x3DE : (BitVec 12)))
                                                                                                                                                                                                           then
                                                                                                                                                                                                             true
                                                                                                                                                                                                           else
-                                                                                                                                                                                                            (if ((b__0 == (0x3DF : (BitVec 12))) : Bool)
+                                                                                                                                                                                                            (bif (b__0 == (0x3DF : (BitVec 12)))
                                                                                                                                                                                                             then
                                                                                                                                                                                                               true
                                                                                                                                                                                                             else
-                                                                                                                                                                                                              (if ((b__0 == (0x3E0 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                              (bif (b__0 == (0x3E0 : (BitVec 12)))
                                                                                                                                                                                                               then
                                                                                                                                                                                                                 true
                                                                                                                                                                                                               else
-                                                                                                                                                                                                                (if ((b__0 == (0x3E1 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                (bif (b__0 == (0x3E1 : (BitVec 12)))
                                                                                                                                                                                                                 then
                                                                                                                                                                                                                   true
                                                                                                                                                                                                                 else
-                                                                                                                                                                                                                  (if ((b__0 == (0x3E2 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                  (bif (b__0 == (0x3E2 : (BitVec 12)))
                                                                                                                                                                                                                   then
                                                                                                                                                                                                                     true
                                                                                                                                                                                                                   else
-                                                                                                                                                                                                                    (if ((b__0 == (0x3E3 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                    (bif (b__0 == (0x3E3 : (BitVec 12)))
                                                                                                                                                                                                                     then
                                                                                                                                                                                                                       true
                                                                                                                                                                                                                     else
-                                                                                                                                                                                                                      (if ((b__0 == (0x3E4 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                      (bif (b__0 == (0x3E4 : (BitVec 12)))
                                                                                                                                                                                                                       then
                                                                                                                                                                                                                         true
                                                                                                                                                                                                                       else
-                                                                                                                                                                                                                        (if ((b__0 == (0x3E5 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                        (bif (b__0 == (0x3E5 : (BitVec 12)))
                                                                                                                                                                                                                         then
                                                                                                                                                                                                                           true
                                                                                                                                                                                                                         else
-                                                                                                                                                                                                                          (if ((b__0 == (0x3E6 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                          (bif (b__0 == (0x3E6 : (BitVec 12)))
                                                                                                                                                                                                                           then
                                                                                                                                                                                                                             true
                                                                                                                                                                                                                           else
-                                                                                                                                                                                                                            (if ((b__0 == (0x3E7 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                            (bif (b__0 == (0x3E7 : (BitVec 12)))
                                                                                                                                                                                                                             then
                                                                                                                                                                                                                               true
                                                                                                                                                                                                                             else
-                                                                                                                                                                                                                              (if ((b__0 == (0x3E8 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                              (bif (b__0 == (0x3E8 : (BitVec 12)))
                                                                                                                                                                                                                               then
                                                                                                                                                                                                                                 true
                                                                                                                                                                                                                               else
-                                                                                                                                                                                                                                (if ((b__0 == (0x3E9 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                (bif (b__0 == (0x3E9 : (BitVec 12)))
                                                                                                                                                                                                                                 then
                                                                                                                                                                                                                                   true
                                                                                                                                                                                                                                 else
-                                                                                                                                                                                                                                  (if ((b__0 == (0x3EA : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                  (bif (b__0 == (0x3EA : (BitVec 12)))
                                                                                                                                                                                                                                   then
                                                                                                                                                                                                                                     true
                                                                                                                                                                                                                                   else
-                                                                                                                                                                                                                                    (if ((b__0 == (0x3EB : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                    (bif (b__0 == (0x3EB : (BitVec 12)))
                                                                                                                                                                                                                                     then
                                                                                                                                                                                                                                       true
                                                                                                                                                                                                                                     else
-                                                                                                                                                                                                                                      (if ((b__0 == (0x3EC : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                      (bif (b__0 == (0x3EC : (BitVec 12)))
                                                                                                                                                                                                                                       then
                                                                                                                                                                                                                                         true
                                                                                                                                                                                                                                       else
-                                                                                                                                                                                                                                        (if ((b__0 == (0x3ED : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                        (bif (b__0 == (0x3ED : (BitVec 12)))
                                                                                                                                                                                                                                         then
                                                                                                                                                                                                                                           true
                                                                                                                                                                                                                                         else
-                                                                                                                                                                                                                                          (if ((b__0 == (0x3EE : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                          (bif (b__0 == (0x3EE : (BitVec 12)))
                                                                                                                                                                                                                                           then
                                                                                                                                                                                                                                             true
                                                                                                                                                                                                                                           else
-                                                                                                                                                                                                                                            (if ((b__0 == (0x3EF : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                            (bif (b__0 == (0x3EF : (BitVec 12)))
                                                                                                                                                                                                                                             then
                                                                                                                                                                                                                                               true
                                                                                                                                                                                                                                             else
-                                                                                                                                                                                                                                              (if ((b__0 == (0x001 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                              (bif (b__0 == (0x001 : (BitVec 12)))
                                                                                                                                                                                                                                               then
                                                                                                                                                                                                                                                 true
                                                                                                                                                                                                                                               else
-                                                                                                                                                                                                                                                (if ((b__0 == (0x002 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                (bif (b__0 == (0x002 : (BitVec 12)))
                                                                                                                                                                                                                                                 then
                                                                                                                                                                                                                                                   true
                                                                                                                                                                                                                                                 else
-                                                                                                                                                                                                                                                  (if ((b__0 == (0x003 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                  (bif (b__0 == (0x003 : (BitVec 12)))
                                                                                                                                                                                                                                                   then
                                                                                                                                                                                                                                                     true
                                                                                                                                                                                                                                                   else
-                                                                                                                                                                                                                                                    (if ((b__0 == (0x008 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                    (bif (b__0 == (0x008 : (BitVec 12)))
                                                                                                                                                                                                                                                     then
                                                                                                                                                                                                                                                       true
                                                                                                                                                                                                                                                     else
-                                                                                                                                                                                                                                                      (if ((b__0 == (0x009 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                      (bif (b__0 == (0x009 : (BitVec 12)))
                                                                                                                                                                                                                                                       then
                                                                                                                                                                                                                                                         true
                                                                                                                                                                                                                                                       else
-                                                                                                                                                                                                                                                        (if ((b__0 == (0x00A : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                        (bif (b__0 == (0x00A : (BitVec 12)))
                                                                                                                                                                                                                                                         then
                                                                                                                                                                                                                                                           true
                                                                                                                                                                                                                                                         else
-                                                                                                                                                                                                                                                          (if ((b__0 == (0x00F : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                          (bif (b__0 == (0x00F : (BitVec 12)))
                                                                                                                                                                                                                                                           then
                                                                                                                                                                                                                                                             true
                                                                                                                                                                                                                                                           else
-                                                                                                                                                                                                                                                            (if ((b__0 == (0xC20 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                            (bif (b__0 == (0xC20 : (BitVec 12)))
                                                                                                                                                                                                                                                             then
                                                                                                                                                                                                                                                               true
                                                                                                                                                                                                                                                             else
-                                                                                                                                                                                                                                                              (if ((b__0 == (0xC21 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                              (bif (b__0 == (0xC21 : (BitVec 12)))
                                                                                                                                                                                                                                                               then
                                                                                                                                                                                                                                                                 true
                                                                                                                                                                                                                                                               else
-                                                                                                                                                                                                                                                                (if ((b__0 == (0xC22 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                (bif (b__0 == (0xC22 : (BitVec 12)))
                                                                                                                                                                                                                                                                 then
                                                                                                                                                                                                                                                                   true
                                                                                                                                                                                                                                                                 else
-                                                                                                                                                                                                                                                                  (if ((b__0 == (0x321 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                  (bif (b__0 == (0x321 : (BitVec 12)))
                                                                                                                                                                                                                                                                   then
                                                                                                                                                                                                                                                                     true
                                                                                                                                                                                                                                                                   else
-                                                                                                                                                                                                                                                                    (if ((b__0 == (0x721 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                    (bif (b__0 == (0x721 : (BitVec 12)))
                                                                                                                                                                                                                                                                     then
                                                                                                                                                                                                                                                                       true
                                                                                                                                                                                                                                                                     else
-                                                                                                                                                                                                                                                                      (if ((b__0 == (0x322 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                      (bif (b__0 == (0x322 : (BitVec 12)))
                                                                                                                                                                                                                                                                       then
                                                                                                                                                                                                                                                                         true
                                                                                                                                                                                                                                                                       else
-                                                                                                                                                                                                                                                                        (if ((b__0 == (0x722 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                        (bif (b__0 == (0x722 : (BitVec 12)))
                                                                                                                                                                                                                                                                         then
                                                                                                                                                                                                                                                                           true
                                                                                                                                                                                                                                                                         else
-                                                                                                                                                                                                                                                                          (if ((b__0 == (0x180 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                          (bif (b__0 == (0x180 : (BitVec 12)))
                                                                                                                                                                                                                                                                           then
                                                                                                                                                                                                                                                                             true
                                                                                                                                                                                                                                                                           else
@@ -782,7 +781,7 @@ def csr_name_map_backwards_matches (arg_ : String) : Bool :=
   | "minstretcfgh" => (some true)
   | "satp" => (some true)
   | mapping0_ =>
-    (if ((hex_bits_12_backwards_matches mapping0_) : Bool)
+    (bif (hex_bits_12_backwards_matches mapping0_)
     then
       (match (hex_bits_12_backwards mapping0_) with
       | reg => (some true))
@@ -793,122 +792,122 @@ def csr_name_map_backwards_matches (arg_ : String) : Bool :=
     | _ => false)
 
 def read_CSR (b__0 : (BitVec 12)) : SailM (BitVec 64) := do
-  if ((b__0 == (0x301 : (BitVec 12))) : Bool)
+  bif (b__0 == (0x301 : (BitVec 12)))
   then readReg misa
   else
     (do
-      if ((b__0 == (0x300 : (BitVec 12))) : Bool)
+      bif (b__0 == (0x300 : (BitVec 12)))
       then (pure (Sail.BitVec.extractLsb (← readReg mstatus) (xlen -i 1) 0))
       else
         (do
-          if (((b__0 == (0x310 : (BitVec 12))) && (xlen == 32)) : Bool)
+          bif ((b__0 == (0x310 : (BitVec 12))) && (xlen == 32))
           then (pure (Sail.BitVec.extractLsb (← readReg mstatus) 63 32))
           else
             (do
-              if ((b__0 == (0x747 : (BitVec 12))) : Bool)
+              bif (b__0 == (0x747 : (BitVec 12)))
               then (pure (Sail.BitVec.extractLsb (← readReg mseccfg) (xlen -i 1) 0))
               else
                 (do
-                  if (((b__0 == (0x757 : (BitVec 12))) && (xlen == 32)) : Bool)
+                  bif ((b__0 == (0x757 : (BitVec 12))) && (xlen == 32))
                   then (pure (Sail.BitVec.extractLsb (← readReg mseccfg) 63 32))
                   else
                     (do
-                      if ((b__0 == (0x30A : (BitVec 12))) : Bool)
+                      bif (b__0 == (0x30A : (BitVec 12)))
                       then (pure (Sail.BitVec.extractLsb (← readReg menvcfg) (xlen -i 1) 0))
                       else
                         (do
-                          if (((b__0 == (0x31A : (BitVec 12))) && (xlen == 32)) : Bool)
+                          bif ((b__0 == (0x31A : (BitVec 12))) && (xlen == 32))
                           then (pure (Sail.BitVec.extractLsb (← readReg menvcfg) 63 32))
                           else
                             (do
-                              if ((b__0 == (0x10A : (BitVec 12))) : Bool)
+                              bif (b__0 == (0x10A : (BitVec 12)))
                               then
                                 (pure (Sail.BitVec.extractLsb (← readReg senvcfg) (xlen -i 1) 0))
                               else
                                 (do
-                                  if ((b__0 == (0x304 : (BitVec 12))) : Bool)
+                                  bif (b__0 == (0x304 : (BitVec 12)))
                                   then readReg mie
                                   else
                                     (do
-                                      if ((b__0 == (0x344 : (BitVec 12))) : Bool)
+                                      bif (b__0 == (0x344 : (BitVec 12)))
                                       then readReg mip
                                       else
                                         (do
-                                          if ((b__0 == (0x302 : (BitVec 12))) : Bool)
+                                          bif (b__0 == (0x302 : (BitVec 12)))
                                           then
                                             (pure (Sail.BitVec.extractLsb (← readReg medeleg)
                                                 (xlen -i 1) 0))
                                           else
                                             (do
-                                              if (((b__0 == (0x312 : (BitVec 12))) && (xlen == 32)) : Bool)
+                                              bif ((b__0 == (0x312 : (BitVec 12))) && (xlen == 32))
                                               then
                                                 (pure (Sail.BitVec.extractLsb (← readReg medeleg)
                                                     63 32))
                                               else
                                                 (do
-                                                  if ((b__0 == (0x303 : (BitVec 12))) : Bool)
+                                                  bif (b__0 == (0x303 : (BitVec 12)))
                                                   then readReg mideleg
                                                   else
                                                     (do
-                                                      if ((b__0 == (0x342 : (BitVec 12))) : Bool)
+                                                      bif (b__0 == (0x342 : (BitVec 12)))
                                                       then readReg mcause
                                                       else
                                                         (do
-                                                          if ((b__0 == (0x343 : (BitVec 12))) : Bool)
+                                                          bif (b__0 == (0x343 : (BitVec 12)))
                                                           then readReg mtval
                                                           else
                                                             (do
-                                                              if ((b__0 == (0x340 : (BitVec 12))) : Bool)
+                                                              bif (b__0 == (0x340 : (BitVec 12)))
                                                               then readReg mscratch
                                                               else
                                                                 (do
-                                                                  if ((b__0 == (0x106 : (BitVec 12))) : Bool)
+                                                                  bif (b__0 == (0x106 : (BitVec 12)))
                                                                   then
                                                                     (pure (zero_extend (m := 64)
                                                                         (← readReg scounteren)))
                                                                   else
                                                                     (do
-                                                                      if ((b__0 == (0x306 : (BitVec 12))) : Bool)
+                                                                      bif (b__0 == (0x306 : (BitVec 12)))
                                                                       then
                                                                         (pure (zero_extend (m := 64)
                                                                             (← readReg mcounteren)))
                                                                       else
                                                                         (do
-                                                                          if ((b__0 == (0x320 : (BitVec 12))) : Bool)
+                                                                          bif (b__0 == (0x320 : (BitVec 12)))
                                                                           then
                                                                             (pure (zero_extend
                                                                                 (m := 64)
                                                                                 (← readReg mcountinhibit)))
                                                                           else
                                                                             (do
-                                                                              if ((b__0 == (0xF11 : (BitVec 12))) : Bool)
+                                                                              bif (b__0 == (0xF11 : (BitVec 12)))
                                                                               then
                                                                                 (pure (zero_extend
                                                                                     (m := 64)
                                                                                     (← readReg mvendorid)))
                                                                               else
                                                                                 (do
-                                                                                  if ((b__0 == (0xF12 : (BitVec 12))) : Bool)
+                                                                                  bif (b__0 == (0xF12 : (BitVec 12)))
                                                                                   then
                                                                                     readReg marchid
                                                                                   else
                                                                                     (do
-                                                                                      if ((b__0 == (0xF13 : (BitVec 12))) : Bool)
+                                                                                      bif (b__0 == (0xF13 : (BitVec 12)))
                                                                                       then
                                                                                         readReg mimpid
                                                                                       else
                                                                                         (do
-                                                                                          if ((b__0 == (0xF14 : (BitVec 12))) : Bool)
+                                                                                          bif (b__0 == (0xF14 : (BitVec 12)))
                                                                                           then
                                                                                             readReg mhartid
                                                                                           else
                                                                                             (do
-                                                                                              if ((b__0 == (0xF15 : (BitVec 12))) : Bool)
+                                                                                              bif (b__0 == (0xF15 : (BitVec 12)))
                                                                                               then
                                                                                                 readReg mconfigptr
                                                                                               else
                                                                                                 (do
-                                                                                                  if ((b__0 == (0x100 : (BitVec 12))) : Bool)
+                                                                                                  bif (b__0 == (0x100 : (BitVec 12)))
                                                                                                   then
                                                                                                     (pure (Sail.BitVec.extractLsb
                                                                                                         (lower_mstatus
@@ -917,66 +916,66 @@ def read_CSR (b__0 : (BitVec 12)) : SailM (BitVec 64) := do
                                                                                                         0))
                                                                                                   else
                                                                                                     (do
-                                                                                                      if ((b__0 == (0x144 : (BitVec 12))) : Bool)
+                                                                                                      bif (b__0 == (0x144 : (BitVec 12)))
                                                                                                       then
                                                                                                         (pure (lower_mip
                                                                                                             (← readReg mip)
                                                                                                             (← readReg mideleg)))
                                                                                                       else
                                                                                                         (do
-                                                                                                          if ((b__0 == (0x104 : (BitVec 12))) : Bool)
+                                                                                                          bif (b__0 == (0x104 : (BitVec 12)))
                                                                                                           then
                                                                                                             (pure (lower_mie
                                                                                                                 (← readReg mie)
                                                                                                                 (← readReg mideleg)))
                                                                                                           else
                                                                                                             (do
-                                                                                                              if ((b__0 == (0x140 : (BitVec 12))) : Bool)
+                                                                                                              bif (b__0 == (0x140 : (BitVec 12)))
                                                                                                               then
                                                                                                                 readReg sscratch
                                                                                                               else
                                                                                                                 (do
-                                                                                                                  if ((b__0 == (0x142 : (BitVec 12))) : Bool)
+                                                                                                                  bif (b__0 == (0x142 : (BitVec 12)))
                                                                                                                   then
                                                                                                                     readReg scause
                                                                                                                   else
                                                                                                                     (do
-                                                                                                                      if ((b__0 == (0x143 : (BitVec 12))) : Bool)
+                                                                                                                      bif (b__0 == (0x143 : (BitVec 12)))
                                                                                                                       then
                                                                                                                         readReg stval
                                                                                                                       else
                                                                                                                         (do
-                                                                                                                          if ((b__0 == (0x7A0 : (BitVec 12))) : Bool)
+                                                                                                                          bif (b__0 == (0x7A0 : (BitVec 12)))
                                                                                                                           then
                                                                                                                             (pure (Complement.complement
                                                                                                                                 (← readReg tselect)))
                                                                                                                           else
                                                                                                                             (do
-                                                                                                                              if ((b__0 == (0x105 : (BitVec 12))) : Bool)
+                                                                                                                              bif (b__0 == (0x105 : (BitVec 12)))
                                                                                                                               then
                                                                                                                                 (get_stvec
                                                                                                                                   ())
                                                                                                                               else
                                                                                                                                 (do
-                                                                                                                                  if ((b__0 == (0x141 : (BitVec 12))) : Bool)
+                                                                                                                                  bif (b__0 == (0x141 : (BitVec 12)))
                                                                                                                                   then
                                                                                                                                     (get_xepc
                                                                                                                                       Supervisor)
                                                                                                                                   else
                                                                                                                                     (do
-                                                                                                                                      if ((b__0 == (0x305 : (BitVec 12))) : Bool)
+                                                                                                                                      bif (b__0 == (0x305 : (BitVec 12)))
                                                                                                                                       then
                                                                                                                                         (get_mtvec
                                                                                                                                           ())
                                                                                                                                       else
                                                                                                                                         (do
-                                                                                                                                          if ((b__0 == (0x341 : (BitVec 12))) : Bool)
+                                                                                                                                          bif (b__0 == (0x341 : (BitVec 12)))
                                                                                                                                           then
                                                                                                                                             (get_xepc
                                                                                                                                               Machine)
                                                                                                                                           else
                                                                                                                                             (do
-                                                                                                                                              if ((((Sail.BitVec.extractLsb
+                                                                                                                                              bif (((Sail.BitVec.extractLsb
                                                                                                                                                        b__0
                                                                                                                                                        11
                                                                                                                                                        4) == (0x3A : (BitVec 8))) && (let idx : (BitVec 4) :=
@@ -986,7 +985,7 @@ def read_CSR (b__0 : (BitVec 12)) : SailM (BitVec 64) := do
                                                                                                                                                        0)
                                                                                                                                                    (((BitVec.access
                                                                                                                                                          idx
-                                                                                                                                                         0) == 0#1) || (xlen == 32)))) : Bool)
+                                                                                                                                                         0) == 0#1) || (xlen == 32))))
                                                                                                                                               then
                                                                                                                                                 (do
                                                                                                                                                   let idx : (BitVec 4) :=
@@ -999,10 +998,10 @@ def read_CSR (b__0 : (BitVec 12)) : SailM (BitVec 64) := do
                                                                                                                                                       idx)))
                                                                                                                                               else
                                                                                                                                                 (do
-                                                                                                                                                  if (((Sail.BitVec.extractLsb
+                                                                                                                                                  bif ((Sail.BitVec.extractLsb
                                                                                                                                                          b__0
                                                                                                                                                          11
-                                                                                                                                                         4) == (0x3B : (BitVec 8))) : Bool)
+                                                                                                                                                         4) == (0x3B : (BitVec 8)))
                                                                                                                                                   then
                                                                                                                                                     (do
                                                                                                                                                       let idx : (BitVec 4) :=
@@ -1015,10 +1014,10 @@ def read_CSR (b__0 : (BitVec 12)) : SailM (BitVec 64) := do
                                                                                                                                                           ((0b00 : (BitVec 2)) ++ idx))))
                                                                                                                                                   else
                                                                                                                                                     (do
-                                                                                                                                                      if (((Sail.BitVec.extractLsb
+                                                                                                                                                      bif ((Sail.BitVec.extractLsb
                                                                                                                                                              b__0
                                                                                                                                                              11
-                                                                                                                                                             4) == (0x3C : (BitVec 8))) : Bool)
+                                                                                                                                                             4) == (0x3C : (BitVec 8)))
                                                                                                                                                       then
                                                                                                                                                         (do
                                                                                                                                                           let idx : (BitVec 4) :=
@@ -1031,10 +1030,10 @@ def read_CSR (b__0 : (BitVec 12)) : SailM (BitVec 64) := do
                                                                                                                                                               ((0b01 : (BitVec 2)) ++ idx))))
                                                                                                                                                       else
                                                                                                                                                         (do
-                                                                                                                                                          if (((Sail.BitVec.extractLsb
+                                                                                                                                                          bif ((Sail.BitVec.extractLsb
                                                                                                                                                                  b__0
                                                                                                                                                                  11
-                                                                                                                                                                 4) == (0x3D : (BitVec 8))) : Bool)
+                                                                                                                                                                 4) == (0x3D : (BitVec 8)))
                                                                                                                                                           then
                                                                                                                                                             (do
                                                                                                                                                               let idx : (BitVec 4) :=
@@ -1047,10 +1046,10 @@ def read_CSR (b__0 : (BitVec 12)) : SailM (BitVec 64) := do
                                                                                                                                                                   ((0b10 : (BitVec 2)) ++ idx))))
                                                                                                                                                           else
                                                                                                                                                             (do
-                                                                                                                                                              if (((Sail.BitVec.extractLsb
+                                                                                                                                                              bif ((Sail.BitVec.extractLsb
                                                                                                                                                                      b__0
                                                                                                                                                                      11
-                                                                                                                                                                     4) == (0x3E : (BitVec 8))) : Bool)
+                                                                                                                                                                     4) == (0x3E : (BitVec 8)))
                                                                                                                                                               then
                                                                                                                                                                 (do
                                                                                                                                                                   let idx : (BitVec 4) :=
@@ -1063,7 +1062,7 @@ def read_CSR (b__0 : (BitVec 12)) : SailM (BitVec 64) := do
                                                                                                                                                                       ((0b11 : (BitVec 2)) ++ idx))))
                                                                                                                                                               else
                                                                                                                                                                 (do
-                                                                                                                                                                  if ((b__0 == (0x001 : (BitVec 12))) : Bool)
+                                                                                                                                                                  bif (b__0 == (0x001 : (BitVec 12)))
                                                                                                                                                                   then
                                                                                                                                                                     (pure (zero_extend
                                                                                                                                                                         (m := 64)
@@ -1071,7 +1070,7 @@ def read_CSR (b__0 : (BitVec 12)) : SailM (BitVec 64) := do
                                                                                                                                                                           (← readReg fcsr))))
                                                                                                                                                                   else
                                                                                                                                                                     (do
-                                                                                                                                                                      if ((b__0 == (0x002 : (BitVec 12))) : Bool)
+                                                                                                                                                                      bif (b__0 == (0x002 : (BitVec 12)))
                                                                                                                                                                       then
                                                                                                                                                                         (pure (zero_extend
                                                                                                                                                                             (m := 64)
@@ -1079,19 +1078,19 @@ def read_CSR (b__0 : (BitVec 12)) : SailM (BitVec 64) := do
                                                                                                                                                                               (← readReg fcsr))))
                                                                                                                                                                       else
                                                                                                                                                                         (do
-                                                                                                                                                                          if ((b__0 == (0x003 : (BitVec 12))) : Bool)
+                                                                                                                                                                          bif (b__0 == (0x003 : (BitVec 12)))
                                                                                                                                                                           then
                                                                                                                                                                             (pure (zero_extend
                                                                                                                                                                                 (m := 64)
                                                                                                                                                                                 (← readReg fcsr)))
                                                                                                                                                                           else
                                                                                                                                                                             (do
-                                                                                                                                                                              if ((b__0 == (0x008 : (BitVec 12))) : Bool)
+                                                                                                                                                                              bif (b__0 == (0x008 : (BitVec 12)))
                                                                                                                                                                               then
                                                                                                                                                                                 readReg vstart
                                                                                                                                                                               else
                                                                                                                                                                                 (do
-                                                                                                                                                                                  if ((b__0 == (0x009 : (BitVec 12))) : Bool)
+                                                                                                                                                                                  bif (b__0 == (0x009 : (BitVec 12)))
                                                                                                                                                                                   then
                                                                                                                                                                                     (pure (zero_extend
                                                                                                                                                                                         (m := 64)
@@ -1099,7 +1098,7 @@ def read_CSR (b__0 : (BitVec 12)) : SailM (BitVec 64) := do
                                                                                                                                                                                           (← readReg vcsr))))
                                                                                                                                                                                   else
                                                                                                                                                                                     (do
-                                                                                                                                                                                      if ((b__0 == (0x00A : (BitVec 12))) : Bool)
+                                                                                                                                                                                      bif (b__0 == (0x00A : (BitVec 12)))
                                                                                                                                                                                       then
                                                                                                                                                                                         (pure (zero_extend
                                                                                                                                                                                             (m := 64)
@@ -1107,29 +1106,29 @@ def read_CSR (b__0 : (BitVec 12)) : SailM (BitVec 64) := do
                                                                                                                                                                                               (← readReg vcsr))))
                                                                                                                                                                                       else
                                                                                                                                                                                         (do
-                                                                                                                                                                                          if ((b__0 == (0x00F : (BitVec 12))) : Bool)
+                                                                                                                                                                                          bif (b__0 == (0x00F : (BitVec 12)))
                                                                                                                                                                                           then
                                                                                                                                                                                             (pure (zero_extend
                                                                                                                                                                                                 (m := 64)
                                                                                                                                                                                                 (← readReg vcsr)))
                                                                                                                                                                                           else
                                                                                                                                                                                             (do
-                                                                                                                                                                                              if ((b__0 == (0xC20 : (BitVec 12))) : Bool)
+                                                                                                                                                                                              bif (b__0 == (0xC20 : (BitVec 12)))
                                                                                                                                                                                               then
                                                                                                                                                                                                 readReg vl
                                                                                                                                                                                               else
                                                                                                                                                                                                 (do
-                                                                                                                                                                                                  if ((b__0 == (0xC21 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                  bif (b__0 == (0xC21 : (BitVec 12)))
                                                                                                                                                                                                   then
                                                                                                                                                                                                     readReg vtype
                                                                                                                                                                                                   else
                                                                                                                                                                                                     (do
-                                                                                                                                                                                                      if ((b__0 == (0xC22 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                      bif (b__0 == (0xC22 : (BitVec 12)))
                                                                                                                                                                                                       then
                                                                                                                                                                                                         (pure VLENB)
                                                                                                                                                                                                       else
                                                                                                                                                                                                         (do
-                                                                                                                                                                                                          if ((b__0 == (0x321 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                          bif (b__0 == (0x321 : (BitVec 12)))
                                                                                                                                                                                                           then
                                                                                                                                                                                                             (pure (Sail.BitVec.extractLsb
                                                                                                                                                                                                                 (← readReg mcyclecfg)
@@ -1137,7 +1136,7 @@ def read_CSR (b__0 : (BitVec 12)) : SailM (BitVec 64) := do
                                                                                                                                                                                                                 0))
                                                                                                                                                                                                           else
                                                                                                                                                                                                             (do
-                                                                                                                                                                                                              if (((b__0 == (0x721 : (BitVec 12))) && (xlen == 32)) : Bool)
+                                                                                                                                                                                                              bif ((b__0 == (0x721 : (BitVec 12))) && (xlen == 32))
                                                                                                                                                                                                               then
                                                                                                                                                                                                                 (pure (Sail.BitVec.extractLsb
                                                                                                                                                                                                                     (← readReg mcyclecfg)
@@ -1145,7 +1144,7 @@ def read_CSR (b__0 : (BitVec 12)) : SailM (BitVec 64) := do
                                                                                                                                                                                                                     32))
                                                                                                                                                                                                               else
                                                                                                                                                                                                                 (do
-                                                                                                                                                                                                                  if ((b__0 == (0x322 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                  bif (b__0 == (0x322 : (BitVec 12)))
                                                                                                                                                                                                                   then
                                                                                                                                                                                                                     (pure (Sail.BitVec.extractLsb
                                                                                                                                                                                                                         (← readReg minstretcfg)
@@ -1153,7 +1152,7 @@ def read_CSR (b__0 : (BitVec 12)) : SailM (BitVec 64) := do
                                                                                                                                                                                                                         0))
                                                                                                                                                                                                                   else
                                                                                                                                                                                                                     (do
-                                                                                                                                                                                                                      if (((b__0 == (0x722 : (BitVec 12))) && (xlen == 32)) : Bool)
+                                                                                                                                                                                                                      bif ((b__0 == (0x722 : (BitVec 12))) && (xlen == 32))
                                                                                                                                                                                                                       then
                                                                                                                                                                                                                         (pure (Sail.BitVec.extractLsb
                                                                                                                                                                                                                             (← readReg minstretcfg)
@@ -1161,12 +1160,12 @@ def read_CSR (b__0 : (BitVec 12)) : SailM (BitVec 64) := do
                                                                                                                                                                                                                             32))
                                                                                                                                                                                                                       else
                                                                                                                                                                                                                         (do
-                                                                                                                                                                                                                          if ((b__0 == (0x180 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                          bif (b__0 == (0x180 : (BitVec 12)))
                                                                                                                                                                                                                           then
                                                                                                                                                                                                                             readReg satp
                                                                                                                                                                                                                           else
                                                                                                                                                                                                                             (internal_error
-                                                                                                                                                                                                                              "postlude/csr_end.sail"
+                                                                                                                                                                                                                              "./postlude/csr_end.sail"
                                                                                                                                                                                                                               17
                                                                                                                                                                                                                               (HAppend.hAppend
                                                                                                                                                                                                                                 "Read from CSR that does not exist: "
@@ -1174,21 +1173,21 @@ def read_CSR (b__0 : (BitVec 12)) : SailM (BitVec 64) := do
                                                                                                                                                                                                                                   b__0)))))))))))))))))))))))))))))))))))))))))))))))))))))))))
 
 def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec 64) Unit) := do
-  if ((b__0 == (0x301 : (BitVec 12))) : Bool)
+  bif (b__0 == (0x301 : (BitVec 12)))
   then
     (do
       writeReg misa (← (legalize_misa (← readReg misa) value))
       (pure (Ok (← readReg misa))))
   else
     (do
-      if (((b__0 == (0x300 : (BitVec 12))) && (xlen == 64)) : Bool)
+      bif ((b__0 == (0x300 : (BitVec 12))) && (xlen == 64))
       then
         (do
           writeReg mstatus (← (legalize_mstatus (← readReg mstatus) value))
           (pure (Ok (← readReg mstatus))))
       else
         (do
-          if (((b__0 == (0x300 : (BitVec 12))) && (xlen == 32)) : Bool)
+          bif ((b__0 == (0x300 : (BitVec 12))) && (xlen == 32))
           then
             (do
               writeReg mstatus (← (legalize_mstatus (← readReg mstatus)
@@ -1196,7 +1195,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
               (pure (Ok (Sail.BitVec.extractLsb (← readReg mstatus) 31 0))))
           else
             (do
-              if (((b__0 == (0x310 : (BitVec 12))) && (xlen == 32)) : Bool)
+              bif ((b__0 == (0x310 : (BitVec 12))) && (xlen == 32))
               then
                 (do
                   writeReg mstatus (← (legalize_mstatus (← readReg mstatus)
@@ -1204,7 +1203,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                   (pure (Ok (Sail.BitVec.extractLsb (← readReg mstatus) 63 32))))
               else
                 (do
-                  if (((b__0 == (0x747 : (BitVec 12))) && (xlen == 32)) : Bool)
+                  bif ((b__0 == (0x747 : (BitVec 12))) && (xlen == 32))
                   then
                     (do
                       writeReg mseccfg (← (legalize_mseccfg (← readReg mseccfg)
@@ -1212,14 +1211,14 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                       (pure (Ok (Sail.BitVec.extractLsb (← readReg mseccfg) 31 0))))
                   else
                     (do
-                      if (((b__0 == (0x747 : (BitVec 12))) && (xlen == 64)) : Bool)
+                      bif ((b__0 == (0x747 : (BitVec 12))) && (xlen == 64))
                       then
                         (do
                           writeReg mseccfg (← (legalize_mseccfg (← readReg mseccfg) value))
                           (pure (Ok (← readReg mseccfg))))
                       else
                         (do
-                          if (((b__0 == (0x757 : (BitVec 12))) && (xlen == 32)) : Bool)
+                          bif ((b__0 == (0x757 : (BitVec 12))) && (xlen == 32))
                           then
                             (do
                               writeReg mseccfg (← (legalize_mseccfg (← readReg mseccfg)
@@ -1227,7 +1226,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                               (pure (Ok (Sail.BitVec.extractLsb (← readReg mseccfg) 63 32))))
                           else
                             (do
-                              if (((b__0 == (0x30A : (BitVec 12))) && (xlen == 32)) : Bool)
+                              bif ((b__0 == (0x30A : (BitVec 12))) && (xlen == 32))
                               then
                                 (do
                                   writeReg menvcfg (← (legalize_menvcfg (← readReg menvcfg)
@@ -1235,7 +1234,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                   (pure (Ok (Sail.BitVec.extractLsb (← readReg menvcfg) 31 0))))
                               else
                                 (do
-                                  if (((b__0 == (0x30A : (BitVec 12))) && (xlen == 64)) : Bool)
+                                  bif ((b__0 == (0x30A : (BitVec 12))) && (xlen == 64))
                                   then
                                     (do
                                       writeReg menvcfg (← (legalize_menvcfg (← readReg menvcfg)
@@ -1243,7 +1242,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                       (pure (Ok (← readReg menvcfg))))
                                   else
                                     (do
-                                      if (((b__0 == (0x31A : (BitVec 12))) && (xlen == 32)) : Bool)
+                                      bif ((b__0 == (0x31A : (BitVec 12))) && (xlen == 32))
                                       then
                                         (do
                                           writeReg menvcfg (← (legalize_menvcfg
@@ -1254,7 +1253,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                               (Sail.BitVec.extractLsb (← readReg menvcfg) 63 32))))
                                       else
                                         (do
-                                          if ((b__0 == (0x10A : (BitVec 12))) : Bool)
+                                          bif (b__0 == (0x10A : (BitVec 12)))
                                           then
                                             (do
                                               writeReg senvcfg (← (legalize_senvcfg
@@ -1265,7 +1264,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                     (xlen -i 1) 0))))
                                           else
                                             (do
-                                              if ((b__0 == (0x304 : (BitVec 12))) : Bool)
+                                              bif (b__0 == (0x304 : (BitVec 12)))
                                               then
                                                 (do
                                                   writeReg mie (← (legalize_mie (← readReg mie)
@@ -1273,7 +1272,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                   (pure (Ok (← readReg mie))))
                                               else
                                                 (do
-                                                  if ((b__0 == (0x344 : (BitVec 12))) : Bool)
+                                                  bif (b__0 == (0x344 : (BitVec 12)))
                                                   then
                                                     (do
                                                       writeReg mip (← (legalize_mip
@@ -1281,7 +1280,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                       (pure (Ok (← readReg mip))))
                                                   else
                                                     (do
-                                                      if (((b__0 == (0x302 : (BitVec 12))) && (xlen == 64)) : Bool)
+                                                      bif ((b__0 == (0x302 : (BitVec 12))) && (xlen == 64))
                                                       then
                                                         (do
                                                           writeReg medeleg (legalize_medeleg
@@ -1289,7 +1288,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                           (pure (Ok (← readReg medeleg))))
                                                       else
                                                         (do
-                                                          if (((b__0 == (0x302 : (BitVec 12))) && (xlen == 32)) : Bool)
+                                                          bif ((b__0 == (0x302 : (BitVec 12))) && (xlen == 32))
                                                           then
                                                             (do
                                                               writeReg medeleg (legalize_medeleg
@@ -1301,7 +1300,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                     (← readReg medeleg) 31 0))))
                                                           else
                                                             (do
-                                                              if (((b__0 == (0x312 : (BitVec 12))) && (xlen == 32)) : Bool)
+                                                              bif ((b__0 == (0x312 : (BitVec 12))) && (xlen == 32))
                                                               then
                                                                 (do
                                                                   writeReg medeleg (legalize_medeleg
@@ -1313,7 +1312,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                         (← readReg medeleg) 63 32))))
                                                               else
                                                                 (do
-                                                                  if ((b__0 == (0x303 : (BitVec 12))) : Bool)
+                                                                  bif (b__0 == (0x303 : (BitVec 12)))
                                                                   then
                                                                     (do
                                                                       writeReg mideleg (legalize_mideleg
@@ -1322,7 +1321,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                           (← readReg mideleg))))
                                                                   else
                                                                     (do
-                                                                      if ((b__0 == (0x342 : (BitVec 12))) : Bool)
+                                                                      bif (b__0 == (0x342 : (BitVec 12)))
                                                                       then
                                                                         (do
                                                                           writeReg mcause value
@@ -1330,7 +1329,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                               (← readReg mcause))))
                                                                       else
                                                                         (do
-                                                                          if ((b__0 == (0x343 : (BitVec 12))) : Bool)
+                                                                          bif (b__0 == (0x343 : (BitVec 12)))
                                                                           then
                                                                             (do
                                                                               writeReg mtval value
@@ -1338,7 +1337,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                   (← readReg mtval))))
                                                                           else
                                                                             (do
-                                                                              if ((b__0 == (0x340 : (BitVec 12))) : Bool)
+                                                                              bif (b__0 == (0x340 : (BitVec 12)))
                                                                               then
                                                                                 (do
                                                                                   writeReg mscratch value
@@ -1346,7 +1345,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                       (← readReg mscratch))))
                                                                               else
                                                                                 (do
-                                                                                  if ((b__0 == (0x106 : (BitVec 12))) : Bool)
+                                                                                  bif (b__0 == (0x106 : (BitVec 12)))
                                                                                   then
                                                                                     (do
                                                                                       writeReg scounteren (legalize_scounteren
@@ -1358,7 +1357,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                             (← readReg scounteren)))))
                                                                                   else
                                                                                     (do
-                                                                                      if ((b__0 == (0x306 : (BitVec 12))) : Bool)
+                                                                                      bif (b__0 == (0x306 : (BitVec 12)))
                                                                                       then
                                                                                         (do
                                                                                           writeReg mcounteren (legalize_mcounteren
@@ -1370,7 +1369,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                                 (← readReg mcounteren)))))
                                                                                       else
                                                                                         (do
-                                                                                          if ((b__0 == (0x320 : (BitVec 12))) : Bool)
+                                                                                          bif (b__0 == (0x320 : (BitVec 12)))
                                                                                           then
                                                                                             (do
                                                                                               writeReg mcountinhibit (legalize_mcountinhibit
@@ -1382,7 +1381,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                                     (← readReg mcountinhibit)))))
                                                                                           else
                                                                                             (do
-                                                                                              if ((b__0 == (0x100 : (BitVec 12))) : Bool)
+                                                                                              bif (b__0 == (0x100 : (BitVec 12)))
                                                                                               then
                                                                                                 (do
                                                                                                   writeReg mstatus (← (legalize_sstatus
@@ -1396,7 +1395,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                                         0))))
                                                                                               else
                                                                                                 (do
-                                                                                                  if ((b__0 == (0x144 : (BitVec 12))) : Bool)
+                                                                                                  bif (b__0 == (0x144 : (BitVec 12)))
                                                                                                   then
                                                                                                     (do
                                                                                                       writeReg mip (legalize_sip
@@ -1409,7 +1408,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                                             (← readReg mideleg)))))
                                                                                                   else
                                                                                                     (do
-                                                                                                      if ((b__0 == (0x104 : (BitVec 12))) : Bool)
+                                                                                                      bif (b__0 == (0x104 : (BitVec 12)))
                                                                                                       then
                                                                                                         (do
                                                                                                           writeReg mie (legalize_sie
@@ -1422,7 +1421,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                                                 (← readReg mideleg)))))
                                                                                                       else
                                                                                                         (do
-                                                                                                          if ((b__0 == (0x140 : (BitVec 12))) : Bool)
+                                                                                                          bif (b__0 == (0x140 : (BitVec 12)))
                                                                                                           then
                                                                                                             (do
                                                                                                               writeReg sscratch value
@@ -1430,7 +1429,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                                                   (← readReg sscratch))))
                                                                                                           else
                                                                                                             (do
-                                                                                                              if ((b__0 == (0x142 : (BitVec 12))) : Bool)
+                                                                                                              bif (b__0 == (0x142 : (BitVec 12)))
                                                                                                               then
                                                                                                                 (do
                                                                                                                   writeReg scause value
@@ -1438,7 +1437,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                                                       (← readReg scause))))
                                                                                                               else
                                                                                                                 (do
-                                                                                                                  if ((b__0 == (0x143 : (BitVec 12))) : Bool)
+                                                                                                                  bif (b__0 == (0x143 : (BitVec 12)))
                                                                                                                   then
                                                                                                                     (do
                                                                                                                       writeReg stval value
@@ -1446,7 +1445,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                                                           (← readReg stval))))
                                                                                                                   else
                                                                                                                     (do
-                                                                                                                      if ((b__0 == (0x7A0 : (BitVec 12))) : Bool)
+                                                                                                                      bif (b__0 == (0x7A0 : (BitVec 12)))
                                                                                                                       then
                                                                                                                         (do
                                                                                                                           writeReg tselect value
@@ -1454,14 +1453,14 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                                                               (← readReg tselect))))
                                                                                                                       else
                                                                                                                         (do
-                                                                                                                          if ((b__0 == (0x105 : (BitVec 12))) : Bool)
+                                                                                                                          bif (b__0 == (0x105 : (BitVec 12)))
                                                                                                                           then
                                                                                                                             (pure (Ok
                                                                                                                                 (← (set_stvec
                                                                                                                                     value))))
                                                                                                                           else
                                                                                                                             (do
-                                                                                                                              if ((b__0 == (0x141 : (BitVec 12))) : Bool)
+                                                                                                                              bif (b__0 == (0x141 : (BitVec 12)))
                                                                                                                               then
                                                                                                                                 (pure (Ok
                                                                                                                                     (← (set_xepc
@@ -1469,14 +1468,14 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                                                                         value))))
                                                                                                                               else
                                                                                                                                 (do
-                                                                                                                                  if ((b__0 == (0x305 : (BitVec 12))) : Bool)
+                                                                                                                                  bif (b__0 == (0x305 : (BitVec 12)))
                                                                                                                                   then
                                                                                                                                     (pure (Ok
                                                                                                                                         (← (set_mtvec
                                                                                                                                             value))))
                                                                                                                                   else
                                                                                                                                     (do
-                                                                                                                                      if ((b__0 == (0x341 : (BitVec 12))) : Bool)
+                                                                                                                                      bif (b__0 == (0x341 : (BitVec 12)))
                                                                                                                                       then
                                                                                                                                         (pure (Ok
                                                                                                                                             (← (set_xepc
@@ -1484,7 +1483,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                                                                                 value))))
                                                                                                                                       else
                                                                                                                                         (do
-                                                                                                                                          if ((((Sail.BitVec.extractLsb
+                                                                                                                                          bif (((Sail.BitVec.extractLsb
                                                                                                                                                    b__0
                                                                                                                                                    11
                                                                                                                                                    4) == (0x3A : (BitVec 8))) && (let idx : (BitVec 4) :=
@@ -1494,7 +1493,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                                                                                    0)
                                                                                                                                                (((BitVec.access
                                                                                                                                                      idx
-                                                                                                                                                     0) == 0#1) || (xlen == 32)))) : Bool)
+                                                                                                                                                     0) == 0#1) || (xlen == 32))))
                                                                                                                                           then
                                                                                                                                             (do
                                                                                                                                               let idx : (BitVec 4) :=
@@ -1513,10 +1512,10 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                                                                                       idx)))))
                                                                                                                                           else
                                                                                                                                             (do
-                                                                                                                                              if (((Sail.BitVec.extractLsb
+                                                                                                                                              bif ((Sail.BitVec.extractLsb
                                                                                                                                                      b__0
                                                                                                                                                      11
-                                                                                                                                                     4) == (0x3B : (BitVec 8))) : Bool)
+                                                                                                                                                     4) == (0x3B : (BitVec 8)))
                                                                                                                                               then
                                                                                                                                                 (do
                                                                                                                                                   let idx : (BitVec 4) :=
@@ -1535,10 +1534,10 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                                                                                           idx)))))
                                                                                                                                               else
                                                                                                                                                 (do
-                                                                                                                                                  if (((Sail.BitVec.extractLsb
+                                                                                                                                                  bif ((Sail.BitVec.extractLsb
                                                                                                                                                          b__0
                                                                                                                                                          11
-                                                                                                                                                         4) == (0x3C : (BitVec 8))) : Bool)
+                                                                                                                                                         4) == (0x3C : (BitVec 8)))
                                                                                                                                                   then
                                                                                                                                                     (do
                                                                                                                                                       let idx : (BitVec 4) :=
@@ -1557,10 +1556,10 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                                                                                               idx)))))
                                                                                                                                                   else
                                                                                                                                                     (do
-                                                                                                                                                      if (((Sail.BitVec.extractLsb
+                                                                                                                                                      bif ((Sail.BitVec.extractLsb
                                                                                                                                                              b__0
                                                                                                                                                              11
-                                                                                                                                                             4) == (0x3D : (BitVec 8))) : Bool)
+                                                                                                                                                             4) == (0x3D : (BitVec 8)))
                                                                                                                                                       then
                                                                                                                                                         (do
                                                                                                                                                           let idx : (BitVec 4) :=
@@ -1579,10 +1578,10 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                                                                                                   idx)))))
                                                                                                                                                       else
                                                                                                                                                         (do
-                                                                                                                                                          if (((Sail.BitVec.extractLsb
+                                                                                                                                                          bif ((Sail.BitVec.extractLsb
                                                                                                                                                                  b__0
                                                                                                                                                                  11
-                                                                                                                                                                 4) == (0x3E : (BitVec 8))) : Bool)
+                                                                                                                                                                 4) == (0x3E : (BitVec 8)))
                                                                                                                                                           then
                                                                                                                                                             (do
                                                                                                                                                               let idx : (BitVec 4) :=
@@ -1601,7 +1600,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                                                                                                       idx)))))
                                                                                                                                                           else
                                                                                                                                                             (do
-                                                                                                                                                              if ((b__0 == (0x001 : (BitVec 12))) : Bool)
+                                                                                                                                                              bif (b__0 == (0x001 : (BitVec 12)))
                                                                                                                                                               then
                                                                                                                                                                 (do
                                                                                                                                                                   (write_fcsr
@@ -1618,7 +1617,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                                                                                                           (← readReg fcsr))))))
                                                                                                                                                               else
                                                                                                                                                                 (do
-                                                                                                                                                                  if ((b__0 == (0x002 : (BitVec 12))) : Bool)
+                                                                                                                                                                  bif (b__0 == (0x002 : (BitVec 12)))
                                                                                                                                                                   then
                                                                                                                                                                     (do
                                                                                                                                                                       (write_fcsr
@@ -1635,7 +1634,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                                                                                                               (← readReg fcsr))))))
                                                                                                                                                                   else
                                                                                                                                                                     (do
-                                                                                                                                                                      if ((b__0 == (0x003 : (BitVec 12))) : Bool)
+                                                                                                                                                                      bif (b__0 == (0x003 : (BitVec 12)))
                                                                                                                                                                       then
                                                                                                                                                                         (do
                                                                                                                                                                           (write_fcsr
@@ -1653,7 +1652,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                                                                                                                 (← readReg fcsr)))))
                                                                                                                                                                       else
                                                                                                                                                                         (do
-                                                                                                                                                                          if ((b__0 == (0x008 : (BitVec 12))) : Bool)
+                                                                                                                                                                          bif (b__0 == (0x008 : (BitVec 12)))
                                                                                                                                                                           then
                                                                                                                                                                             (do
                                                                                                                                                                               (set_vstart
@@ -1665,7 +1664,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                                                                                                                   (← readReg vstart))))
                                                                                                                                                                           else
                                                                                                                                                                             (do
-                                                                                                                                                                              if ((b__0 == (0x009 : (BitVec 12))) : Bool)
+                                                                                                                                                                              bif (b__0 == (0x009 : (BitVec 12)))
                                                                                                                                                                               then
                                                                                                                                                                                 (do
                                                                                                                                                                                   (ext_write_vcsr
@@ -1682,7 +1681,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                                                                                                                           (← readReg vcsr))))))
                                                                                                                                                                               else
                                                                                                                                                                                 (do
-                                                                                                                                                                                  if ((b__0 == (0x00A : (BitVec 12))) : Bool)
+                                                                                                                                                                                  bif (b__0 == (0x00A : (BitVec 12)))
                                                                                                                                                                                   then
                                                                                                                                                                                     (do
                                                                                                                                                                                       (ext_write_vcsr
@@ -1699,7 +1698,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                                                                                                                               (← readReg vcsr))))))
                                                                                                                                                                                   else
                                                                                                                                                                                     (do
-                                                                                                                                                                                      if ((b__0 == (0x00F : (BitVec 12))) : Bool)
+                                                                                                                                                                                      bif (b__0 == (0x00F : (BitVec 12)))
                                                                                                                                                                                       then
                                                                                                                                                                                         (do
                                                                                                                                                                                           (ext_write_vcsr
@@ -1717,7 +1716,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                                                                                                                                 (← readReg vcsr)))))
                                                                                                                                                                                       else
                                                                                                                                                                                         (do
-                                                                                                                                                                                          if (((b__0 == (0x321 : (BitVec 12))) && (xlen == 64)) : Bool)
+                                                                                                                                                                                          bif ((b__0 == (0x321 : (BitVec 12))) && (xlen == 64))
                                                                                                                                                                                           then
                                                                                                                                                                                             (do
                                                                                                                                                                                               writeReg mcyclecfg (← (legalize_smcntrpmf
@@ -1727,7 +1726,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                                                                                                                                   (← readReg mcyclecfg))))
                                                                                                                                                                                           else
                                                                                                                                                                                             (do
-                                                                                                                                                                                              if (((b__0 == (0x321 : (BitVec 12))) && (xlen == 32)) : Bool)
+                                                                                                                                                                                              bif ((b__0 == (0x321 : (BitVec 12))) && (xlen == 32))
                                                                                                                                                                                               then
                                                                                                                                                                                                 (do
                                                                                                                                                                                                   writeReg mcyclecfg (← (legalize_smcntrpmf
@@ -1743,7 +1742,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                                                                                                                                         0))))
                                                                                                                                                                                               else
                                                                                                                                                                                                 (do
-                                                                                                                                                                                                  if (((b__0 == (0x721 : (BitVec 12))) && (xlen == 32)) : Bool)
+                                                                                                                                                                                                  bif ((b__0 == (0x721 : (BitVec 12))) && (xlen == 32))
                                                                                                                                                                                                   then
                                                                                                                                                                                                     (do
                                                                                                                                                                                                       writeReg mcyclecfg (← (legalize_smcntrpmf
@@ -1759,7 +1758,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                                                                                                                                             32))))
                                                                                                                                                                                                   else
                                                                                                                                                                                                     (do
-                                                                                                                                                                                                      if (((b__0 == (0x322 : (BitVec 12))) && (xlen == 64)) : Bool)
+                                                                                                                                                                                                      bif ((b__0 == (0x322 : (BitVec 12))) && (xlen == 64))
                                                                                                                                                                                                       then
                                                                                                                                                                                                         (do
                                                                                                                                                                                                           writeReg minstretcfg (← (legalize_smcntrpmf
@@ -1772,7 +1771,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                                                                                                                                                 0))))
                                                                                                                                                                                                       else
                                                                                                                                                                                                         (do
-                                                                                                                                                                                                          if (((b__0 == (0x322 : (BitVec 12))) && (xlen == 32)) : Bool)
+                                                                                                                                                                                                          bif ((b__0 == (0x322 : (BitVec 12))) && (xlen == 32))
                                                                                                                                                                                                           then
                                                                                                                                                                                                             (do
                                                                                                                                                                                                               writeReg minstretcfg (← (legalize_smcntrpmf
@@ -1788,7 +1787,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                                                                                                                                                     0))))
                                                                                                                                                                                                           else
                                                                                                                                                                                                             (do
-                                                                                                                                                                                                              if (((b__0 == (0x722 : (BitVec 12))) && (xlen == 32)) : Bool)
+                                                                                                                                                                                                              bif ((b__0 == (0x722 : (BitVec 12))) && (xlen == 32))
                                                                                                                                                                                                               then
                                                                                                                                                                                                                 (do
                                                                                                                                                                                                                   writeReg minstretcfg (← (legalize_smcntrpmf
@@ -1804,7 +1803,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                                                                                                                                                         32))))
                                                                                                                                                                                                               else
                                                                                                                                                                                                                 (do
-                                                                                                                                                                                                                  if ((b__0 == (0x180 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                  bif (b__0 == (0x180 : (BitVec 12)))
                                                                                                                                                                                                                   then
                                                                                                                                                                                                                     (do
                                                                                                                                                                                                                       writeReg satp (← (legalize_satp
@@ -1816,7 +1815,7 @@ def write_CSR (b__0 : (BitVec 12)) (value : (BitVec 64)) : SailM (Result (BitVec
                                                                                                                                                                                                                           (← readReg satp))))
                                                                                                                                                                                                                   else
                                                                                                                                                                                                                     (internal_error
-                                                                                                                                                                                                                      "postlude/csr_end.sail"
+                                                                                                                                                                                                                      "./postlude/csr_end.sail"
                                                                                                                                                                                                                       23
                                                                                                                                                                                                                       (HAppend.hAppend
                                                                                                                                                                                                                         "Write to CSR that does not exist: "

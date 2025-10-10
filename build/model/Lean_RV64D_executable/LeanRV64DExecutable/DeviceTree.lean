@@ -3,7 +3,6 @@ import LeanRV64DExecutable.Prelude
 import LeanRV64DExecutable.Xlen
 import LeanRV64DExecutable.Extensions
 import LeanRV64DExecutable.Platform
-import LeanRV64DExecutable.Pma
 
 set_option maxHeartbeats 1_000_000_000
 set_option maxRecDepth 1_000_000
@@ -149,14 +148,14 @@ open Architecture
 open AccessType
 
 def mmu_type (_ : Unit) : SailM String := do
-  assert (xlen == 64) "postlude/device_tree.sail:14.21-14.22"
-  if ((hartSupports Ext_Sv57) : Bool)
+  assert (xlen == 64) "./postlude/device_tree.sail:14.21-14.22"
+  bif (hartSupports Ext_Sv57)
   then (pure "sv57")
   else
-    (if ((hartSupports Ext_Sv48) : Bool)
+    (bif (hartSupports Ext_Sv48)
     then (pure "sv48")
     else
-      (if ((hartSupports Ext_Sv39) : Bool)
+      (bif (hartSupports Ext_Sv39)
       then (pure "sv39")
       else (pure "none")))
 
@@ -178,13 +177,13 @@ def num_of_ISA_Format (arg_ : ISA_Format) : Int :=
   | DeviceTree_ISA_Extensions => 1
 
 def ext_wrap (ext : extension) (fmt : ISA_Format) : String :=
-  if ((not (hartSupports ext)) : Bool)
+  bif (not (hartSupports ext))
   then ""
   else
     (let s := (extensionName_forwards ext)
     match fmt with
     | Canonical_Lowercase =>
-      (if (((String.length s) == 1) : Bool)
+      (bif ((String.length s) == 1)
       then s
       else (HAppend.hAppend "_" s))
     | DeviceTree_ISA_Extensions => (HAppend.hAppend ", \"" (HAppend.hAppend s "\"")))
@@ -208,7 +207,7 @@ def generate_dts_memories (pmas : (List PMA_Region)) : String :=
   match pmas with
   | [] => ""
   | (pma :: rest) =>
-    (if (pma.include_in_device_tree : Bool)
+    (bif pma.include_in_device_tree
     then
       (let base_hi := (BitVec.toNat (shiftr pma.base 32))
       let base_lo := (BitVec.toNat (Sail.BitVec.extractLsb pma.base 31 0))

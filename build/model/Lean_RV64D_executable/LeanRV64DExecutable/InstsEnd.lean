@@ -1,11 +1,19 @@
 import LeanRV64DExecutable.Flow
+import LeanRV64DExecutable.Arith
 import LeanRV64DExecutable.Prelude
+import LeanRV64DExecutable.Errors
 import LeanRV64DExecutable.Types
+import LeanRV64DExecutable.VmemTypes
 import LeanRV64DExecutable.Regs
 import LeanRV64DExecutable.PcAccess
+import LeanRV64DExecutable.AddrChecks
 import LeanRV64DExecutable.ZicfilpRegs
+import LeanRV64DExecutable.Platform
+import LeanRV64DExecutable.Mem
 import LeanRV64DExecutable.InstRetire
+import LeanRV64DExecutable.Vmem
 import LeanRV64DExecutable.ZicfilpInsts
+import LeanRV64DExecutable.ZicbozInsts
 
 set_option maxHeartbeats 1_000_000_000
 set_option maxRecDepth 1_000_000
@@ -154,8 +162,17 @@ def encdec_forwards (arg_ : instruction) : SailM (BitVec 32) := do
   match arg_ with
   | .LPAD lpl =>
     (do
-      if ((← (currentlyEnabled Ext_Zicfilp)) : Bool)
+      bif (← (currentlyEnabled Ext_Zicfilp))
       then (pure ((lpl : (BitVec 20)) ++ ((0b00000 : (BitVec 5)) ++ (0b0010111 : (BitVec 7)))))
+      else
+        (do
+          assert false "Pattern match failure at unknown location"
+          throw Error.Exit))
+  | .ZICBOZ rs1 =>
+    (do
+      bif (← (currentlyEnabled Ext_Zicboz))
+      then
+        (pure ((0x004 : (BitVec 12)) ++ ((encdec_reg_forwards rs1) ++ ((0b010 : (BitVec 3)) ++ ((0b00000 : (BitVec 5)) ++ (0b0001111 : (BitVec 7)))))))
       else
         (do
           assert false "Pattern match failure at unknown location"
@@ -167,29 +184,70 @@ def encdec_forwards (arg_ : instruction) : SailM (BitVec 32) := do
       throw Error.Exit)
 
 def encdec_backwards (arg_ : (BitVec 32)) : SailM instruction := do
-  let v__8 := arg_
-  if (((← (currentlyEnabled Ext_Zicfilp)) && ((Sail.BitVec.extractLsb v__8 11 0) == (0x017 : (BitVec 12)))) : Bool)
-  then
-    (let lpl : (BitVec 20) := (Sail.BitVec.extractLsb v__8 31 12)
-    let lpl : (BitVec 20) := (Sail.BitVec.extractLsb v__8 31 12)
-    (pure (LPAD lpl)))
-  else (pure (ILLEGAL v__8))
+  let head_exp_ := arg_
+  match (← do
+    let v__8 := head_exp_
+    bif ((← (currentlyEnabled Ext_Zicfilp)) && ((Sail.BitVec.extractLsb v__8 11 0) == (0x017 : (BitVec 12))))
+    then
+      (let lpl : (BitVec 20) := (Sail.BitVec.extractLsb v__8 31 12)
+      let lpl : (BitVec 20) := (Sail.BitVec.extractLsb v__8 31 12)
+      (pure (some (LPAD lpl))))
+    else
+      (do
+        bif ((let mapping0_ : (BitVec 5) := (Sail.BitVec.extractLsb v__8 19 15)
+             (encdec_reg_backwards_matches mapping0_)) && (((Sail.BitVec.extractLsb v__8 31 20) == (0x004 : (BitVec 12))) && ((Sail.BitVec.extractLsb
+                   v__8 14 0) == (0b010000000001111 : (BitVec 15)))))
+        then
+          (do
+            let mapping0_ : (BitVec 5) := (Sail.BitVec.extractLsb v__8 19 15)
+            let rs1 ← do (encdec_reg_backwards mapping0_)
+            bif (← (currentlyEnabled Ext_Zicboz))
+            then (pure (some (ZICBOZ rs1)))
+            else (pure none))
+        else (pure none))) with
+  | .some result => (pure result)
+  | none =>
+    (match head_exp_ with
+    | s => (pure (ILLEGAL s)))
 
 def encdec_forwards_matches (arg_ : instruction) : SailM Bool := do
   match arg_ with
   | .LPAD lpl =>
     (do
-      if ((← (currentlyEnabled Ext_Zicfilp)) : Bool)
+      bif (← (currentlyEnabled Ext_Zicfilp))
+      then (pure true)
+      else (pure false))
+  | .ZICBOZ rs1 =>
+    (do
+      bif (← (currentlyEnabled Ext_Zicboz))
       then (pure true)
       else (pure false))
   | .ILLEGAL s => (pure true)
   | _ => (pure false)
 
 def encdec_backwards_matches (arg_ : (BitVec 32)) : SailM Bool := do
-  let v__11 := arg_
-  if (((← (currentlyEnabled Ext_Zicfilp)) && ((Sail.BitVec.extractLsb v__11 11 0) == (0x017 : (BitVec 12)))) : Bool)
-  then (pure true)
-  else (pure true)
+  let head_exp_ := arg_
+  match (← do
+    let v__16 := head_exp_
+    bif ((← (currentlyEnabled Ext_Zicfilp)) && ((Sail.BitVec.extractLsb v__16 11 0) == (0x017 : (BitVec 12))))
+    then (pure (some true))
+    else
+      (do
+        bif ((let mapping0_ : (BitVec 5) := (Sail.BitVec.extractLsb v__16 19 15)
+             (encdec_reg_backwards_matches mapping0_)) && (((Sail.BitVec.extractLsb v__16 31 20) == (0x004 : (BitVec 12))) && ((Sail.BitVec.extractLsb
+                   v__16 14 0) == (0b010000000001111 : (BitVec 15)))))
+        then
+          (do
+            let mapping0_ : (BitVec 5) := (Sail.BitVec.extractLsb v__16 19 15)
+            let rs1 ← do (encdec_reg_backwards mapping0_)
+            bif (← (currentlyEnabled Ext_Zicboz))
+            then (pure (some true))
+            else (pure none))
+        else (pure none))) with
+  | .some result => (pure result)
+  | none =>
+    (match head_exp_ with
+    | s => (pure true))
 
 def encdec_compressed_forwards (arg_ : instruction) : SailM (BitVec 16) := do
   match arg_ with
@@ -212,8 +270,41 @@ def encdec_compressed_backwards_matches (arg_ : (BitVec 16)) : Bool :=
   match arg_ with
   | s => true
 
+def execute_ZICBOZ (rs1 : regidx) : SailM ExecutionResult := do
+  bif (← (cbo_zero_enabled (← readReg cur_privilege)))
+  then
+    (do
+      let rs1_val ← do (rX_bits rs1)
+      let cache_block_size := (2 ^i plat_cache_block_size_exp)
+      let negative_offset :=
+        ((rs1_val &&& (Complement.complement
+              (zero_extend (m := 64) (ones (n := plat_cache_block_size_exp))))) - rs1_val)
+      match (← (ext_data_get_addr rs1 negative_offset (Write Data) cache_block_size)) with
+      | .Ext_DataAddr_Error e => (pure (Ext_DataAddr_Check_Failure e))
+      | .Ext_DataAddr_OK vaddr =>
+        (do
+          match (← (translateAddr vaddr (Write Data))) with
+          | .Err (e, _) =>
+            (pure (Memory_Exception ((sub_virtaddr_xlenbits vaddr negative_offset), e)))
+          | .Ok (paddr, _) =>
+            (do
+              match (← (mem_write_ea paddr cache_block_size false false false)) with
+              | .Err e =>
+                (pure (Memory_Exception ((sub_virtaddr_xlenbits vaddr negative_offset), e)))
+              | .Ok _ =>
+                (do
+                  match (← (mem_write_value paddr cache_block_size
+                      (zeros (n := (8 *i (2 ^i plat_cache_block_size_exp)))) false false false)) with
+                  | .Ok true => (pure RETIRE_SUCCESS)
+                  | .Ok false =>
+                    (internal_error "./extensions/Zicboz/zicboz_insts.sail" 53
+                      "store got false from mem_write_value")
+                  | .Err e =>
+                    (pure (Memory_Exception ((sub_virtaddr_xlenbits vaddr negative_offset), e)))))))
+  else (pure (Illegal_Instruction ()))
+
 def execute_LPAD (lpl : (BitVec 20)) : SailM ExecutionResult := do
-  if ((← (is_landing_pad_expected ())) : Bool)
+  bif (← (is_landing_pad_expected ()))
   then
     (do
       let unaligned_pc ← do
@@ -221,7 +312,7 @@ def execute_LPAD (lpl : (BitVec 20)) : SailM ExecutionResult := do
       let label_mismatch ← do
         (pure (((Sail.BitVec.extractLsb (← (rX (Regno 7))) 31 12) != lpl) && (lpl != (zeros
                 (n := 20)))))
-      if ((unaligned_pc || label_mismatch) : Bool)
+      bif (unaligned_pc || label_mismatch)
       then
         (pure (Trap
             ((← readReg cur_privilege), (CTL_TRAP (make_landing_pad_exception ())), (← readReg PC))))
@@ -240,6 +331,7 @@ def execute_C_ILLEGAL (s : (BitVec 16)) : ExecutionResult :=
 def execute (merge_var : instruction) : SailM ExecutionResult := do
   match merge_var with
   | .LPAD lpl => (execute_LPAD lpl)
+  | .ZICBOZ rs1 => (execute_ZICBOZ rs1)
   | .ILLEGAL s => (pure (execute_ILLEGAL s))
   | .C_ILLEGAL s => (pure (execute_C_ILLEGAL s))
 
@@ -250,6 +342,7 @@ def assembly_backwards (arg_ : String) : SailM instruction := do
 def assembly_forwards_matches (arg_ : instruction) : Bool :=
   match arg_ with
   | .LPAD lpl => true
+  | .ZICBOZ rs1 => true
   | .ILLEGAL s => true
   | .C_ILLEGAL s => true
 

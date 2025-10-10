@@ -1,12 +1,10 @@
 import LeanRV64DExecutable.Prelude
 import LeanRV64DExecutable.Regs
-import LeanRV64DExecutable.SysRegs
 import LeanRV64DExecutable.ZicfilpRegs
 import LeanRV64DExecutable.SysControl
 import LeanRV64DExecutable.Platform
 import LeanRV64DExecutable.Vmem
 import LeanRV64DExecutable.StepExt
-import LeanRV64DExecutable.Step
 import LeanRV64DExecutable.ValidateConfig
 
 set_option maxHeartbeats 1_000_000_000
@@ -161,7 +159,7 @@ def reset (_ : Unit) : SailM Unit := do
 
 def init_model (config_filename : String) : SailM Unit := do
   assert (← (config_is_valid ())) (HAppend.hAppend
-    (if ((config_filename == "") : Bool)
+    (bif (config_filename == "")
     then "Default config"
     else (HAppend.hAppend "Config in " config_filename)) " is invalid.")
   (init_platform ())
