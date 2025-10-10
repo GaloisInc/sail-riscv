@@ -603,7 +603,7 @@ def currentlyEnabled (merge_var : extension) : SailM Bool := do
   | Ext_Svrsw60t59b => (pure ((hartSupports Ext_Svrsw60t59b) && (← (currentlyEnabled Ext_Sv39))))
   | _ =>
     (do
-      dbg_trace "merge var {merge_var}"
+      dbg_trace "merge var {repr merge_var}"
       assert false "Pattern match failure at sys/vmem_pte.sail:78.0-78.110"
       throw Error.Exit)
 termination_by let ext := merge_var; ((currentlyEnabled_measure ext)).toNat
