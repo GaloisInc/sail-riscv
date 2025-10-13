@@ -248,7 +248,6 @@ def reset_pmp (_ : Unit) : SailM Unit := do
   for i in [loop_i_lower:loop_i_upper:1]i do
     let () := loop_vars
     loop_vars ← do
-    dbg_trace "update pmpcfg_n inside reset_pmp function call"
       writeReg pmpcfg_n (vectorUpdate (← readReg pmpcfg_n) i
         (_update_Pmpcfg_ent_L
           (_update_Pmpcfg_ent_A (GetElem?.getElem! (← readReg pmpcfg_n) i)
