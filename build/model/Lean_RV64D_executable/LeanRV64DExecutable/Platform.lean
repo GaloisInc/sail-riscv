@@ -648,6 +648,7 @@ def htif_store (app_0 : physaddr) (width : Nat) (data : (BitVec (8 * width))) : 
               then (pure ())
               else
                 (do
+                  dbg_trace "probably about to call plat_term_write"
                   if ((b__2 == (0x01 : (BitVec 8))) : Bool)
                   then (plat_term_write (Sail.BitVec.extractLsb (_get_htif_cmd_payload cmd) 7 0))
                   else
@@ -704,4 +705,3 @@ def init_platform (_ : Unit) : SailM Unit := do
 
 def platform_wfi (_ : Unit) : Unit :=
   ()
-
