@@ -242,15 +242,17 @@ def pmpCheck (addr : physaddr) (width : Nat) (acc : (AccessType Unit)) (priv : P
   else (pure (some (accessToFault acc)))
 
 def reset_pmp (_ : Unit) : SailM Unit := do
+  dbg_trace "reset_pmp 1"
   let loop_i_lower := 0
   let loop_i_upper := 63
   let mut loop_vars := ()
   for i in [loop_i_lower:loop_i_upper:1]i do
+    dbg_trace "reset_pmp for loop {i}"
     let () := loop_vars
     loop_vars ← do
+      dbg_trace "update loop_vars by writing to pmpcfg_n"
       writeReg pmpcfg_n (vectorUpdate (← readReg pmpcfg_n) i
         (_update_Pmpcfg_ent_L
           (_update_Pmpcfg_ent_A (GetElem?.getElem! (← readReg pmpcfg_n) i)
             (pmpAddrMatchType_encdec_forwards OFF)) (0b0 : (BitVec 1))))
   (pure loop_vars)
-
