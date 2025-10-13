@@ -9,6 +9,6 @@ _sbuild/
 z3_problems
 
 # Typical CMake build directory.
-/build
+# /build
 # CMake build directories used by CLion.
 /cmake-build-*
