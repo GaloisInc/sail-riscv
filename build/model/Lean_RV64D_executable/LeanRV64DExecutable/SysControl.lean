@@ -824,7 +824,9 @@ def set_pc_reset_address (addr : (BitVec 64)) : SailM Unit := do
   writeReg pc_reset_address (trunc (m := 64) addr)
 
 def reset_sys (_ : Unit) : SailM Unit := do
+  dbg_trace "inside reset_sys"
   writeReg cur_privilege Machine
+  dbg_trace "wrote to cur_privilege register"
   writeReg mstatus (Sail.BitVec.updateSubrange (← readReg mstatus) 3 3 (0b0 : (BitVec 1)))
   writeReg mstatus (Sail.BitVec.updateSubrange (← readReg mstatus) 17 17 (0b0 : (BitVec 1)))
   (long_csr_write_callback "mstatus" "mstatush" (← readReg mstatus))
@@ -866,4 +868,3 @@ def MemoryOpResult_drop_meta (r : (Result (k_t × Unit) ExceptionType)) : (Resul
   match r with
   | .Ok (v, m) => (Ok v)
   | .Err e => (Err e)
-
