@@ -834,7 +834,9 @@ def reset_sys (_ : Unit) : SailM Unit := do
   writeReg nextPC (← readReg pc_reset_address)
   writeReg mcause (zeros (n := 64))
   (csr_name_write_callback "mcause" (← readReg mcause))
+  dbg_trace "calling reset_pmp"
   (reset_pmp ())
+  dbg_trace "successfully called reset_pmp"
   writeReg mseccfg (Sail.BitVec.updateSubrange (← readReg mseccfg) 9 9
     (bool_to_bits (false : Bool)))
   writeReg mseccfg (Sail.BitVec.updateSubrange (← readReg mseccfg) 8 8
@@ -866,4 +868,3 @@ def MemoryOpResult_drop_meta (r : (Result (k_t × Unit) ExceptionType)) : (Resul
   match r with
   | .Ok (v, m) => (Ok v)
   | .Err e => (Err e)
-
