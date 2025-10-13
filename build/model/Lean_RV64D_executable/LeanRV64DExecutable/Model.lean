@@ -165,7 +165,6 @@ def reset (_ : Unit) : SailM Unit := do
   (pure (ext_reset ()))
 
 def init_model (config_filename : String) : SailM Unit := do
-  dbg_trace "inside init_model"
   assert (← (config_is_valid ())) (HAppend.hAppend
     (if ((config_filename == "") : Bool)
     then "Default config"
@@ -176,3 +175,4 @@ def init_model (config_filename : String) : SailM Unit := do
 def init_boot_requirements (_ : Unit) : SailM Unit := do
   (wX (Regno 10) (← readReg mhartid))
   (wX (Regno 11) (trunc (m := 64) (0x0000000000001000 : (BitVec 64))))
+

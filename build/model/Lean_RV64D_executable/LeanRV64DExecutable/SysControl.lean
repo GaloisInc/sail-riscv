@@ -824,59 +824,35 @@ def set_pc_reset_address (addr : (BitVec 64)) : SailM Unit := do
   writeReg pc_reset_address (trunc (m := 64) addr)
 
 def reset_sys (_ : Unit) : SailM Unit := do
-  dbg_trace "inside reset_sys"
   writeReg cur_privilege Machine
-  dbg_trace "wrote to cur_privilege register"
   writeReg mstatus (Sail.BitVec.updateSubrange (← readReg mstatus) 3 3 (0b0 : (BitVec 1)))
-  dbg_trace "reset_sys 1"
   writeReg mstatus (Sail.BitVec.updateSubrange (← readReg mstatus) 17 17 (0b0 : (BitVec 1)))
-    dbg_trace "reset_sys 2"
   (long_csr_write_callback "mstatus" "mstatush" (← readReg mstatus))
-    dbg_trace "reset_sys 3"
   (reset_misa ())
-    dbg_trace "reset_sys 4"
   (cancel_reservation ())
-    dbg_trace "reset_sys 5"
   writeReg PC (← readReg pc_reset_address)
-    dbg_trace "reset_sys 6"
   writeReg nextPC (← readReg pc_reset_address)
-    dbg_trace "reset_sys 7"
   writeReg mcause (zeros (n := 64))
-    dbg_trace "reset_sys 8"
   (csr_name_write_callback "mcause" (← readReg mcause))
-    dbg_trace "reset_sys 9"
   (reset_pmp ())
-    dbg_trace "reset_sys 10"
   writeReg mseccfg (Sail.BitVec.updateSubrange (← readReg mseccfg) 9 9
     (bool_to_bits (false : Bool)))
-      dbg_trace "reset_sys 11"
   writeReg mseccfg (Sail.BitVec.updateSubrange (← readReg mseccfg) 8 8
     (bool_to_bits (false : Bool)))
-      dbg_trace "reset_sys 12"
   if ((hartSupports Ext_Zicfilp) : Bool)
   then writeReg mseccfg (Sail.BitVec.updateSubrange (← readReg mseccfg) 10 10 (0b0 : (BitVec 1)))
   else (pure ())
-    dbg_trace "reset_sys 13"
   writeReg vstart (zeros (n := 64))
-    dbg_trace "reset_sys 14"
   writeReg vl (zeros (n := 64))
-    dbg_trace "reset_sys 15"
   writeReg vcsr (Sail.BitVec.updateSubrange (← readReg vcsr) 2 1 (0b00 : (BitVec 2)))
-    dbg_trace "reset_sys 16"
   writeReg vcsr (Sail.BitVec.updateSubrange (← readReg vcsr) 0 0 (0b0 : (BitVec 1)))
-    dbg_trace "reset_sys 17"
   writeReg vtype (Sail.BitVec.updateSubrange (← readReg vtype) (64 -i 1) (64 -i 1)
     (0b1 : (BitVec 1)))
-      dbg_trace "reset_sys 18"
   writeReg vtype (Sail.BitVec.updateSubrange (← readReg vtype) (64 -i 2) 8
     (zeros (n := (64 -i 9))))
-      dbg_trace "reset_sys 19"
   writeReg vtype (Sail.BitVec.updateSubrange (← readReg vtype) 7 7 (0b0 : (BitVec 1)))
-    dbg_trace "reset_sys 20"
   writeReg vtype (Sail.BitVec.updateSubrange (← readReg vtype) 6 6 (0b0 : (BitVec 1)))
-    dbg_trace "reset_sys 21"
   writeReg vtype (Sail.BitVec.updateSubrange (← readReg vtype) 5 3 (0b000 : (BitVec 3)))
-    dbg_trace "reset_sys 22"
   writeReg vtype (Sail.BitVec.updateSubrange (← readReg vtype) 2 0 (0b000 : (BitVec 3)))
 
 /-- Type quantifiers: k_t : Type -/
@@ -890,3 +866,4 @@ def MemoryOpResult_drop_meta (r : (Result (k_t × Unit) ExceptionType)) : (Resul
   match r with
   | .Ok (v, m) => (Ok v)
   | .Err e => (Err e)
+
