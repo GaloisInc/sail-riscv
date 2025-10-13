@@ -159,7 +159,7 @@ open AtomicSupport
 open Architecture
 open AccessType
 
-def initialize_registers (_ : Unit) : Unit := do
+def initialize_registers (_ : Unit) : SailM Unit := do
   writeReg rvfi_instruction (← (undefined_RVFI_DII_Instruction_Packet ()))
   writeReg rvfi_inst_data (← (undefined_RVFI_DII_Execution_Packet_InstMetaData ()))
   writeReg rvfi_pc_data (← (undefined_RVFI_DII_Execution_Packet_PC ()))
@@ -274,7 +274,6 @@ def initialize_registers (_ : Unit) : Unit := do
   writeReg htif_cmd_write (← (undefined_bit ()))
   writeReg htif_payload_writes (← (undefined_bitvector 4))
   writeReg satp (← (undefined_bitvector ((2 ^i 3) *i 8)))
-  ()
 
 def sail_model_init (x_0 : Unit) : SailM Unit := do
   writeReg misa (_update_Misa_MXL (Mk_Misa (zeros (n := 64))) (architecture_bits_forwards RV64))
@@ -338,6 +337,6 @@ def sail_model_init (x_0 : Unit) : SailM Unit := do
                                                                                                     include_in_device_tree := true }]
   writeReg tlb (vectorInit none)
   writeReg hart_state (HART_ACTIVE ())
-  (pure (initialize_registers ()))
+  initialize_registers ()
 
 end LeanRV64DExecutable.Functions
