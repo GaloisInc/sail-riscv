@@ -1,4 +1,10 @@
-import LeanRV64DExecutable.InstsEnd
+import LeanRV64DExecutable.Sail.Sail
+import LeanRV64DExecutable.Sail.BitVec
+import LeanRV64DExecutable.Sail.IntRange
+import LeanRV64DExecutable.Defs
+import LeanRV64DExecutable.Specialization
+import LeanRV64DExecutable.FakeReal
+import LeanRV64DExecutable.RiscvExtrasExecutable
 
 set_option maxHeartbeats 1_000_000_000
 set_option maxRecDepth 1_000_000
@@ -148,9 +154,19 @@ open AtomicSupport
 open Architecture
 open AccessType
 
-def ext_decode_compressed (bv : (BitVec 16)) : instruction :=
-  (encdec_compressed_backwards bv)
+def undefined_cbop_zicbom (_ : Unit) : SailM cbop_zicbom := do
+  (internal_pick [CBO_CLEAN, CBO_FLUSH, CBO_INVAL])
 
-def ext_decode (bv : (BitVec 32)) : SailM instruction := do
-  (encdec_backwards bv)
+/-- Type quantifiers: arg_ : Nat, 0 ≤ arg_ ∧ arg_ ≤ 2 -/
+def cbop_zicbom_of_num (arg_ : Nat) : cbop_zicbom :=
+  match arg_ with
+  | 0 => CBO_CLEAN
+  | 1 => CBO_FLUSH
+  | _ => CBO_INVAL
+
+def num_of_cbop_zicbom (arg_ : cbop_zicbom) : Int :=
+  match arg_ with
+  | CBO_CLEAN => 0
+  | CBO_FLUSH => 1
+  | CBO_INVAL => 2
 

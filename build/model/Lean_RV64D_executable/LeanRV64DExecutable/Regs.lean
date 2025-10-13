@@ -51,6 +51,7 @@ open vfunary0
 open vfnunary0
 open vextfunct6
 open vector_support
+open seed_opst
 open rounding_mode
 open rmvvfunct6
 open rivvfunct6
@@ -120,8 +121,12 @@ open f_bin_f_op_D
 open extension
 open exception
 open ctl_result
+open csrop
 open cregidx
+open checked_cbop
 open cfregidx
+open cbop_zicbom
+open cbie
 open barrier_kind
 open amoop
 open agtype
@@ -149,10 +154,6 @@ open AtomicSupport
 open Architecture
 open AccessType
 
-def encdec_reg_forwards (arg_ : regidx) : (BitVec 5) :=
-  match arg_ with
-  | .Regidx r => (zero_extend (m := 5) r)
-
 def encdec_reg_backwards (arg_ : (BitVec 5)) : SailM regidx := do
   let r := arg_
   if (((not base_E_enabled) || ((BitVec.access r 4) == 0#1)) : Bool)
@@ -161,10 +162,6 @@ def encdec_reg_backwards (arg_ : (BitVec 5)) : SailM regidx := do
     (do
       assert false "Pattern match failure at unknown location"
       throw Error.Exit)
-
-def encdec_reg_forwards_matches (arg_ : regidx) : Bool :=
-  match arg_ with
-  | .Regidx r => true
 
 def encdec_reg_backwards_matches (arg_ : (BitVec 5)) : Bool :=
   let r := arg_
@@ -187,105 +184,6 @@ def encdec_creg_forwards_matches (arg_ : cregidx) : Bool :=
 def encdec_creg_backwards_matches (arg_ : (BitVec 3)) : Bool :=
   match arg_ with
   | r => true
-
-def reg_abi_name_raw_forwards (arg_ : (BitVec 5)) : String :=
-  let b__0 := arg_
-  if ((b__0 == (0b00000 : (BitVec 5))) : Bool)
-  then "zero"
-  else
-    (if ((b__0 == (0b00001 : (BitVec 5))) : Bool)
-    then "ra"
-    else
-      (if ((b__0 == (0b00010 : (BitVec 5))) : Bool)
-      then "sp"
-      else
-        (if ((b__0 == (0b00011 : (BitVec 5))) : Bool)
-        then "gp"
-        else
-          (if ((b__0 == (0b00100 : (BitVec 5))) : Bool)
-          then "tp"
-          else
-            (if ((b__0 == (0b00101 : (BitVec 5))) : Bool)
-            then "t0"
-            else
-              (if ((b__0 == (0b00110 : (BitVec 5))) : Bool)
-              then "t1"
-              else
-                (if ((b__0 == (0b00111 : (BitVec 5))) : Bool)
-                then "t2"
-                else
-                  (if ((b__0 == (0b01000 : (BitVec 5))) : Bool)
-                  then "s0"
-                  else
-                    (if ((b__0 == (0b01000 : (BitVec 5))) : Bool)
-                    then "fp"
-                    else
-                      (if ((b__0 == (0b01001 : (BitVec 5))) : Bool)
-                      then "s1"
-                      else
-                        (if ((b__0 == (0b01010 : (BitVec 5))) : Bool)
-                        then "a0"
-                        else
-                          (if ((b__0 == (0b01011 : (BitVec 5))) : Bool)
-                          then "a1"
-                          else
-                            (if ((b__0 == (0b01100 : (BitVec 5))) : Bool)
-                            then "a2"
-                            else
-                              (if ((b__0 == (0b01101 : (BitVec 5))) : Bool)
-                              then "a3"
-                              else
-                                (if ((b__0 == (0b01110 : (BitVec 5))) : Bool)
-                                then "a4"
-                                else
-                                  (if ((b__0 == (0b01111 : (BitVec 5))) : Bool)
-                                  then "a5"
-                                  else
-                                    (if ((b__0 == (0b10000 : (BitVec 5))) : Bool)
-                                    then "a6"
-                                    else
-                                      (if ((b__0 == (0b10001 : (BitVec 5))) : Bool)
-                                      then "a7"
-                                      else
-                                        (if ((b__0 == (0b10010 : (BitVec 5))) : Bool)
-                                        then "s2"
-                                        else
-                                          (if ((b__0 == (0b10011 : (BitVec 5))) : Bool)
-                                          then "s3"
-                                          else
-                                            (if ((b__0 == (0b10100 : (BitVec 5))) : Bool)
-                                            then "s4"
-                                            else
-                                              (if ((b__0 == (0b10101 : (BitVec 5))) : Bool)
-                                              then "s5"
-                                              else
-                                                (if ((b__0 == (0b10110 : (BitVec 5))) : Bool)
-                                                then "s6"
-                                                else
-                                                  (if ((b__0 == (0b10111 : (BitVec 5))) : Bool)
-                                                  then "s7"
-                                                  else
-                                                    (if ((b__0 == (0b11000 : (BitVec 5))) : Bool)
-                                                    then "s8"
-                                                    else
-                                                      (if ((b__0 == (0b11001 : (BitVec 5))) : Bool)
-                                                      then "s9"
-                                                      else
-                                                        (if ((b__0 == (0b11010 : (BitVec 5))) : Bool)
-                                                        then "s10"
-                                                        else
-                                                          (if ((b__0 == (0b11011 : (BitVec 5))) : Bool)
-                                                          then "s11"
-                                                          else
-                                                            (if ((b__0 == (0b11100 : (BitVec 5))) : Bool)
-                                                            then "t3"
-                                                            else
-                                                              (if ((b__0 == (0b11101 : (BitVec 5))) : Bool)
-                                                              then "t4"
-                                                              else
-                                                                (if ((b__0 == (0b11110 : (BitVec 5))) : Bool)
-                                                                then "t5"
-                                                                else "t6")))))))))))))))))))))))))))))))
 
 def reg_abi_name_raw_backwards (arg_ : String) : SailM (BitVec 5) := do
   match arg_ with
@@ -466,102 +364,6 @@ def reg_abi_name_raw_backwards_matches (arg_ : String) : Bool :=
   | "t6" => true
   | _ => false
 
-def reg_arch_name_raw_forwards (arg_ : (BitVec 5)) : String :=
-  let b__0 := arg_
-  if ((b__0 == (0b00000 : (BitVec 5))) : Bool)
-  then "x0"
-  else
-    (if ((b__0 == (0b00001 : (BitVec 5))) : Bool)
-    then "x1"
-    else
-      (if ((b__0 == (0b00010 : (BitVec 5))) : Bool)
-      then "x2"
-      else
-        (if ((b__0 == (0b00011 : (BitVec 5))) : Bool)
-        then "x3"
-        else
-          (if ((b__0 == (0b00100 : (BitVec 5))) : Bool)
-          then "x4"
-          else
-            (if ((b__0 == (0b00101 : (BitVec 5))) : Bool)
-            then "x5"
-            else
-              (if ((b__0 == (0b00110 : (BitVec 5))) : Bool)
-              then "x6"
-              else
-                (if ((b__0 == (0b00111 : (BitVec 5))) : Bool)
-                then "x7"
-                else
-                  (if ((b__0 == (0b01000 : (BitVec 5))) : Bool)
-                  then "x8"
-                  else
-                    (if ((b__0 == (0b01001 : (BitVec 5))) : Bool)
-                    then "x9"
-                    else
-                      (if ((b__0 == (0b01010 : (BitVec 5))) : Bool)
-                      then "x10"
-                      else
-                        (if ((b__0 == (0b01011 : (BitVec 5))) : Bool)
-                        then "x11"
-                        else
-                          (if ((b__0 == (0b01100 : (BitVec 5))) : Bool)
-                          then "x12"
-                          else
-                            (if ((b__0 == (0b01101 : (BitVec 5))) : Bool)
-                            then "x13"
-                            else
-                              (if ((b__0 == (0b01110 : (BitVec 5))) : Bool)
-                              then "x14"
-                              else
-                                (if ((b__0 == (0b01111 : (BitVec 5))) : Bool)
-                                then "x15"
-                                else
-                                  (if ((b__0 == (0b10000 : (BitVec 5))) : Bool)
-                                  then "x16"
-                                  else
-                                    (if ((b__0 == (0b10001 : (BitVec 5))) : Bool)
-                                    then "x17"
-                                    else
-                                      (if ((b__0 == (0b10010 : (BitVec 5))) : Bool)
-                                      then "x18"
-                                      else
-                                        (if ((b__0 == (0b10011 : (BitVec 5))) : Bool)
-                                        then "x19"
-                                        else
-                                          (if ((b__0 == (0b10100 : (BitVec 5))) : Bool)
-                                          then "x20"
-                                          else
-                                            (if ((b__0 == (0b10101 : (BitVec 5))) : Bool)
-                                            then "x21"
-                                            else
-                                              (if ((b__0 == (0b10110 : (BitVec 5))) : Bool)
-                                              then "x22"
-                                              else
-                                                (if ((b__0 == (0b10111 : (BitVec 5))) : Bool)
-                                                then "x23"
-                                                else
-                                                  (if ((b__0 == (0b11000 : (BitVec 5))) : Bool)
-                                                  then "x24"
-                                                  else
-                                                    (if ((b__0 == (0b11001 : (BitVec 5))) : Bool)
-                                                    then "x25"
-                                                    else
-                                                      (if ((b__0 == (0b11010 : (BitVec 5))) : Bool)
-                                                      then "x26"
-                                                      else
-                                                        (if ((b__0 == (0b11011 : (BitVec 5))) : Bool)
-                                                        then "x27"
-                                                        else
-                                                          (if ((b__0 == (0b11100 : (BitVec 5))) : Bool)
-                                                          then "x28"
-                                                          else
-                                                            (if ((b__0 == (0b11101 : (BitVec 5))) : Bool)
-                                                            then "x29"
-                                                            else
-                                                              (if ((b__0 == (0b11110 : (BitVec 5))) : Bool)
-                                                              then "x30"
-                                                              else "x31"))))))))))))))))))))))))))))))
-
 def reg_arch_name_raw_backwards (arg_ : String) : SailM (BitVec 5) := do
   match arg_ with
   | "x0" => (pure (0b00000 : (BitVec 5)))
@@ -735,33 +537,6 @@ def reg_arch_name_raw_backwards_matches (arg_ : String) : Bool :=
   | "x30" => true
   | "x31" => true
   | _ => false
-
-def reg_name_forwards (arg_ : regidx) : SailM String := do
-  let head_exp_ := arg_
-  match (let mapping0_ := head_exp_
-  if ((encdec_reg_forwards_matches mapping0_) : Bool)
-  then
-    (let i := (encdec_reg_forwards mapping0_)
-    if ((get_config_use_abi_names ()) : Bool)
-    then (some (reg_abi_name_raw_forwards i))
-    else none)
-  else none) with
-  | .some result => (pure result)
-  | none =>
-    (do
-      match (let mapping1_ := head_exp_
-      if ((encdec_reg_forwards_matches mapping1_) : Bool)
-      then
-        (let i := (encdec_reg_forwards mapping1_)
-        if ((not (get_config_use_abi_names ())) : Bool)
-        then (some (reg_arch_name_raw_forwards i))
-        else none)
-      else none) with
-      | .some result => (pure result)
-      | _ =>
-        (do
-          assert false "Pattern match failure at unknown location"
-          throw Error.Exit))
 
 def reg_name_backwards (arg_ : String) : SailM regidx := do
   let head_exp_ := arg_

@@ -1,4 +1,5 @@
-import LeanRV64DExecutable.InstsEnd
+import LeanRV64DExecutable.Types
+import LeanRV64DExecutable.SysRegs
 
 set_option maxHeartbeats 1_000_000_000
 set_option maxRecDepth 1_000_000
@@ -148,9 +149,7 @@ open AtomicSupport
 open Architecture
 open AccessType
 
-def ext_decode_compressed (bv : (BitVec 16)) : instruction :=
-  (encdec_compressed_backwards bv)
-
-def ext_decode (bv : (BitVec 32)) : SailM instruction := do
-  (encdec_backwards bv)
+def cbo_zero_enabled (p : Privilege) : SailM Bool := do
+  (feature_enabled_for_priv p (BitVec.access (_get_MEnvcfg_CBZE (← readReg menvcfg)) 0)
+    (BitVec.access (_get_SEnvcfg_CBZE (← readReg senvcfg)) 0))
 

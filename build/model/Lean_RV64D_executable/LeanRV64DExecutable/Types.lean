@@ -53,6 +53,7 @@ open vfunary0
 open vfnunary0
 open vextfunct6
 open vector_support
+open seed_opst
 open rounding_mode
 open rmvvfunct6
 open rivvfunct6
@@ -122,8 +123,12 @@ open f_bin_f_op_D
 open extension
 open exception
 open ctl_result
+open csrop
 open cregidx
+open checked_cbop
 open cfregidx
+open cbop_zicbom
+open cbie
 open barrier_kind
 open amoop
 open agtype
@@ -601,10 +606,13 @@ def currentlyEnabled (merge_var : extension) : SailM Bool := do
   | Ext_Svnapot => (pure false)
   | Ext_Svpbmt => (pure false)
   | Ext_Svrsw60t59b => (pure ((hartSupports Ext_Svrsw60t59b) && (← (currentlyEnabled Ext_Sv39))))
+  | Ext_Zkr => (pure (hartSupports Ext_Zkr))
+  | Ext_Zicsr => (pure (hartSupports Ext_Zicsr))
+  | Ext_Zicbom => (pure (hartSupports Ext_Zicbom))
+  | Ext_Zicboz => (pure (hartSupports Ext_Zicboz))
   | _ =>
     (do
-      dbg_trace "merge var {repr merge_var}"
-      assert false "Pattern match failure at sys/vmem_pte.sail:78.0-78.110"
+      assert false "Pattern match failure at extensions/Zicboz/zicboz_insts.sail:11.0-11.71"
       throw Error.Exit)
 termination_by let ext := merge_var; ((currentlyEnabled_measure ext)).toNat
 def get_xLPE (p : Privilege) : SailM Bool := do
@@ -1395,8 +1403,13 @@ def csr_name_map_forwards (arg_ : (BitVec 12)) : SailM String := do
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   then
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     (pure "satp")
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   else
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    (hex_bits_12_forwards
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      b__0)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    (do
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      if ((b__0 == (0x015 : (BitVec 12))) : Bool)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      then
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        (pure "seed")
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      else
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        (hex_bits_12_forwards
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          b__0))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
 
 def csr_name (csr : (BitVec 12)) : SailM String := do
   (csr_name_map_forwards csr)
@@ -1489,11 +1502,283 @@ def pma_region_to_str (region : PMA_Region) : String :=
       (HAppend.hAppend " size: "
         (HAppend.hAppend (BitVec.toFormatted region.size) (pma_attributes_to_str region.attributes)))))
 
+def cbop_mnemonic_forwards (arg_ : cbop_zicbom) : String :=
+  match arg_ with
+  | CBO_CLEAN => "cbo.clean"
+  | CBO_FLUSH => "cbo.flush"
+  | CBO_INVAL => "cbo.inval"
+
+def csr_mnemonic_forwards (arg_ : csrop) : String :=
+  match arg_ with
+  | CSRRW => "csrrw"
+  | CSRRS => "csrrs"
+  | CSRRC => "csrrc"
+
+def encdec_reg_forwards (arg_ : regidx) : (BitVec 5) :=
+  match arg_ with
+  | .Regidx r => (zero_extend (m := 5) r)
+
+def encdec_reg_forwards_matches (arg_ : regidx) : Bool :=
+  match arg_ with
+  | .Regidx r => true
+
+def reg_abi_name_raw_forwards (arg_ : (BitVec 5)) : String :=
+  let b__0 := arg_
+  if ((b__0 == (0b00000 : (BitVec 5))) : Bool)
+  then "zero"
+  else
+    (if ((b__0 == (0b00001 : (BitVec 5))) : Bool)
+    then "ra"
+    else
+      (if ((b__0 == (0b00010 : (BitVec 5))) : Bool)
+      then "sp"
+      else
+        (if ((b__0 == (0b00011 : (BitVec 5))) : Bool)
+        then "gp"
+        else
+          (if ((b__0 == (0b00100 : (BitVec 5))) : Bool)
+          then "tp"
+          else
+            (if ((b__0 == (0b00101 : (BitVec 5))) : Bool)
+            then "t0"
+            else
+              (if ((b__0 == (0b00110 : (BitVec 5))) : Bool)
+              then "t1"
+              else
+                (if ((b__0 == (0b00111 : (BitVec 5))) : Bool)
+                then "t2"
+                else
+                  (if ((b__0 == (0b01000 : (BitVec 5))) : Bool)
+                  then "s0"
+                  else
+                    (if ((b__0 == (0b01000 : (BitVec 5))) : Bool)
+                    then "fp"
+                    else
+                      (if ((b__0 == (0b01001 : (BitVec 5))) : Bool)
+                      then "s1"
+                      else
+                        (if ((b__0 == (0b01010 : (BitVec 5))) : Bool)
+                        then "a0"
+                        else
+                          (if ((b__0 == (0b01011 : (BitVec 5))) : Bool)
+                          then "a1"
+                          else
+                            (if ((b__0 == (0b01100 : (BitVec 5))) : Bool)
+                            then "a2"
+                            else
+                              (if ((b__0 == (0b01101 : (BitVec 5))) : Bool)
+                              then "a3"
+                              else
+                                (if ((b__0 == (0b01110 : (BitVec 5))) : Bool)
+                                then "a4"
+                                else
+                                  (if ((b__0 == (0b01111 : (BitVec 5))) : Bool)
+                                  then "a5"
+                                  else
+                                    (if ((b__0 == (0b10000 : (BitVec 5))) : Bool)
+                                    then "a6"
+                                    else
+                                      (if ((b__0 == (0b10001 : (BitVec 5))) : Bool)
+                                      then "a7"
+                                      else
+                                        (if ((b__0 == (0b10010 : (BitVec 5))) : Bool)
+                                        then "s2"
+                                        else
+                                          (if ((b__0 == (0b10011 : (BitVec 5))) : Bool)
+                                          then "s3"
+                                          else
+                                            (if ((b__0 == (0b10100 : (BitVec 5))) : Bool)
+                                            then "s4"
+                                            else
+                                              (if ((b__0 == (0b10101 : (BitVec 5))) : Bool)
+                                              then "s5"
+                                              else
+                                                (if ((b__0 == (0b10110 : (BitVec 5))) : Bool)
+                                                then "s6"
+                                                else
+                                                  (if ((b__0 == (0b10111 : (BitVec 5))) : Bool)
+                                                  then "s7"
+                                                  else
+                                                    (if ((b__0 == (0b11000 : (BitVec 5))) : Bool)
+                                                    then "s8"
+                                                    else
+                                                      (if ((b__0 == (0b11001 : (BitVec 5))) : Bool)
+                                                      then "s9"
+                                                      else
+                                                        (if ((b__0 == (0b11010 : (BitVec 5))) : Bool)
+                                                        then "s10"
+                                                        else
+                                                          (if ((b__0 == (0b11011 : (BitVec 5))) : Bool)
+                                                          then "s11"
+                                                          else
+                                                            (if ((b__0 == (0b11100 : (BitVec 5))) : Bool)
+                                                            then "t3"
+                                                            else
+                                                              (if ((b__0 == (0b11101 : (BitVec 5))) : Bool)
+                                                              then "t4"
+                                                              else
+                                                                (if ((b__0 == (0b11110 : (BitVec 5))) : Bool)
+                                                                then "t5"
+                                                                else "t6")))))))))))))))))))))))))))))))
+
+def reg_arch_name_raw_forwards (arg_ : (BitVec 5)) : String :=
+  let b__0 := arg_
+  if ((b__0 == (0b00000 : (BitVec 5))) : Bool)
+  then "x0"
+  else
+    (if ((b__0 == (0b00001 : (BitVec 5))) : Bool)
+    then "x1"
+    else
+      (if ((b__0 == (0b00010 : (BitVec 5))) : Bool)
+      then "x2"
+      else
+        (if ((b__0 == (0b00011 : (BitVec 5))) : Bool)
+        then "x3"
+        else
+          (if ((b__0 == (0b00100 : (BitVec 5))) : Bool)
+          then "x4"
+          else
+            (if ((b__0 == (0b00101 : (BitVec 5))) : Bool)
+            then "x5"
+            else
+              (if ((b__0 == (0b00110 : (BitVec 5))) : Bool)
+              then "x6"
+              else
+                (if ((b__0 == (0b00111 : (BitVec 5))) : Bool)
+                then "x7"
+                else
+                  (if ((b__0 == (0b01000 : (BitVec 5))) : Bool)
+                  then "x8"
+                  else
+                    (if ((b__0 == (0b01001 : (BitVec 5))) : Bool)
+                    then "x9"
+                    else
+                      (if ((b__0 == (0b01010 : (BitVec 5))) : Bool)
+                      then "x10"
+                      else
+                        (if ((b__0 == (0b01011 : (BitVec 5))) : Bool)
+                        then "x11"
+                        else
+                          (if ((b__0 == (0b01100 : (BitVec 5))) : Bool)
+                          then "x12"
+                          else
+                            (if ((b__0 == (0b01101 : (BitVec 5))) : Bool)
+                            then "x13"
+                            else
+                              (if ((b__0 == (0b01110 : (BitVec 5))) : Bool)
+                              then "x14"
+                              else
+                                (if ((b__0 == (0b01111 : (BitVec 5))) : Bool)
+                                then "x15"
+                                else
+                                  (if ((b__0 == (0b10000 : (BitVec 5))) : Bool)
+                                  then "x16"
+                                  else
+                                    (if ((b__0 == (0b10001 : (BitVec 5))) : Bool)
+                                    then "x17"
+                                    else
+                                      (if ((b__0 == (0b10010 : (BitVec 5))) : Bool)
+                                      then "x18"
+                                      else
+                                        (if ((b__0 == (0b10011 : (BitVec 5))) : Bool)
+                                        then "x19"
+                                        else
+                                          (if ((b__0 == (0b10100 : (BitVec 5))) : Bool)
+                                          then "x20"
+                                          else
+                                            (if ((b__0 == (0b10101 : (BitVec 5))) : Bool)
+                                            then "x21"
+                                            else
+                                              (if ((b__0 == (0b10110 : (BitVec 5))) : Bool)
+                                              then "x22"
+                                              else
+                                                (if ((b__0 == (0b10111 : (BitVec 5))) : Bool)
+                                                then "x23"
+                                                else
+                                                  (if ((b__0 == (0b11000 : (BitVec 5))) : Bool)
+                                                  then "x24"
+                                                  else
+                                                    (if ((b__0 == (0b11001 : (BitVec 5))) : Bool)
+                                                    then "x25"
+                                                    else
+                                                      (if ((b__0 == (0b11010 : (BitVec 5))) : Bool)
+                                                      then "x26"
+                                                      else
+                                                        (if ((b__0 == (0b11011 : (BitVec 5))) : Bool)
+                                                        then "x27"
+                                                        else
+                                                          (if ((b__0 == (0b11100 : (BitVec 5))) : Bool)
+                                                          then "x28"
+                                                          else
+                                                            (if ((b__0 == (0b11101 : (BitVec 5))) : Bool)
+                                                            then "x29"
+                                                            else
+                                                              (if ((b__0 == (0b11110 : (BitVec 5))) : Bool)
+                                                              then "x30"
+                                                              else "x31"))))))))))))))))))))))))))))))
+
+def reg_name_forwards (arg_ : regidx) : SailM String := do
+  let head_exp_ := arg_
+  match (let mapping0_ := head_exp_
+  if ((encdec_reg_forwards_matches mapping0_) : Bool)
+  then
+    (let i := (encdec_reg_forwards mapping0_)
+    if ((get_config_use_abi_names ()) : Bool)
+    then (some (reg_abi_name_raw_forwards i))
+    else none)
+  else none) with
+  | .some result => (pure result)
+  | none =>
+    (do
+      match (let mapping1_ := head_exp_
+      if ((encdec_reg_forwards_matches mapping1_) : Bool)
+      then
+        (let i := (encdec_reg_forwards mapping1_)
+        if ((not (get_config_use_abi_names ())) : Bool)
+        then (some (reg_arch_name_raw_forwards i))
+        else none)
+      else none) with
+      | .some result => (pure result)
+      | _ =>
+        (do
+          assert false "Pattern match failure at unknown location"
+          throw Error.Exit))
+
 def assembly_forwards (arg_ : instruction) : SailM String := do
   match arg_ with
   | .LPAD lpl =>
     (pure (String.append "lpad"
         (String.append (spc_forwards ()) (String.append (← (hex_bits_20_forwards lpl)) ""))))
+  | .CSRImm (csr, imm, rd, op) =>
+    (pure (String.append (csr_mnemonic_forwards op)
+        (String.append "i"
+          (String.append (spc_forwards ())
+            (String.append (← (reg_name_forwards rd))
+              (String.append (sep_forwards ())
+                (String.append (← (csr_name_map_forwards csr))
+                  (String.append (sep_forwards ())
+                    (String.append (← (hex_bits_5_forwards imm)) "")))))))))
+  | .CSRReg (csr, rs1, rd, op) =>
+    (pure (String.append (csr_mnemonic_forwards op)
+        (String.append (spc_forwards ())
+          (String.append (← (reg_name_forwards rd))
+            (String.append (sep_forwards ())
+              (String.append (← (csr_name_map_forwards csr))
+                (String.append (sep_forwards ()) (String.append (← (reg_name_forwards rs1)) ""))))))))
+  | .ZICBOM (cbop, rs1) =>
+    (pure (String.append (cbop_mnemonic_forwards cbop)
+        (String.append (spc_forwards ())
+          (String.append "("
+            (String.append (opt_spc_forwards ())
+              (String.append (← (reg_name_forwards rs1))
+                (String.append (opt_spc_forwards ()) (String.append ")" ""))))))))
+  | .ZICBOZ rs1 =>
+    (pure (String.append "cbo.zero"
+        (String.append (spc_forwards ())
+          (String.append "("
+            (String.append (opt_spc_forwards ())
+              (String.append (← (reg_name_forwards rs1))
+                (String.append (opt_spc_forwards ()) (String.append ")" ""))))))))
   | .ILLEGAL s =>
     (pure (String.append "illegal"
         (String.append (spc_forwards ()) (String.append (← (hex_bits_32_forwards s)) ""))))
@@ -2294,3 +2579,4 @@ def width_mnemonic_wide_backwards_matches (arg_ : String) : Bool :=
   | "d" => true
   | "q" => true
   | _ => false
+

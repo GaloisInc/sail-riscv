@@ -47,6 +47,7 @@ open vfunary0
 open vfnunary0
 open vextfunct6
 open vector_support
+open seed_opst
 open rounding_mode
 open rmvvfunct6
 open rivvfunct6
@@ -116,8 +117,12 @@ open f_bin_f_op_D
 open extension
 open exception
 open ctl_result
+open csrop
 open cregidx
+open checked_cbop
 open cfregidx
+open cbop_zicbom
+open cbie
 open barrier_kind
 open amoop
 open agtype
@@ -307,6 +312,7 @@ def csr_name_map_backwards (arg_ : String) : SailM (BitVec 12) := do
   | "minstretcfg" => (some (0x322 : (BitVec 12)))
   | "minstretcfgh" => (some (0x722 : (BitVec 12)))
   | "satp" => (some (0x180 : (BitVec 12)))
+  | "seed" => (some (0x015 : (BitVec 12)))
   | mapping0_ =>
     (if ((hex_bits_12_backwards_matches mapping0_) : Bool)
     then
