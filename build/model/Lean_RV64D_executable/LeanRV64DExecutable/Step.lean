@@ -338,6 +338,7 @@ def wait_is_nop (wr : WaitReason) : Bool :=
 
 /-- Type quantifiers: k_ex94389# : Bool, step_no : Nat, 0 ≤ step_no -/
 def try_step (step_no : Nat) (exit_wait : Bool) : SailM Bool := do
+  dbg_trace "entered try_step function"
   let _ : Unit := (ext_pre_step_hook ())
   writeReg minstret_increment (← (should_inc_minstret (← readReg cur_privilege)))
   let step_val ← (( do
@@ -405,11 +406,13 @@ def try_step (step_no : Nat) (exit_wait : Bool) : SailM Bool := do
       (pure false))
 
 def loop (_ : Unit) : SailM Unit := do
+  dbg_trace "entered loop function"
   let i : Nat := 0
   let step_no : Nat := 0
   let (i, step_no) ← (( do
     let mut loop_vars := (i, step_no)
     while (← (λ (i, step_no) => do (pure (not (← readReg htif_done)))) loop_vars) do
+      dbg_trace "entered loop while loop"
       let (i, step_no) := loop_vars
       loop_vars ← do
         let stepped ← do (try_step step_no true)
@@ -447,4 +450,3 @@ def loop (_ : Unit) : SailM Unit := do
         (pure (i, step_no))
     (pure loop_vars) ) : SailM (Nat × Nat) )
   (pure ())
-
