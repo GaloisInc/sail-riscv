@@ -32,7 +32,7 @@ def plat_term_read : Unit → SailM String := λ _ => panic "handwritten plat_te
 -- Reservations
 def load_reservation : Arch.pa → SailM Unit := λ _ => panic "handwritten load_reservation TODO"
 def match_reservation : Arch.pa → Bool := λ _ => panic "handwritten match_reservation TODO"
-def cancel_reservation : Unit → SailM Unit := λ _ => panic "handwritten cancel_reservation TODO"
+def cancel_reservation : Unit → SailM Unit := λ _ => pure () --panic "handwritten cancel_reservation TODO"
 def valid_reservation : Unit → Bool := λ _ => false
 
 def get_16_random_bits : Unit → SailM (BitVec 16) := λ _ => panic " handwritten get_16_random_bits TODO"
