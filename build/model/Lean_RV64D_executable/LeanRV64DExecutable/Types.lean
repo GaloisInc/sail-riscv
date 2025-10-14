@@ -612,7 +612,7 @@ def currentlyEnabled (merge_var : extension) : SailM Bool := do
   | Ext_Zicboz => (pure (hartSupports Ext_Zicboz))
   | x =>
     (do
-      assert false "Pattern match failure at extensions/Zicboz/zicboz_insts.sail:11.0-11.71 {repr x}"
+      assert false s!"Pattern match failure at extensions/Zicboz/zicboz_insts.sail:11.0-11.71 {repr x}"
       throw Error.Exit)
 termination_by let ext := merge_var; ((currentlyEnabled_measure ext)).toNat
 def get_xLPE (p : Privilege) : SailM Bool := do
