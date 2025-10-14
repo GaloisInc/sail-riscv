@@ -256,10 +256,12 @@ def run_hart_waiting (step_no : Int) (wr : WaitReason) (instbits : (BitVec 32)) 
 
 /-- Type quantifiers: step_no : Nat, 0 ≤ step_no -/
 def run_hart_active (step_no : Nat) : SailM Step := do
+  dbg_trace "entered run_hart_active function"
   match (← (dispatchInterrupt (← readReg cur_privilege))) with
   | .some (intr, priv) => (pure (Step_Pending_Interrupt (intr, priv)))
   | none =>
     (do
+      dbg_trace "dispatchInterrupt is none"
       match (ext_fetch_hook (← (fetch ()))) with
       | .F_Ext_Error e => (pure (Step_Ext_Fetch_Failure e))
       | .F_Error (e, addr) => (pure (Step_Fetch_Failure ((Virtaddr addr), e)))
