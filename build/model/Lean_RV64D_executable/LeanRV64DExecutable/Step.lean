@@ -343,6 +343,7 @@ def try_step (step_no : Nat) (exit_wait : Bool) : SailM Bool := do
   writeReg minstret_increment (← (should_inc_minstret (← readReg cur_privilege)))
   dbg_trace "wrote to minstret_increment reg"
   let step_val ← (( do
+    dbg_trace "step_val {repr (← readReg hart_state)}"
     match (← readReg hart_state) with
     | .HART_WAITING (wr, instbits) => (run_hart_waiting step_no wr instbits exit_wait)
     | .HART_ACTIVE () => (run_hart_active step_no) ) : SailM Step )
