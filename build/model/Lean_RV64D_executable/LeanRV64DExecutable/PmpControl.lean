@@ -253,3 +253,4 @@ def reset_pmp (_ : Unit) : SailM Unit := do
           (_update_Pmpcfg_ent_A (GetElem?.getElem! (← readReg pmpcfg_n) i)
             (pmpAddrMatchType_encdec_forwards OFF)) (0b0 : (BitVec 1))))
   (pure loop_vars)
+

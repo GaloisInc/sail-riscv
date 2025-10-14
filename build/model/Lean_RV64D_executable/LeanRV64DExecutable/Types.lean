@@ -610,10 +610,7 @@ def currentlyEnabled (merge_var : extension) : SailM Bool := do
   | Ext_Zicsr => (pure (hartSupports Ext_Zicsr))
   | Ext_Zicbom => (pure (hartSupports Ext_Zicbom))
   | Ext_Zicboz => (pure (hartSupports Ext_Zicboz))
-  | x =>
-    (do
-      assert false s!"Pattern match failure at extensions/Zicboz/zicboz_insts.sail:11.0-11.71 {repr x}"
-      throw Error.Exit)
+  | _ => (pure false)
 termination_by let ext := merge_var; ((currentlyEnabled_measure ext)).toNat
 def get_xLPE (p : Privilege) : SailM Bool := do
   match p with
@@ -2579,3 +2576,4 @@ def width_mnemonic_wide_backwards_matches (arg_ : String) : Bool :=
   | "d" => true
   | "q" => true
   | _ => false
+

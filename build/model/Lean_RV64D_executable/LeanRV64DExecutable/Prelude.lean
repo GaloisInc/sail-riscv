@@ -165,7 +165,7 @@ def print_step (_ : Unit) : Unit :=
   ()
 
 def get_config_print_instr (_ : Unit) : Bool :=
-  true
+  false
 
 def get_config_print_platform (_ : Unit) : Bool :=
   false
@@ -378,3 +378,4 @@ def hex_bits_str (x : (BitVec k_n)) : String :=
   (BitVec.toFormatted
     (zero_extend
       (m := ((3 -i (Int.tmod ((Sail.BitVec.length x) +i 3) 4)) +i (Sail.BitVec.length x))) x))
+

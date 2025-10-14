@@ -256,12 +256,10 @@ def run_hart_waiting (step_no : Int) (wr : WaitReason) (instbits : (BitVec 32)) 
 
 /-- Type quantifiers: step_no : Nat, 0 ≤ step_no -/
 def run_hart_active (step_no : Nat) : SailM Step := do
-  dbg_trace "entered run_hart_active function"
   match (← (dispatchInterrupt (← readReg cur_privilege))) with
   | .some (intr, priv) => (pure (Step_Pending_Interrupt (intr, priv)))
   | none =>
     (do
-      dbg_trace "dispatchInterrupt is none"
       match (ext_fetch_hook (← (fetch ()))) with
       | .F_Ext_Error e => (pure (Step_Ext_Fetch_Failure e))
       | .F_Error (e, addr) => (pure (Step_Fetch_Failure ((Virtaddr addr), e)))
@@ -340,16 +338,12 @@ def wait_is_nop (wr : WaitReason) : Bool :=
 
 /-- Type quantifiers: k_ex94389# : Bool, step_no : Nat, 0 ≤ step_no -/
 def try_step (step_no : Nat) (exit_wait : Bool) : SailM Bool := do
-  dbg_trace "entered try_step function"
   let _ : Unit := (ext_pre_step_hook ())
   writeReg minstret_increment (← (should_inc_minstret (← readReg cur_privilege)))
-  dbg_trace "wrote to minstret_increment reg"
   let step_val ← (( do
-    dbg_trace "step_val {repr (← readReg hart_state)}"
     match (← readReg hart_state) with
     | .HART_WAITING (wr, instbits) => (run_hart_waiting step_no wr instbits exit_wait)
     | .HART_ACTIVE () => (run_hart_active step_no) ) : SailM Step )
-  dbg_trace "step val is {repr step_val}"
   match step_val with
   | .Step_Pending_Interrupt (intr, priv) =>
     (do
@@ -411,13 +405,11 @@ def try_step (step_no : Nat) (exit_wait : Bool) : SailM Bool := do
       (pure false))
 
 def loop (_ : Unit) : SailM Unit := do
-  dbg_trace "entered loop function"
   let i : Nat := 0
   let step_no : Nat := 0
   let (i, step_no) ← (( do
     let mut loop_vars := (i, step_no)
     while (← (λ (i, step_no) => do (pure (not (← readReg htif_done)))) loop_vars) do
-      dbg_trace "entered loop while loop"
       let (i, step_no) := loop_vars
       loop_vars ← do
         let stepped ← do (try_step step_no true)
@@ -455,3 +447,4 @@ def loop (_ : Unit) : SailM Unit := do
         (pure (i, step_no))
     (pure loop_vars) ) : SailM (Nat × Nat) )
   (pure ())
+

@@ -27,15 +27,15 @@ section Effectful
 variable {Register : Type} {RegisterType : Register → Type} [DecidableEq Register] [Hashable Register]
 
 def plat_term_write {α} : α → SailM Unit := λ _ => panic "handwritten plat_term_write TODO"
-def plat_term_read : Unit → SailM String := λ _ => panic "handwritten plat_term_read TODO"
+def plat_term_read : Unit → SailM String := λ _ => panic "TODO"
 
 -- Reservations
-def load_reservation : Arch.pa → SailM Unit := λ _ => panic "handwritten load_reservation TODO"
-def match_reservation : Arch.pa → Bool := λ _ => panic "handwritten match_reservation TODO"
-def cancel_reservation : Unit → SailM Unit := λ _ => pure () --panic "handwritten cancel_reservation TODO"
+def load_reservation : Arch.pa → SailM Unit := λ _ => panic "TODO"
+def match_reservation : Arch.pa → Bool := λ _ => panic "TODO"
+def cancel_reservation : Unit → SailM Unit := λ _ => panic "TODO"
 def valid_reservation : Unit → Bool := λ _ => false
 
-def get_16_random_bits : Unit → SailM (BitVec 16) := λ _ => panic " handwritten get_16_random_bits TODO"
+def get_16_random_bits : Unit → SailM (BitVec 16) := λ _ => panic "TODO"
 def sys_enable_experimental_extensions : Unit → Bool := λ _ => false
 
 end Effectful

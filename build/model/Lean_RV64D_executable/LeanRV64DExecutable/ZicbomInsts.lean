@@ -171,7 +171,6 @@ def encdec_cbop_forwards (arg_ : cbop_zicbom) : (BitVec 12) :=
   | CBO_INVAL => (0x000 : (BitVec 12))
 
 def encdec_cbop_backwards (arg_ : (BitVec 12)) : SailM cbop_zicbom := do
-  dbg_trace "encdec_cbop_backwards"
   let b__0 := arg_
   if ((b__0 == (0x001 : (BitVec 12))) : Bool)
   then (pure CBO_CLEAN)
@@ -213,7 +212,7 @@ def cbop_mnemonic_backwards (arg_ : String) : SailM cbop_zicbom := do
   | "cbo.inval" => (pure CBO_INVAL)
   | _ =>
     (do
-      assert false "Pattern match failure on {repr arg_} at unknown location"
+      assert false "Pattern match failure at unknown location"
       throw Error.Exit)
 
 def cbop_mnemonic_forwards_matches (arg_ : cbop_zicbom) : Bool :=
@@ -359,3 +358,4 @@ def process_clean_inval (rs1 : regidx) (cbop : cbop_zicbom) : SailM ExecutionRes
               (internal_error "extensions/Zicbom/zicbom_insts.sail" 127
                 "unexpected exception for cmo.clean/inval") ) : SailM ExceptionType )
           (pure (Memory_Exception ((sub_virtaddr_xlenbits vaddr negative_offset), e)))))
+
