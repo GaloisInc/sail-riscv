@@ -337,6 +337,6 @@ def sail_model_init (x_0 : Unit) : SailM Unit := do
                                                                                                     include_in_device_tree := true }]
   writeReg tlb (vectorInit none)
   writeReg hart_state (HART_ACTIVE ())
-  (pure (initialize_registers ()))
+  initialize_registers ()
 
 end LeanRV64DExecutable.Functions
