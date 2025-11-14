@@ -74,7 +74,6 @@ add_custom_command(
         ${coverage_args}
         # Generate schema for configuration.
         --output-schema ${schema_file}
-
         # Optimisations.
         -O --Oconstant-fold
         # Cache Z3 results in z3_problems file to speed up incremental compilation.
@@ -453,6 +452,7 @@ foreach (xlen IN ITEMS 32 64)
             ${lean_sail_common}
             ${lean_sail_executable}
             ${SAIL_MODULES}
+            -D PRINT_EFFECTS
             ${project_file}
     )
 
