@@ -6,7 +6,7 @@
 
 Within sail-riscv, build the lean model with:
 
-`cmake -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DSAIL_MODULES="Zca;Zicbom_insts;Zicboz;Zicsr_insts;Zkr;postlude" && cmake --build build --target generated_lean_executable_rv64d`
+`cmake -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DSAIL_MODULES="H;Zca;Zicbom_insts;Zicboz;Zicsr_insts;Zkr;postlude" && cmake --build build --target generated_lean_executable_rv64d`
 
 After generating the lean code, replace the `initialize_registers` function with:
 
