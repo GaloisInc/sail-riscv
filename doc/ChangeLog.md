@@ -1,8 +1,15 @@
 # Release notes for the next version
 
+- A configuration parameter to specify the size of the reservation set
+  for Zalrsc atomics has been added.
+
 - The following extensions have been added:
 
+  - Za64rs, Za128rs
   - Zic64b
+  - Sstvala
+  - Sstvecd
+  - Ssu64xl
 
 # Release notes for version 0.9
 

@@ -32,6 +32,8 @@ function get_xLPE(p : Privilege) -> bool =
     VirtualUser       => internal_error(__FILE__, __LINE__, "Hypervisor extension not supported"),
   }
 
+// This measure needs to be > currentlyEnabled_measure(Ext_S), currently equal
+// to 1, see currentlyEnabled_measure in extensions.sail
 termination_measure get_xLPE(_) = 2
 
 function clause currentlyEnabled(Ext_Zicfilp) =

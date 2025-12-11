@@ -68,7 +68,11 @@ int signature_granularity = DEFAULT_SIGNATURE_GRANULARITY;
 bool config_print_instr = false;
 bool config_print_reg = false;
 bool config_print_mem_access = false;
-bool config_print_platform = false;
+bool config_print_clint = false;
+bool config_print_exception = false;
+bool config_print_interrupt = false;
+bool config_print_htif = false;
+bool config_print_pma = false;
 bool config_print_rvfi = false;
 bool config_print_step = false;
 
@@ -172,10 +176,31 @@ static void setup_options(CLI::App &app)
                "Enable trace output for memory accesses");
   app.add_flag("--trace-rvfi", config_print_rvfi,
                "Enable trace output for RVFI");
-  app.add_flag("--trace-platform", config_print_platform,
-               "Enable trace output for privilege changes, MMIO, interrupts");
+  app.add_flag("--trace-clint", config_print_clint,
+               "Enable trace output for CLINT memory accesses and status");
+  app.add_flag("--trace-exception", config_print_exception,
+               "Enable trace output for exceptions");
+  app.add_flag("--trace-interrupt", config_print_interrupt,
+               "Enable trace output for interrupts");
+  app.add_flag("--trace-htif", config_print_htif,
+               "Enable trace output for HTIF operations");
+  app.add_flag("--trace-pma", config_print_pma,
+               "Enable trace output for PMA checks");
+  app.add_flag_callback(
+      "--trace-platform",
+      [] {
+        config_print_clint = true;
+        config_print_exception = true;
+        config_print_interrupt = true;
+        config_print_htif = true;
+        config_print_pma = true;
+      },
+      "Enable trace output for platform-level events (MMIO, interrupts, "
+      "exceptions, CLINT, HTIF, PMA)");
   app.add_flag("--trace-step", config_print_step,
                "Add a blank line between steps in the trace output");
+  app.add_flag("--trace-reservation", config_print_reservation,
+               "Enable trace output for LR/SC reservations.");
 
   app.add_flag_callback(
       "--trace-all",
@@ -184,8 +209,13 @@ static void setup_options(CLI::App &app)
         config_print_reg = true;
         config_print_mem_access = true;
         config_print_rvfi = true;
-        config_print_platform = true;
+        config_print_clint = true;
+        config_print_exception = true;
+        config_print_interrupt = true;
+        config_print_htif = true;
+        config_print_pma = true;
         config_print_step = true;
+        config_print_reservation = true;
       },
       "Enable all trace output");
 
@@ -272,6 +302,13 @@ void write_dtb_to_rom(const std::vector<uint8_t> &dtb)
   for (uint8_t d : dtb) {
     write_mem(addr++, d);
   }
+}
+
+void init_platform_constants()
+{
+  reservation_set_size_exp
+      = get_config_uint64({"platform", "reservation_set_size_exp"});
+  reservation_set_addr_mask = ~((1 << reservation_set_size_exp) - 1);
 }
 
 void init_sail(uint64_t elf_entry, const char *config_file)
@@ -374,7 +411,7 @@ void flush_logs(void)
 
 void run_sail(void)
 {
-  bool is_waiting;
+  bool is_waiting = false;
   bool exit_wait = true;
 
   /* initialize the step number */
@@ -404,6 +441,9 @@ void run_sail(void)
         break;
       }
     }
+
+    call_pre_step_callbacks(is_waiting);
+
     { /* run a Sail step */
       sail_int sail_step;
       CREATE(sail_int)(&sail_step);
@@ -418,6 +458,9 @@ void run_sail(void)
         rvfi->send_trace(config_print_rvfi);
       }
     }
+
+    call_post_step_callbacks(is_waiting);
+
     if (!is_waiting) {
       if (config_print_step) {
         fprintf(trace_log, "\n");
@@ -560,6 +603,9 @@ int inner_main(int argc, char **argv)
   } else {
     sail_config_set_string(get_default_config());
   }
+
+  // Initialize platform.
+  init_platform_constants();
 
   init_sail_configured_types();
   model_init();

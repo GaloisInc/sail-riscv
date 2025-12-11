@@ -26,15 +26,15 @@ interactive proof (in Isabelle, Rocq, and Lean), support proof about binary code
 Install [Sail](https://github.com/rems-project/sail/). On Linux you can download a [binary release](https://github.com/rems-project/sail/releases) (strongly recommended), or you can install from source [using opam](https://github.com/rems-project/sail/blob/sail2/INSTALL.md). Then:
 
 ```
-$ ./build_simulators.sh
+$ ./build_simulator.sh
 ```
 
 will build the simulator at `build/c_emulator/sail_riscv_sim`.
 
 If you get an error message saying `sail: unknown option '--require-version'.` it's because your Sail compiler is too old. You need version 0.20 or later.
 
-By default [`build_simulators.sh`](./build_simulators.sh) will download and build [libgmp](https://gmplib.org).
-To use a system installation of libgmp, run `env DOWNLOAD_GMP=FALSE ./build_simulators.sh` instead.
+By default [`build_simulator.sh`](./build_simulator.sh) will download and build [libgmp](https://gmplib.org).
+To use a system installation of libgmp, run `env DOWNLOAD_GMP=FALSE ./build_simulator.sh` instead.
 
 ### Executing test binaries
 
@@ -88,6 +88,8 @@ For booting operating system images, see the information under the
 - A extension for atomic instructions, v2.1
 - Zalrsc extension for load-reserved and store-conditional operations, v1.0
 - Zaamo extension for atomic memory operations, v1.0
+- Za64rs extension for reservation sets that are contiguous, naturally aligned, and a maximum of 64 bytes, v1.0
+- Za128rs extension for reservation sets that are contiguous, naturally aligned, and at most 128 bytes in size, v1.0
 - Zawrs extension for Wait-on-Reservation-Set instructions, v1.01
 - Zabha extension for byte and halfword atomic memory operations, v1.0
 - Zacas extension atomic Compare-and-Swap (CAS) instructions, v1.0.0
@@ -129,6 +131,9 @@ For booting operating system images, see the information under the
 - Smcntrpmf extension for cycle and instret privilege mode filtering, v1.0
 - Sscofpmf extension for Count Overflow and Mode-Based Filtering, v1.0
 - Sstc extension for Supervisor-mode Timer Interrupts, v1.0
+- Sstvala extension for `stval` provides all needed values, v1.0
+- Sstvecd extension for Direct mode support in `stvec.MODE`, v1.0
+- Ssu64xl extension to ensure `sstatus.UXL` is capable of supporting UXLEN=64, v1.0
 - Sv32, Sv39, Sv48 and Sv57 page-based virtual-memory systems
 - Svbare extension for Bare mode virtual-memory translation
 - Svinval extension for fine-grained address-translation cache invalidation, v1.0

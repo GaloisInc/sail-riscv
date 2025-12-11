@@ -133,6 +133,8 @@ function clause write_CSR(0x301, value) = { misa = legalize_misa(misa, value); O
 // you are technically allowed to have writable misa[U/S].
 function clause currentlyEnabled(Ext_U) = hartSupports(Ext_U) & misa[U] == 0b1 & currentlyEnabled(Ext_Zicsr)
 function clause currentlyEnabled(Ext_S) = hartSupports(Ext_S) & misa[S] == 0b1 & currentlyEnabled(Ext_Zicsr)
+// This will need adjusting for dynamic XLEN.
+function clause currentlyEnabled(Ext_Ssu64xl) = hartSupports(Ext_Ssu64xl) & currentlyEnabled(Ext_S)
 
 function clause currentlyEnabled(Ext_Svbare) = currentlyEnabled(Ext_S)
 function clause currentlyEnabled(Ext_Sv32) = hartSupports(Ext_Sv32) &  currentlyEnabled(Ext_S)
@@ -144,6 +146,8 @@ function virtual_memory_supported() -> bool = {
   currentlyEnabled(Ext_Sv32) | currentlyEnabled(Ext_Sv39) | currentlyEnabled(Ext_Sv48) | currentlyEnabled(Ext_Sv57)
 }
 
+// This measure needs to be > currentlyEnabled_measure(Ext_Sv{32,39,48,57}),
+// currently all equal to 2, see currentlyEnabled_measure in extensions.sail
 termination_measure virtual_memory_supported(_) = 3
 
 //
@@ -475,7 +479,7 @@ function legalize_mie(o : Minterrupts, v : xlenbits) -> Minterrupts = {
   ]
 }
 
-function legalize_mideleg(o : Minterrupts, v : xlenbits) -> Minterrupts = {
+function legalize_mideleg(_o : Minterrupts, v : xlenbits) -> Minterrupts = {
   // M-mode interrupt delegation bits "should" be hardwired to 0.
   // FIXME: needs verification against eventual spec language.
   [Mk_Minterrupts(v) with MEI = 0b0, MTI = 0b0, MSI = 0b0]
@@ -500,7 +504,7 @@ bitfield Medeleg : bits(64) = {
   Fetch_Addr_Align  : 0
 }
 
-function legalize_medeleg(o : Medeleg, v : bits(64)) -> Medeleg = {
+function legalize_medeleg(_o : Medeleg, v : bits(64)) -> Medeleg = {
   // M-EnvCalls delegation is not supported
   [Mk_Medeleg(v) with MEnvCall = 0b0]
 }
@@ -574,6 +578,8 @@ function tvec_addr(m : Mtvec, c : Mcause) -> option(xlenbits) = {
   }
 }
 
+function clause currentlyEnabled(Ext_Sstvecd) = hartSupports(Ext_Sstvecd) & currentlyEnabled(Ext_S)
+
 // Exception PC
 
 register mepc : xlenbits
@@ -621,7 +627,7 @@ bitfield Counteren : bits(32) = {
 }
 
 // scounteren
-function legalize_scounteren(c : Counteren, v : xlenbits) -> Counteren = {
+function legalize_scounteren(_c : Counteren, v : xlenbits) -> Counteren = {
   let supported_counters = sys_writable_hpm_counters[31 .. 3] @ 0b111;
   Mk_Counteren(v[31 .. 0] & supported_counters)
 }
@@ -633,7 +639,7 @@ function clause read_CSR(0x106) = zero_extend(scounteren.bits)
 function clause write_CSR(0x106, value) = { scounteren = legalize_scounteren(scounteren, value); Ok(zero_extend(scounteren.bits)) }
 
 // mcounteren
-function legalize_mcounteren(c : Counteren, v : xlenbits) -> Counteren = {
+function legalize_mcounteren(_c : Counteren, v : xlenbits) -> Counteren = {
   let supported_counters = sys_writable_hpm_counters[31 .. 3] @ 0b111;
   Mk_Counteren(v[31 .. 0] & supported_counters)
 }
@@ -652,7 +658,7 @@ bitfield Counterin : bits(32) = {
   CY : 0
 }
 
-function legalize_mcountinhibit(c : Counterin, v : xlenbits) -> Counterin = {
+function legalize_mcountinhibit(_c : Counterin, v : xlenbits) -> Counterin = {
   // Note the 0 in 0b101 is because the mtimer counter can't be paused.
   let supported_counters = sys_writable_hpm_counters[31 .. 3] @ 0b101;
   Mk_Counterin(v[31 .. 0] & supported_counters)

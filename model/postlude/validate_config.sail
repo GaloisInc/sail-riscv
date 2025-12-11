@@ -206,7 +206,21 @@ function check_pmp() -> bool = {
     valid = false;
     print_endline("NA4 is not supported if the PMP grain G is non-zero.");
   };
+  if sys_pmp_usable_count > sys_pmp_count
+  then {
+    valid = false;
+    print_endline("The number of usable PMP entries cannot exceed the total number of PMP entries.");
+  };
   valid
+}
+
+function check_required_sstvala_option(name : string, value : bool) -> bool = {
+  if not(value) then {
+    print_endline("The Sstvala extension is enabled but " ^ name ^ " have not been configured (under `base.xtval_nonzero`) to write xtval.");
+    false
+  } else {
+    true
+  }
 }
 
 function check_misc_extension_dependencies() -> bool = {
@@ -227,15 +241,43 @@ function check_misc_extension_dependencies() -> bool = {
     valid = false;
     print_endline("The Zvfbfwma extension is enabled but either Zfbfmin or Zvfbfmin is disabled: supporting Zvfbfwma requires Zfbfmin and Zvfbfmin.")
   };
+  if hartSupports(Ext_Sstvala) then {
+    if not(hartSupports(Ext_S)) then {
+      valid = false;
+      print_endline("The Sstvala extension writes `stval` which requires supervisor mode (S) but supervisor mode is not enabled.");
+    };
+    // `stval` must be written with the faulting virtual address for load, store, and instruction page-fault,
+    // access-fault, and misaligned exceptions, and for breakpoint exceptions other than those caused by execution of
+    // the EBREAK or C.EBREAK instructions. For virtual-instruction and illegal-instruction exceptions, `stval` must be
+    // written with the faulting instruction.
+    // TODO: add validation for virtual-instruction exceptions.
+    valid = valid & check_required_sstvala_option("load page-faults", load_page_fault_writes_xtval);
+    valid = valid & check_required_sstvala_option("load access-faults", load_access_fault_writes_xtval);
+    valid = valid & check_required_sstvala_option("misaligned load exceptions", misaligned_load_writes_xtval);
+    valid = valid & check_required_sstvala_option("store/AMO page-faults", samo_page_fault_writes_xtval);
+    valid = valid & check_required_sstvala_option("store/AMO access-faults", samo_access_fault_writes_xtval);
+    valid = valid & check_required_sstvala_option("misaligned store/AMO exceptions", misaligned_samo_writes_xtval);
+    valid = valid & check_required_sstvala_option("fetch page-faults", fetch_page_fault_writes_xtval);
+    valid = valid & check_required_sstvala_option("fetch access-faults", fetch_access_fault_writes_xtval);
+    valid = valid & check_required_sstvala_option("misaligned fetch exceptions", misaligned_fetch_writes_xtval);
+    valid = valid & check_required_sstvala_option("hardware breakpoint exceptions", hardware_breakpoint_writes_xtval);
+    valid = valid & check_required_sstvala_option("illegal instruction exceptions", illegal_instruction_writes_xtval);
+  };
   valid
 }
 
 function check_extension_param_constraints() -> bool = {
   var valid : bool = true;
-  if hartSupports(Ext_Zic64b) & (plat_cache_block_size_exp != 6)
-  then {
+  if hartSupports(Ext_Zic64b) & (plat_cache_block_size_exp != 6) then {
     valid = false;
     print_endline("The Zic64b extension is enabled but the cache block size is not 64 bytes.");
+  };
+  let min_rss_exp = log2_xlen - 3;
+  if (hartSupports(Ext_A) | hartSupports(Ext_Zalrsc)) & (plat_reservation_set_size_exp < min_rss_exp) then {
+    valid = false;
+    print_endline("The A or Zalrsc extensions are enabled, but the reservation set size of 2^" ^ dec_str(plat_reservation_set_size_exp) ^
+                  " is too small; it should be at least 2^" ^ dec_str(min_rss_exp) ^
+                  " for the LR/SC operands on this platform.");
   };
   valid
 }

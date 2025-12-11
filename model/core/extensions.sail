@@ -21,15 +21,18 @@ scattered function hartSupports
 
 function hartSupports_measure(ext : extension) -> int =
   match ext {
-    Ext_D => 1,
-    Ext_V => 1,
-    Ext_Zvkn => 1,
-    Ext_Zvks => 1,
-    Ext_C => 2,
-    Ext_Zvknc => 2,
-    Ext_Zvkng => 2,
-    Ext_Zvksc => 2,
-    Ext_Zvksg => 2,
+    Ext_D => 1, // > F
+    Ext_Sstvecd => 1, // > S
+    Ext_Ssu64xl => 1, // > S
+    Ext_Zvkn => 1, // > Zvkned
+    Ext_Zvks => 1, // > Zvksed
+
+    Ext_C => 2, // > D
+    Ext_Zvknc => 2, // > Zvkn
+    Ext_Zvkng => 2, // > Zvkn
+    Ext_Zvksc => 2, // > Zvks
+    Ext_Zvksg => 2, // > Zvks
+
     _ => 0,
   }
 
@@ -165,6 +168,13 @@ function clause hartSupports(Ext_Zalrsc) = config extensions.Zalrsc.supported
 enum clause extension = Ext_Zawrs
 mapping clause extensionName = Ext_Zawrs <-> "zawrs"
 function clause hartSupports(Ext_Zawrs) = config extensions.Zawrs.supported
+// Maximum reservation set sizes
+enum clause extension = Ext_Za64rs
+mapping clause extensionName = Ext_Za64rs <-> "za64rs"
+function clause hartSupports(Ext_Za64rs) = plat_reservation_set_size_exp <= 6 & (config extensions.Zalrsc.supported : bool | config extensions.A.supported : bool)
+enum clause extension = Ext_Za128rs
+mapping clause extensionName = Ext_Za128rs <-> "za128rs"
+function clause hartSupports(Ext_Za128rs) = plat_reservation_set_size_exp <= 7 & (config extensions.Zalrsc.supported : bool | config extensions.A.supported : bool)
 
 // Additional Floating-Point Instructions
 enum clause extension = Ext_Zfa
@@ -432,6 +442,20 @@ function clause hartSupports(Ext_Sscofpmf) = config extensions.Sscofpmf.supporte
 enum clause extension = Ext_Sstc
 mapping clause extensionName = Ext_Sstc <-> "sstc"
 function clause hartSupports(Ext_Sstc) = config extensions.Sstc.supported
+// `stval` provides all needed values
+enum clause extension = Ext_Sstvala
+mapping clause extensionName = Ext_Sstvala <-> "sstvala"
+function clause hartSupports(Ext_Sstvala) = config extensions.Sstvala.supported
+function clause currentlyEnabled(Ext_Sstvala) = hartSupports(Ext_Sstvala) & currentlyEnabled(Ext_S)
+// stvec.MODE supports Direct, and in that mode stvec.BASE must be
+// capable of holding any valid four-byte-aligned address.
+enum clause extension = Ext_Sstvecd
+mapping clause extensionName = Ext_Sstvecd <-> "sstvecd"
+function clause hartSupports(Ext_Sstvecd) = hartSupports(Ext_S)
+// sstatus.UXL must be capable of holding the value 2 (i.e., UXLEN=64 must be supported)
+enum clause extension = Ext_Ssu64xl
+mapping clause extensionName = Ext_Ssu64xl <-> "ssu64xl"
+function clause hartSupports(Ext_Ssu64xl) = hartSupports(Ext_S) & (xlen == 64)
 
 // Supervisor-Level Address Translation Modes
 enum clause extension = Ext_Svbare
@@ -475,61 +499,57 @@ function clause hartSupports(Ext_Smcntrpmf) = config extensions.Smcntrpmf.suppor
 // When adding a new extension X, we need to make sure that if X being enabled
 // depends on Y being enabled, then the value associated to X is _greater_ than
 // the value associated to Y. The default value is 2, so that if it does not
-// depend on anything or only on extensions A, B, C, D, F, M, S, V, or Zicsr,
+// depend on anything or only on extensions A, B, C, D, F, M, S, Zve32x, Zvl* or Zicsr,
 // nothing needs to be done.
+
 function currentlyEnabled_measure(ext : extension) -> int =
   match ext {
+    Ext_A => 0,
+    Ext_B => 0,
+    Ext_C => 0,
+    Ext_M => 0,
     Ext_Zicsr => 0,
-    Ext_A => 1,
-    Ext_B => 1,
-    Ext_C => 1,
-    Ext_D => 1,
-    Ext_F => 1,
-    Ext_M => 1,
-    Ext_S => 1,
+    Ext_Zvl128b => 0,
+    Ext_Zvl32b => 0,
+    Ext_Zvl64b => 0,
 
-    // 3
-    Ext_Smcntrpmf => 3, // > Ext_Zicntr
-    Ext_Sscofpmf => 3, // > Ext_Zihpm
-    Ext_Svrsw60t59b => 3, // > Ext_Sv39
-    Ext_Zabha => 3, // > Ext_Zaamo
-    Ext_Zacas => 3, // > Ext_Zaamo
-    Ext_Zcb => 3, // > Ext_Zca
-    Ext_Zcd => 3, // > Ext_Zca
-    Ext_Zcf => 3, // > Ext_Zca
-    Ext_Zcmop => 3, // > Ext_Zca
-    Ext_Zfhmin => 3, // > Ext_Zfh
-    Ext_Zhinx => 3, // > Ext_Zfinx
-    Ext_Zve32x => 3, // > Ext_Zvl32b
-    Ext_Zicfilp => 3, // > 2
+    Ext_D => 1, // > Zicsr
+    Ext_F => 1, // > Zicsr
+    Ext_S => 1, // > Zicsr
+    Ext_Zaamo => 1, // > A
+    Ext_Zalrsc => 1, // > A
+    Ext_Zca => 1, // > C
+    Ext_Zfinx => 1, // > Zicsr
+    Ext_Zicntr => 1, // > Zicsr
+    Ext_Zihpm => 1, // > Zicsr
+    Ext_Zve32x => 1, // > Zvl32b
 
-    // 4
-    Ext_H => 4, // > 3
-    Ext_Zhinxmin => 4, // > Ext_Zhinx
-    Ext_Zvbb => 4, // > Ext_Zve32x
-    Ext_Zve32f => 4, // > Ext_Zve32x
-    Ext_Zve64x => 4, // > Ext_Zvl32x
-    Ext_Zvkg => 4, // > Ext_Zve32x
-    Ext_Zvkned => 4, // > Ext_Zve32x
-    Ext_Zvksed => 4, // > Ext_Zve32x
-    Ext_Zvknha => 4, // > Ext_Zve32x
-    Ext_Zvksh => 4, // > Ext_Zve32x
+    // Note: even though these match the default case, making them explicit to
+    // annotate the chain of dependencies
+    Ext_Sv39 => 2, // > S
+    Ext_Zfh => 2, // > F
+    Ext_Zhinx => 2, // > Zfinx
+    Ext_Zvbb => 2, // > Zve32x
+    Ext_Zve32f => 2, // > Zve32x
+    Ext_Zve64x => 2, // > Zve32x
 
-    // 5
-    Ext_Zvbc => 5, // > Ext_Zve64x
-    Ext_Zve64f => 5, // > Ext_Zvl64x
-    Ext_Zvfh => 5, // > Ext_Zve32f
-    Ext_Zvkb => 5, // > Ext_Zvbb
-    Ext_Zvknhb => 5, // > Ext_Zve64x
-    Ext_Zvfbfmin => 5, // > Ext_Zve32f
+    Ext_Svrsw60t59b => 3, // > Sv39
+    Ext_Zfhmin => 3, // > Zfh
+    Ext_Zhinxmin => 3, // > Zhinx
+    Ext_Zicfilp => 3, // > get_xLPE
+    Ext_Zvbc => 3, // > Zve64x
+    Ext_Zve64f => 3, // > Zve64x
+    Ext_Zvfbfmin => 3, // > Zve32f
+    Ext_Zvkb => 3, // > Zvbb
+    Ext_Zvknhb => 3, // > Zve64x
 
-    // 6
-    Ext_Zve64d => 6, // > Ext_Zvl64f
-    Ext_Zvfhmin => 6, // > Ext_Zvfh
-    Ext_Zvfbfwma => 6, // > Ext_Zvfbfmin
+    Ext_H => 4, // > virtual_mem_supported
+    Ext_Zve64d => 4, // > Zve64f
+    Ext_Zvfbfwma => 4, // > Zvfbfmin
+    Ext_Zvfh => 4, // > Zfhmin
 
-    // 7
-    Ext_V => 7, // > Ext_Zve64d
+    Ext_V => 5, // > Zve64d
+    Ext_Zvfhmin => 5, // > Zvfh
 
     _ => 2
   }
@@ -570,6 +590,8 @@ let extensions_ordered_for_isa_string = [
   Ext_Zmmul,
 
   // Za
+  Ext_Za128rs,
+  Ext_Za64rs,
   Ext_Zaamo,
   Ext_Zabha,
   Ext_Zacas,
@@ -657,6 +679,9 @@ let extensions_ordered_for_isa_string = [
   // Supervisor extensions, ordered alphabetically.
   Ext_Sscofpmf,
   Ext_Sstc,
+  Ext_Sstvala,
+  Ext_Sstvecd,
+  Ext_Ssu64xl,
   // Ext_Svade,
   // Ext_Svadu,
   Ext_Svinval,

@@ -57,14 +57,14 @@ function read_pte forall 'n, 'n in {4, 8} . (
   paddr    : physaddr,
   pte_size : int('n),
 ) -> MemoryOpResult(bits(8 * 'n)) =
-  mem_read_priv(Read(Data), Supervisor, paddr, pte_size, false, false, false)
+  mem_read_priv(Load(Data), Supervisor, paddr, pte_size, false, false, false)
 
 // PRIVATE
 // 'v is the virtual address size.
 val pt_walk : forall 'v, is_sv_mode('v) . (
   int('v),                      // Sv32, Sv39, Sv48, Sv57
   vpn_bits('v),                 // Virtual Page Number
-  AccessType(ext_access_type),  // Read/Write/ReadWrite/InstructionFetch
+  MemoryAccessType(ext_access_type),  // Memory Load/Store/LoadStore/InstructionFetch
   Privilege,                    // User/Supervisor/Machine
   bool,                         // mstatus.MXR
   bool,                         // do_sum
@@ -105,7 +105,7 @@ function pt_walk(
 
   // Read this-level PTE from mem (Step 2 of VATP)
   match read_pte(pte_addr, 2 ^ log_pte_size_bytes) {
-    Err(_)  => Err(PTW_Access(), ext_ptw),
+    Err(_)  => Err(PTW_No_Access(), ext_ptw),
     Ok(pte) => {
       let pte_flags = Mk_PTE_Flags(pte[7 .. 0]);
       let pte_ext   = ext_bits_of_PTE(pte);
@@ -136,8 +136,8 @@ function pt_walk(
           };
           // Steps 6, 7 (TODO: shadow stack protection), 8 of VATP.
           match check_PTE_permission(ac, priv, mxr, do_sum, pte_flags, pte_ext, ext_ptw) {
-            PTE_Check_Failure(ext_ptw, ext_ptw_fail) =>
-              Err(ext_get_ptw_error(ext_ptw_fail), ext_ptw),
+            PTE_Check_Failure(ext_ptw, pte_failure) =>
+              Err(ext_get_ptw_error(pte_failure), ext_ptw),
             PTE_Check_Success(ext_ptw) => {
               let ppn = if level > 0 then {
                 // Compose final PA in superpage:
@@ -166,7 +166,7 @@ register satp : xlenbits
 mapping clause csr_name_map = 0x180  <-> "satp"
 function clause is_CSR_accessible(0x180, priv, _) = currentlyEnabled(Ext_S) & not(priv == Supervisor & mstatus[TVM] == 0b1)
 function clause read_CSR(0x180) = satp
-function clause write_CSR(0x180, value) = { satp = legalize_satp(architecture(cur_privilege), satp, value); Ok(satp) }
+function clause write_CSR(0x180, value) = { satp = legalize_satp(architecture(Supervisor), satp, value); Ok(satp) }
 
 // ----------------
 // Fields of SATP
@@ -218,9 +218,9 @@ type TR_Result('paddr : Type, 'failure : Type) = result(('paddr, ext_ptw), ('fai
 // PRIVATE: translate on TLB hit, and maintenance of PTE in TLB
 function translate_TLB_hit forall 'v, is_sv_mode('v) . (
   sv_width  : int('v),
-  asid      : asidbits,
+  _asid     : asidbits,
   vpn       : vpn_bits('v),
-  ac        : AccessType(ext_access_type),
+  ac        : MemoryAccessType(ext_access_type),
   priv      : Privilege,
   mxr       : bool,
   do_sum    : bool,
@@ -237,8 +237,8 @@ function translate_TLB_hit forall 'v, is_sv_mode('v) . (
                                        ext_pte, ext_ptw);
 
   match pte_check {
-    PTE_Check_Failure(ext_ptw, ext_ptw_fail) =>
-      Err(ext_get_ptw_error(ext_ptw_fail), ext_ptw),
+    PTE_Check_Failure(ext_ptw, pte_failure) =>
+      Err(ext_get_ptw_error(pte_failure), ext_ptw),
     PTE_Check_Success(ext_ptw) =>
       match update_PTE_Bits(pte, ac) {
         None()     => Ok(tlb_get_ppn(sv_width, ent, vpn), ext_ptw),
@@ -246,13 +246,13 @@ function translate_TLB_hit forall 'v, is_sv_mode('v) . (
           // Step 9 of VATP. See platform.sail.
           if not(plat_enable_dirty_update) then
             // pte needs dirty/accessed update but that is not enabled
-            Err(PTW_PTE_Update(), ext_ptw)
+            Err(PTW_PTE_Needs_Update(), ext_ptw)
           else {
             // Writeback the PTE (which has new A/D bits)
             write_TLB(tlb_index, tlb_set_pte(ent, pte'));
             match write_pte(ent.pteAddr, pte_size, pte') {
               Ok(_)  => (),
-              Err(e) => internal_error(__FILE__, __LINE__,
+              Err(_) => internal_error(__FILE__, __LINE__,
                                        "invalid physical address in TLB")
             };
             Ok(tlb_get_ppn(sv_width, ent, vpn), ext_ptw)
@@ -267,7 +267,7 @@ function translate_TLB_miss forall 'v, is_sv_mode('v) . (
   asid     : asidbits,
   base_ppn : ppn_bits('v),
   vpn      : vpn_bits('v),
-  ac       : AccessType(ext_access_type),
+  ac       : MemoryAccessType(ext_access_type),
   priv     : Privilege,
   mxr      : bool,
   do_sum   : bool,
@@ -294,7 +294,7 @@ function translate_TLB_miss forall 'v, is_sv_mode('v) . (
           // Step 9 of VATP. See platform.sail.
           if not(plat_enable_dirty_update) then
             // pte needs dirty/accessed update but that is not enabled
-            Err(PTW_PTE_Update(), ext_ptw)
+            Err(PTW_PTE_Needs_Update(), ext_ptw)
           else {
             // Writeback the PTE (which has new A/D bits)
             match write_pte(pteAddr, pte_size, pte) {
@@ -302,8 +302,8 @@ function translate_TLB_miss forall 'v, is_sv_mode('v) . (
                 add_to_TLB(sv_width, asid, vpn, ppn, pte, pteAddr, level, global);
                 Ok(ppn, ext_ptw)
               },
-              Err(e) =>
-                Err(PTW_Access(), ext_ptw)
+              Err(_) =>
+                Err(PTW_No_Access(), ext_ptw)
             }
           }
         }
@@ -326,7 +326,7 @@ function translate forall 'v, is_sv_mode('v) . (
   asid     : asidbits,
   base_ppn : ppn_bits('v),
   vpn      : vpn_bits('v),
-  ac       : AccessType(ext_access_type),
+  ac       : MemoryAccessType(ext_access_type),
   priv     : Privilege,
   mxr      : bool,
   do_sum   : bool,
@@ -357,7 +357,7 @@ function get_satp forall 'v, is_sv_mode('v). (
 // PUBLIC: invoked from instr-fetch and load/store/amo
 function translateAddr(
   vAddr : virtaddr,
-  ac    : AccessType(ext_access_type),
+  ac    : MemoryAccessType(ext_access_type),
 ) -> TR_Result(physaddr, ExceptionType) = {
 
   // Effective privilege takes into account mstatus.PRV, mstatus.MPP
