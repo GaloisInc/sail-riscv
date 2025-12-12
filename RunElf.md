@@ -165,6 +165,8 @@ def initialize_registers (_ : Unit) : SailM Unit := do
 
 and change the last line of `def sail_model_init` to `initialize_registers ()`.
 
+To turn on debugging that prints out instructions as they are executed, in `Lean_RV64D_executable/LeanRV64Dexecutable/Prelude.lean`, change the body of the `get_config_print_instr` function to `true`.
+
 To execute an ELF file, from within `sail/test/lean-riscv`, run
 
 ```
