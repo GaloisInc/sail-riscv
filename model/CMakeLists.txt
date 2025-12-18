@@ -465,6 +465,7 @@ foreach (xlen IN ITEMS 32 64)
             ${lean_sail_common}
             ${lean_sail_executable}
             ${SAIL_MODULES}
+            -D PRINT_EFFECTS
             ${project_file}
     )
 
