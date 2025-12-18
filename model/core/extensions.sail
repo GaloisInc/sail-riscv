@@ -200,7 +200,7 @@ function clause hartSupports(Ext_Zfinx) = config extensions.Zfinx.supported
 // Floating-Point in Integer Registers (double precision)
 enum clause extension = Ext_Zdinx
 mapping clause extensionName = Ext_Zdinx <-> "zdinx"
-function clause hartSupports(Ext_Zdinx) = config extensions.Zfinx.supported // TODO: Separate Zfinx and Zdinx supported flags
+function clause hartSupports(Ext_Zdinx) = config extensions.Zdinx.supported
 
 // Code Size Reduction: compressed instructions excluding floating point loads and stores
 enum clause extension = Ext_Zca
@@ -495,6 +495,29 @@ function clause hartSupports(Ext_Svrsw60t59b) = config extensions.Svrsw60t59b.su
 enum clause extension = Ext_Smcntrpmf
 mapping clause extensionName = Ext_Smcntrpmf <-> "smcntrpmf"
 function clause hartSupports(Ext_Smcntrpmf) = config extensions.Smcntrpmf.supported
+
+// When adding a new extension X, we need to make sure that if X being supported
+// depends on Y being supported, then the value associated to X is _greater_ than
+// the value associated to Y. The default value is 0.
+
+function hartSupports_measure(ext : extension) -> int =
+  match ext {
+    Ext_D => 1, // > F
+    Ext_Sstvecd => 1, // > S
+    Ext_Ssu64xl => 1, // > S
+    Ext_Zvkn => 1, // > Zvkned
+    Ext_Zvks => 1, // > Zvksed
+
+    Ext_C => 2, // > D
+    Ext_Zvknc => 2, // > Zvkn
+    Ext_Zvkng => 2, // > Zvkn
+    Ext_Zvksc => 2, // > Zvks
+    Ext_Zvksg => 2, // > Zvks
+
+    _ => 0,
+  }
+
+termination_measure hartSupports(ext) = hartSupports_measure(ext)
 
 // When adding a new extension X, we need to make sure that if X being enabled
 // depends on Y being enabled, then the value associated to X is _greater_ than

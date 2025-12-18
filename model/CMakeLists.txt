@@ -44,11 +44,11 @@ execute_process(
 
 separate_arguments(sail_srcs UNIX_COMMAND "${sail_list_files}")
 
-############# C #############
+############# C++ #############
 
-# Generate C code from Sail model
+# Generate C++ code from Sail model
 set(c_model_no_ext "${CMAKE_BINARY_DIR}/sail_riscv_model")
-set(c_model "${c_model_no_ext}.c")
+set(c_model "${c_model_no_ext}.cpp")
 set(c_model_header "${c_model_no_ext}.h")
 # JSON schema for configuration file.
 set(schema_file "${CMAKE_BINARY_DIR}/sail_riscv_config_schema.json")
@@ -65,7 +65,7 @@ add_custom_command(
     DEPENDS ${sail_srcs} ${project_file}
     OUTPUT ${c_model} ${c_model_header} ${branch_info_file} ${schema_file}
     VERBATIM
-    COMMENT "Building C code from Sail model"
+    COMMENT "Building C++ code from Sail model"
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     COMMAND
         ${SAIL_BIN}
@@ -81,14 +81,19 @@ add_custom_command(
         -O --Oconstant-fold
         # Cache Z3 results in z3_problems file to speed up incremental compilation.
         --memo-z3
-        # Output C code.
-        -c
+        # Output C++ code.
+        --cpp
+        # In future we may have other models in other namespaces if we
+        # do proper SoC modelling, e.g. plic, imsic, debug_module, etc.
+        --cpp-namespace hart
+        # Make the output Model class derive from a PlatformInterface class
+        # Its public members become protected in Model.
+        --cpp-derive-from "protected PlatformInterface"
         # Don't generate a main() function.
         --c-no-main
         # Extra #include's.
-        --c-include riscv_prelude.h
-        --c-include riscv_platform.h
-        --c-include riscv_callbacks.h
+        --c-header-include riscv_platform_if.h
+        --c-include riscv_softfloat.h
         # Don't dead-code eliminate these functions.
         --c-preserve init_model
         --c-preserve init_boot_requirements
@@ -118,6 +123,8 @@ add_custom_command(
         --c-preserve rvfi_mem_exception
         --c-preserve rvfi_wX
         --c-preserve rvfi_trap
+        # Preserve to_str functions.
+        --c-preserve ptw_error_to_str
         # Input files.
         ${SAIL_MODULES}
         ${project_file}
