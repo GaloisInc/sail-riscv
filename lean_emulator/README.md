@@ -19,5 +19,5 @@ lake update && lake build
 3. Run the Lean emulator on an elf binary.
 
 ```
-lake exec lean_emulator -- path/to/riscv/binary.elf
+lake exec lean_riscv_emulator -- path/to/riscv/binary.elf
 ```

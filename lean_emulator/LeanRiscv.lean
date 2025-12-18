@@ -94,9 +94,10 @@ def initializeRegisters (elf: ELF64File) :=
   | none => do
       panic ".tohost address not found in ELF"
   | some tohost_addr => do
+    let tohost_addr := BitVec.ofNat 64 (tohost_addr)
     writeReg PC (elf.file_header.e_entry:UInt64).toBitVec
-    writeReg htif_tohost (tohost_addr:UInt64).toBitVec
-    enable_htif (tohost_addr:UInt64).toBitVec
+    writeReg htif_tohost tohost_addr
+    enable_htif tohost_addr
 
 def my_main (elf: ELF64File) :=
   open LeanRV64DExecutable.Functions in
