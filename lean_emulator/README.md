@@ -16,8 +16,14 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DSAIL_MODULES="postlude;Z
 lake update && lake build
 ```
 
-3. Run the Lean emulator on an elf binary.
+3. Run the Lean emulator on an ELF binary.
 
 ```
 lake exec lean_riscv_emulator -- path/to/riscv/binary.elf
+```
+
+You can download the Spike test ELFs by running the following in the `/test` directory.
+
+```
+cmake -S . -B build -DENABLE_RISCV_TESTS=1 && cmake --build build
 ```
