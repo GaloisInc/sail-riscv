@@ -12,7 +12,7 @@ root = "Main"
 [[require]]
 name = "ELFSage"
 git = "https://github.com/GaloisInc/ELFSage.git"
-rev = "d6ba1361944d1ed300ffcda4532a6768b8a5c6db"
+rev = "e28bd859821b8d9b4831ebdfed3903c91b4096e5"
 
 [[require]]
 name = "Lean_RV64D_executable"
