@@ -86,12 +86,9 @@ def initializeRegisters (elf: ELF64File): SailM PUnit :=
   open LeanRV64DExecutable.Functions in
   open Sail in
   do
-  -- -- TODO: initialize register properly
-  -- let emptyRegs := Std.ExtDHashMap.emptyWithCapacity
-  -- let regs := emptyRegs.insert PC (elf.file_header.e_entry:UInt32).toBitVec
-  -- regs
-  -- dbg_trace (repr elf)
-  let tohost_addr_m := (elf.interpreted_sections.find? is_tohost).map (λ (s: ELF64SectionHeaderTableEntry × InterpretedSection) => s.snd.section_addr)
+  let tohost_addr_m :=
+    (elf.interpreted_sections.find? is_tohost).map
+      (λ (s: ELF64SectionHeaderTableEntry × InterpretedSection) => s.snd.section_addr)
   match tohost_addr_m with
   | none => do
       panic ".tohost address not found in ELF"
@@ -253,34 +250,29 @@ def my_main (elf: ELF64File) :=
   open LeanRV64DExecutable.Functions in
   open Sail in
   do
-  -- monadLift (IO.print "TEST")
-  -- let _ <- pure (unsafeIO (IO.print "TEST"))
-  -- dbg_trace "In my_main!"
-  -- print_effect
-  -- pure (print_bits "PC = " (← readReg PC))
-  print_bits_effect "PC = " (← readReg PC)
-  print_bits_effect "htif_tohost = " (← readReg htif_tohost)
-  sailTryCatch (do
+  sailTryCatch
+    (do
       init_model ""
       cycle_count ()
-      initializeRegisters elf
+      -- Note: init_model resets the PC to 0, so we need to set it again
+      writeReg PC (elf.file_header.e_entry:UInt64).toBitVec
       print_bits_effect "PC = " (← readReg PC)
       print_bits_effect "htif_tohost = " (← readReg htif_tohost)
       loop ()
-  ) (λ the_exception ↦
-    match the_exception with
+    )
+    (λ the_exception ↦
+      match the_exception with
       | .Error_not_implemented s => (pure (print_string "Error: Not implemented: " s))
       | .Error_internal_error () => (pure (print "Error: internal error"))
-  )
-
+    )
 
 def runElf64 (elf : ELF64File) : IO UInt32 :=
   open Sail in
   open LeanRV64DExecutable.Functions in
   let mem := initializeMemory MachineBits.B64 elf
-  let regs := Std.ExtDHashMap.emptyWithCapacity -- initializeRegisters elf
+  let regs := Std.ExtDHashMap.emptyWithCapacity
   let initialState := ⟨regs, (), mem, default, default, default⟩
   main_of_sail_main initialState $ fun () => do
-    initializeRegisters elf
     sail_model_init ()
+    initializeRegisters elf
     my_main elf
