@@ -1,8 +1,6 @@
-Lean emulator for Sail RISC-V
-=============================
+# Lean emulator for Sail RISC-V
 
-Instructions
-------------
+## Instructions
 
 1. Compile the Sail RISC-V model for Lean which is a dependency for the Lean emulator. Here's an example command to build the Lean backend (from the root directory). You may want to change the set of modules and extensions that are included in your version of the emulator.
 
